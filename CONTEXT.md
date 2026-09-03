@@ -24,6 +24,10 @@ _Avoid_: Style guide, template
 A state a person may recognize in themselves, carried by every practice record so that practices can be found by what someone is living through rather than by what kind of practice they are.
 _Avoid_: Mood, symptom, goal
 
+**Suggestion set**:
+The small group of practices offered in response to one answer to the discovery question, unranked and fixed editorially rather than computed per visitor, offered as a starting point rather than a result about the person.
+_Avoid_: Results, matches, recommendations
+
 **Smallest version**:
 The least a person can do and still have done the practice, offered so that nothing carries a duration target or completion pressure.
 _Avoid_: Duration, minimum time, quick option
