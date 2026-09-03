@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PROTOTYPE — age and family adaptations (issue #5)</title>
+    <!--
+      THROWAWAY PROTOTYPE. Not production code, not reviewed content.
+
+      Question (wayfinder ticket #5): what distinctions, if any, are needed between adolescent and
+      adult-family experiences, and how should caregivers be supported in adapting practices for
+      younger children without claiming universal developmental suitability?
+
+      All four variants sit on top of the journey already decided in #6 (no landing doorstep, one
+      gentle question, an unranked small set, then a practice detail) and the content standard
+      decided in #7. They disagree about ONE thing: where the audience distinction lives.
+
+        A — No audience surface. One experience for everyone; adapting for another person is just
+            another line in every practice's "ways to change it". Nothing ever asks who you are.
+        B — The audience question IS the one question. Arrival spends its single question on who
+            this is for; the need narrowing demotes to adjustments on the set screen.
+        C — Fork after the practice. Arrival is identical for everyone; each practice detail carries
+            a "Doing this with someone else" panel, with a younger-child note inside it.
+        D — A separate companion guide. Arrival is identical; a quiet persistent link leads to one
+            standalone page about adapting, which teaches principles rather than per-practice steps.
+
+      Practice names come from the twelve-practice catalog decided in #7; the copy under them is
+      placeholder drafting under the guardrails from #2 (previewable, adaptable, skippable,
+      stoppable; no outcome claims; no timers; refusal always visible). It has had NO chaplain,
+      tradition, or clinical review.
+    -->
+    <style>
+      :root {
+        --ink: #22303c;
+        --ink-soft: #4a5a67;
+        --line: #d9e0e4;
+        --bg: #f7f5f1;
+        --card: #fffdfa;
+        --accent: #3d6b6a;
+        --accent-soft: #e6efee;
+        --focus: #1c4f7c;
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        padding: 0 0 6.5rem;
+        background: var(--bg);
+        color: var(--ink);
+        font: 1.0625rem/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      main { max-width: 44rem; margin: 0 auto; padding: 1.5rem 1.25rem 0; }
+      h1 { font-size: 1.5rem; line-height: 1.3; margin: 0 0 0.5rem; font-weight: 600; }
+      h2 { font-size: 1.2rem; line-height: 1.35; margin: 2rem 0 0.5rem; font-weight: 600; }
+      h3 { font-size: 1.05rem; margin: 0 0 0.35rem; font-weight: 600; }
+      h4 { font-size: 0.9375rem; margin: 1rem 0 0.3rem; font-weight: 600; }
+      p { margin: 0 0 0.9rem; }
+      .lede { color: var(--ink-soft); }
+      .small { font-size: 0.9375rem; color: var(--ink-soft); }
+      :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+
+      button { font: inherit; cursor: pointer; }
+      .btn {
+        display: inline-block;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        border-radius: 999px;
+        padding: 0.7rem 1.25rem;
+        min-height: 2.75rem;
+        text-align: left;
+      }
+      .btn.secondary { background: transparent; color: var(--accent); }
+      .btn.quiet { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+      .row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1rem 0; }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
+        margin: 0 0 0.85rem;
+        width: 100%;
+        text-align: left;
+        color: inherit;
+        display: block;
+      }
+      button.card:hover { border-color: var(--accent); }
+
+      .answers { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.25rem 0; }
+      .answer {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 0.9rem 1.1rem;
+        text-align: left;
+        color: inherit;
+        min-height: 3rem;
+      }
+      .answer:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.1rem 1.2rem;
+        margin: 0 0 1rem;
+      }
+      .panel h3 { margin-top: 0; }
+      .panel.inset { background: var(--accent-soft); border-color: #c6dbda; }
+      ul { margin: 0 0 0.9rem; padding-left: 1.2rem; }
+      li { margin-bottom: 0.35rem; }
+
+      .tail { margin-top: 1.75rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+      .doorway {
+        margin: 1.75rem 0 0;
+        padding: 0.85rem 0 0;
+        border-top: 1px solid var(--line);
+        font-size: 0.9375rem;
+      }
+      .doorway a, .linkish {
+        color: var(--accent);
+        background: none;
+        border: 0;
+        padding: 0;
+        font: inherit;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      details.adapt {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--card);
+        padding: 0.35rem 1.1rem;
+        margin: 0 0 1rem;
+      }
+      details.adapt > summary {
+        cursor: pointer;
+        padding: 0.7rem 0;
+        font-weight: 600;
+        list-style-position: outside;
+      }
+      details.adapt[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 0.8rem; }
+
+      .caveat {
+        font-size: 0.9375rem;
+        color: var(--ink-soft);
+        border-left: 3px solid var(--line);
+        padding: 0.15rem 0 0.15rem 0.9rem;
+        margin: 0 0 1rem;
+      }
+      .steps { counter-reset: step; list-style: none; padding-left: 0; }
+      .steps li {
+        counter-increment: step;
+        padding-left: 2rem;
+        position: relative;
+        margin-bottom: 0.6rem;
+      }
+      .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 0.05rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: #234d4c;
+        font-size: 0.8125rem;
+        display: grid;
+        place-items: center;
+      }
+      .mode {
+        display: inline-block;
+        font-size: 0.8125rem;
+        border: 1px solid #c6dbda;
+        background: var(--accent-soft);
+        color: #234d4c;
+        border-radius: 999px;
+        padding: 0.15rem 0.7rem;
+        margin: 0 0 0.75rem;
+      }
+
+      .boundary {
+        max-width: 44rem;
+        margin: 2.5rem auto 0;
+        padding: 1rem 1.25rem;
+        border-top: 1px solid var(--line);
+        font-size: 0.9375rem;
+        color: var(--ink-soft);
+      }
+
+      /* Prototype switcher — deliberately not part of the design under evaluation. */
+      .switcher {
+        position: fixed;
+        left: 50%;
+        bottom: 1rem;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #16202a;
+        color: #fff;
+        border-radius: 999px;
+        padding: 0.4rem 0.5rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+        z-index: 50;
+        font-size: 0.9375rem;
+      }
+      .switcher button {
+        background: #2c3a47;
+        color: #fff;
+        border: 0;
+        border-radius: 999px;
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1.1rem;
+      }
+      .switcher .label { padding: 0 0.5rem; white-space: nowrap; }
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="app"></main>
+    <footer class="boundary">
+      <p>
+        This is a place to explore, not medical, mental-health, or crisis care. For anything about
+        symptoms, medicines, or equipment, talk with your care team. If you are struggling
+        emotionally or thinking about suicide, call or text <strong>988</strong>. In an emergency,
+        call <strong>911</strong>.
+      </p>
+      <p><strong>Prototype only.</strong> Placeholder wording; not reviewed by a chaplain or clinician.</p>
+    </footer>
+    <div class="switcher" role="group" aria-label="Prototype variant switcher">
+      <button type="button" id="prev" aria-label="Previous variant">&#8592;</button>
+      <span class="label" id="variant-label"></span>
+      <button type="button" id="next" aria-label="Next variant">&#8594;</button>
+    </div>
+
+    <script>
+      // ---------------------------------------------------------------------
+      // Placeholder practice records. Names from the twelve-practice catalog (#7);
+      // copy is drafting only. `companion` and `child` are the fields this ticket is testing.
+      // ---------------------------------------------------------------------
+      const PRACTICES = [
+        {
+          id: "notice",
+          title: "Noticing what's around you",
+          invitation: "Rest your attention on something outside you for a moment.",
+          needs: ["toomuch", "still"],
+          involves: [
+            "Pick something you can already see or hear — a window, a light, a sound in the hall.",
+            "Look at it, or listen to it, for as long as you like.",
+            "There are no breathing instructions and nothing to count.",
+          ],
+          adapt: [
+            "Works lying down, with eyes open, and with any amount of movement or none.",
+            "If you can't see it, someone can describe something to you instead.",
+          ],
+          companion: [
+            "You can do this in the same room without talking about it.",
+            "If you name what you notice out loud, leave long gaps. Silence is part of it.",
+            "Don't ask them what they noticed afterwards.",
+          ],
+          child: {
+            keep: "Looking at one thing together, and saying nothing about it.",
+            change: "Younger children often want to point and name things. Follow that instead of quieting it — it is the same practice.",
+          },
+          smallest: "Looking at one thing, once.",
+          stop: "Stop any time, and look wherever you want.",
+        },
+        {
+          id: "rest",
+          title: "Rest, without a task",
+          invitation: "Nothing to do here, on purpose.",
+          needs: ["toomuch", "still"],
+          involves: [
+            "Put the screen down or leave it open, whichever you prefer.",
+            "Do nothing in particular for as long as you want.",
+            "Nothing is being tracked, and there is nothing to come back to.",
+          ],
+          adapt: [
+            "Eyes open or closed. Sleep is allowed and is not a failure of the practice.",
+            "You can leave this page open and ignore it.",
+          ],
+          companion: [
+            "Sitting nearby doing nothing is the whole practice; you do not need to fill it.",
+            "Say once that you are not waiting for anything, then stop saying it.",
+          ],
+          child: {
+            keep: "Being near each other with nothing expected.",
+            change: "For a younger child, 'nothing to do' can feel like being in trouble. Naming it — 'we're just resting, you're not in trouble' — usually settles it.",
+          },
+          smallest: "One minute of not being asked for anything.",
+          stop: "There is nothing to stop.",
+        },
+        {
+          id: "sit",
+          title: "Letting someone sit with you",
+          invitation: "Asking for company, without having to talk.",
+          needs: ["alone", "toomuch"],
+          involves: [
+            "Decide who you would want nearby — a family member, a friend, a chaplain, a nurse.",
+            "Ask them to sit with you, and say whether you want talking or quiet.",
+            "You can change your mind partway through.",
+          ],
+          adapt: [
+            "A phone or video call counts.",
+            "If asking out loud is hard, you can show them this page instead.",
+          ],
+          companion: [
+            "If you were asked to sit, you are already doing it right. Nothing else is required.",
+            "Ask once whether they want talking or quiet, then follow their answer.",
+            "Leaving when asked is part of the practice, not a rejection.",
+          ],
+          child: {
+            keep: "Being asked for, and staying.",
+            change: "A younger child may want contact rather than company — a hand, a lap. Follow their lead and their care team's guidance on touch.",
+          },
+          smallest: "Asking one person to stay for a minute.",
+          stop: "You can ask them to go at any point, without a reason.",
+        },
+        {
+          id: "hardthing",
+          title: "Saying the hard thing",
+          invitation: "Anger, fear, and “this is not fair” belong here too.",
+          needs: ["angry", "alone"],
+          involves: [
+            "Name something that is hard right now — out loud, silently, or on paper.",
+            "Say it as harshly as it actually is.",
+            "Nothing is typed here, saved, or sent anywhere.",
+          ],
+          adapt: [
+            "You can say it to a person, to God, to no one, or into the air.",
+            "You do not have to find a bright side or feel better afterwards.",
+          ],
+          companion: [
+            "If it is said to you, the practice is to hear it — not to answer it or soften it.",
+            "“That's true” or nothing at all are both complete responses.",
+            "Do not repeat it to anyone unless they ask you to.",
+          ],
+          child: {
+            keep: "Saying the true, unsoftened thing to someone who stays.",
+            change: "Younger children often say it through play, drawing, or a character instead of directly. That still counts; you do not need to bring it back to the real subject.",
+          },
+          smallest: "One sentence, said once.",
+          stop: "Stop mid-sentence if you want.",
+        },
+        {
+          id: "remember",
+          title: "Remembering someone, or something",
+          invitation: "Bringing a person, a place, or a time close for a moment.",
+          needs: ["remember", "angry"],
+          involves: [
+            "Pick one person, place, or time.",
+            "Let one specific thing about them come back — a room, a smell, something they said.",
+            "Stay with it for as long as you want, or say it out loud to someone.",
+          ],
+          adapt: [
+            "A photo, a song, or an object can hold the place of remembering.",
+            "If it turns painful, you can stop in the middle. Nothing is left unfinished.",
+          ],
+          companion: [
+            "Ask for one specific memory rather than a general one, then stay quiet.",
+            "Your version of the memory is not a correction of theirs.",
+            "Tears are not a sign this went wrong.",
+          ],
+          child: {
+            keep: "One specific memory, held together.",
+            change: "A younger child may want the same story told the same way many times. Repetition is the practice, not a sign of being stuck.",
+          },
+          smallest: "One memory, for as long as it lasts.",
+          stop: "Stop whenever you want, including in the middle.",
+        },
+        {
+          id: "make",
+          title: "Making something small",
+          invitation: "Something made by hand, with whatever is nearby.",
+          needs: ["make", "remember"],
+          involves: [
+            "Find something to work with — paper, tape, string, a napkin.",
+            "Make something small. It does not have to be finished or good.",
+            "Keep it, give it away, or throw it out.",
+          ],
+          adapt: [
+            "Someone else can do the making while you decide what it should be.",
+            "Choosing a colour is enough to have made something.",
+          ],
+          companion: [
+            "Make your own alongside rather than helping with theirs, unless you are asked.",
+            "Don't improve it, and don't praise it into an achievement.",
+          ],
+          child: {
+            keep: "Making something with your hands, badly, on purpose.",
+            change: "Younger children may need the materials chosen for them and the mess handled for them. Check with the care team about anything shared between rooms.",
+          },
+          smallest: "One mark on one piece of paper.",
+          stop: "Leave it half-made. That is a normal ending.",
+        },
+      ];
+
+      const NEEDS = [
+        { id: "toomuch", label: "Everything is too much right now" },
+        { id: "alone", label: "I feel alone" },
+        { id: "angry", label: "I'm angry, grieving, or full of doubt" },
+        { id: "remember", label: "I want to remember someone" },
+        { id: "make", label: "I want to make or do something" },
+        { id: "still", label: "I want to be still" },
+      ];
+
+      // ---------------------------------------------------------------------
+      // Tiny DOM helper
+      // ---------------------------------------------------------------------
+      function el(tag, opts = {}, ...kids) {
+        const node = document.createElement(tag);
+        for (const [k, v] of Object.entries(opts)) {
+          if (k === "text") node.textContent = v;
+          else if (k === "html") node.innerHTML = v;
+          else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+          else node.setAttribute(k, v);
+        }
+        kids.filter(Boolean).forEach((c) => node.append(c));
+        return node;
+      }
+
+      function list(items, cls) {
+        const ul = el("ul", cls ? { class: cls } : {});
+        items.forEach((i) => ul.append(el("li", { text: i })));
+        return ul;
+      }
+
+      function setFor(needId) {
+        const matches = PRACTICES.filter((p) => p.needs.includes(needId));
+        return matches.length ? matches.slice(0, 3) : PRACTICES.slice(0, 3);
+      }
+
+      function questionScreen(root, { title, subhead, options, onPick, onSkip }) {
+        root.append(el("h1", { text: title }));
+        root.append(el("p", { class: "lede", text: subhead }));
+        const box = el("div", { class: "answers" });
+        options.forEach((o) => {
+          box.append(el("button", { class: "answer", type: "button", text: o.label, onclick: () => onPick(o) }));
+        });
+        root.append(box);
+        root.append(
+          el("div", { class: "row" },
+            el("button", { class: "btn quiet", type: "button", text: "I'm not sure", onclick: () => onSkip("unsure") }),
+            el("button", { class: "btn quiet", type: "button", text: "Show me everything", onclick: () => onSkip("all") }),
+            el("button", { class: "btn quiet", type: "button", text: "Nothing right now", onclick: () => onSkip("none") })
+          )
+        );
+      }
+
+      function suggestionScreen(root, { heading, note, practices, onOpen, onAll, onNone, tail }) {
+        root.append(el("h1", { text: heading }));
+        if (note) root.append(el("p", { class: "lede", text: note }));
+        practices.forEach((p) => {
+          const card = el("button", { class: "card", type: "button", onclick: () => onOpen(p) });
+          card.append(el("h3", { text: p.title }));
+          card.append(el("p", { class: "small", text: p.invitation }));
+          root.append(card);
+        });
+        if (tail) root.append(tail);
+        root.append(
+          el("div", { class: "row" },
+            el("button", { class: "btn quiet", type: "button", text: "Show me everything", onclick: onAll }),
+            el("button", { class: "btn quiet", type: "button", text: "Nothing right now", onclick: onNone })
+          )
+        );
+      }
+
+      function nothingScreen(root, back) {
+        root.append(el("h1", { text: "That's alright." }));
+        root.append(el("p", { text: "Nothing was saved and nothing is expected." }));
+        root.append(el("p", { class: "lede", text: "This page keeps nothing. It will still be here later." }));
+        root.append(el("div", { class: "row" },
+          el("button", { class: "btn quiet", type: "button", text: "Show me one thing after all", onclick: back })));
+      }
+
+      // Practice detail, shared shape from #6: what this involves -> ways to change it ->
+      // stop guidance -> "I'll try this". Variants pass extra blocks in.
+      function practiceView(root, p, { badge, extraAdapt = [], blocks = [], actions = [] }) {
+        if (badge) root.append(el("span", { class: "mode", text: badge }));
+        root.append(el("h1", { text: p.title }));
+        root.append(el("p", { class: "lede", text: p.invitation }));
+
+        const involves = el("section", { class: "panel" });
+        involves.append(el("h3", { text: "What this involves" }));
+        involves.append(list(p.involves, "steps"));
+        involves.append(el("p", { class: "small", text: "The smallest version: " + p.smallest }));
+        root.append(involves);
+
+        const adapt = el("section", { class: "panel" });
+        adapt.append(el("h3", { text: "Ways to change it" }));
+        adapt.append(list(p.adapt.concat(extraAdapt)));
+        root.append(adapt);
+
+        blocks.forEach((b) => root.append(b));
+
+        const stop = el("section", { class: "panel" });
+        stop.append(el("h3", { text: "Stopping" }));
+        stop.append(el("p", { class: "small", text: p.stop }));
+        root.append(stop);
+
+        const row = el("div", { class: "row" });
+        row.append(el("button", { class: "btn", type: "button", text: "I'll try this" }));
+        actions.forEach((a) => row.append(el("button", { class: "btn quiet", type: "button", text: a.label, onclick: a.onClick })));
+        root.append(row);
+      }
+
+      // =====================================================================
+      // A — No audience surface at all
+      // Adapting for someone else is folded into every practice's "ways to change it".
+      // Nothing anywhere asks who is holding the phone.
+      // =====================================================================
+      const VariantA = {
+        name: "One experience, no audience question",
+        render(root) {
+          const s = (VariantA.state ||= { screen: "q", need: null, practice: null });
+
+          if (s.screen === "none") return nothingScreen(root, () => { s.screen = "q"; render(); });
+
+          if (s.screen === "q") {
+            questionScreen(root, {
+              title: "What might support you right now?",
+              subhead: "Someone shared this page with you. There is no right answer, and nothing you pick is saved.",
+              options: NEEDS,
+              onPick: (o) => { s.need = o.id; s.screen = "set"; render(); },
+              onSkip: (k) => { s.need = null; s.screen = k === "none" ? "none" : "set"; render(); },
+            });
+            return;
+          }
+
+          if (s.screen === "set") {
+            suggestionScreen(root, {
+              heading: "A few things people reach for",
+              note: "A starting point, not a result about you. Nothing here was saved.",
+              practices: s.need ? setFor(s.need) : PRACTICES.slice(0, 3),
+              onOpen: (p) => { s.practice = p; s.screen = "detail"; render(); },
+              onAll: () => { s.need = null; s.screen = "set"; render(); },
+              onNone: () => { s.screen = "none"; render(); },
+            });
+            return;
+          }
+
+          // The whole idea of A: companion and younger-child lines are just more "ways to change it".
+          const p = s.practice;
+          practiceView(root, p, {
+            extraAdapt: p.companion.concat([
+              "For a younger child: " + p.child.change.charAt(0).toLowerCase() + p.child.change.slice(1),
+            ]),
+            actions: [{ label: "Back", onClick: () => { s.screen = "set"; render(); } }],
+          });
+          root.append(el("p", { class: "caveat", text: "Every line here is optional. Nothing on this page is written for a particular age, and children differ enormously — the person who knows them decides what fits." }));
+        },
+      };
+
+      // =====================================================================
+      // B — The audience question IS the one question
+      // Arrival spends its single question on who this is for. The need narrowing
+      // demotes to adjustments on the set screen, mirroring how #6 demoted energy.
+      // =====================================================================
+      const VariantB = {
+        name: "The one question is “who is this for”",
+        render(root) {
+          const s = (VariantB.state ||= { screen: "q", who: null, need: null, practice: null });
+
+          if (s.screen === "none") return nothingScreen(root, () => { s.screen = "q"; render(); });
+
+          if (s.screen === "q") {
+            questionScreen(root, {
+              title: "Who are you here for?",
+              subhead: "Someone shared this page with you. There is no right answer, and nothing you pick is saved.",
+              options: [
+                { id: "me", label: "Myself" },
+                { id: "with", label: "Someone I'm with — I want to be alongside them" },
+                { id: "child", label: "A younger child I'm caring for" },
+              ],
+              onPick: (o) => { s.who = o.id; s.screen = "set"; render(); },
+              onSkip: (k) => { s.who = k === "all" ? "me" : null; s.screen = k === "none" ? "none" : "set"; render(); },
+            });
+            return;
+          }
+
+          const label = { me: "For you", with: "Alongside someone", child: "Caring for a younger child" }[s.who] || "For anyone";
+
+          if (s.screen === "set") {
+            const tail = el("div", { class: "tail" });
+            tail.append(el("h4", { text: "Adjust these" }));
+            const row = el("div", { class: "row" });
+            NEEDS.slice(0, 4).forEach((n) => {
+              row.append(el("button", {
+                class: "btn quiet", type: "button", text: n.label,
+                onclick: () => { s.need = s.need === n.id ? null : n.id; render(); },
+              }));
+            });
+            tail.append(row);
+            if (s.who === "child") {
+              tail.append(el("p", { class: "caveat", text: "These are the same practices everyone else sees, with notes on adapting them. We can't say which of them suits a particular child — you can, and so can their care team." }));
+            }
+
+            suggestionScreen(root, {
+              heading: s.who === "me" ? "A few things people reach for" : "A few things you could offer",
+              note: label + ". A starting point, not a result about anyone. Nothing was saved.",
+              practices: s.need ? setFor(s.need) : PRACTICES.slice(0, 3),
+              onOpen: (p) => { s.practice = p; s.screen = "detail"; render(); },
+              onAll: () => { s.need = null; render(); },
+              onNone: () => { s.screen = "none"; render(); },
+              tail,
+            });
+            return;
+          }
+
+          const p = s.practice;
+          const blocks = [];
+          if (s.who === "with" || s.who === "child") {
+            const b = el("section", { class: "panel inset" });
+            b.append(el("h3", { text: s.who === "child" ? "Doing this with a younger child" : "Being alongside someone" }));
+            if (s.who === "child") {
+              b.append(el("p", { class: "small", text: "Keep: " + p.child.keep }));
+              b.append(el("p", { class: "small", text: "Change: " + p.child.change }));
+            }
+            b.append(list(p.companion));
+            blocks.push(b);
+          }
+          practiceView(root, p, {
+            badge: label,
+            blocks,
+            actions: [
+              { label: "Back", onClick: () => { s.screen = "set"; render(); } },
+              { label: "Change who this is for", onClick: () => { s.screen = "q"; render(); } },
+            ],
+          });
+        },
+      };
+
+      // =====================================================================
+      // C — Fork after the practice, never before
+      // Arrival is identical for everyone (exactly the journey decided in #6). The audience
+      // distinction lives inside each practice detail as a collapsed panel.
+      // =====================================================================
+      const VariantC = {
+        name: "Adaptation panel inside every practice",
+        render(root) {
+          const s = (VariantC.state ||= { screen: "q", need: null, practice: null });
+
+          if (s.screen === "none") return nothingScreen(root, () => { s.screen = "q"; render(); });
+
+          if (s.screen === "q") {
+            questionScreen(root, {
+              title: "What might support you right now?",
+              subhead: "Someone shared this page with you. There is no right answer, and nothing you pick is saved.",
+              options: NEEDS,
+              onPick: (o) => { s.need = o.id; s.screen = "set"; render(); },
+              onSkip: (k) => { s.need = null; s.screen = k === "none" ? "none" : "set"; render(); },
+            });
+            return;
+          }
+
+          if (s.screen === "set") {
+            suggestionScreen(root, {
+              heading: "A few things people reach for",
+              note: "A starting point, not a result about you. Nothing here was saved.",
+              practices: s.need ? setFor(s.need) : PRACTICES.slice(0, 3),
+              onOpen: (p) => { s.practice = p; s.screen = "detail"; render(); },
+              onAll: () => { s.need = null; render(); },
+              onNone: () => { s.screen = "none"; render(); },
+            });
+            return;
+          }
+
+          const p = s.practice;
+
+          const withSomeone = el("details", { class: "adapt" });
+          withSomeone.append(el("summary", { text: "Doing this with someone else" }));
+          withSomeone.append(list(p.companion));
+
+          const child = el("details", { class: "adapt" });
+          child.append(el("summary", { text: "Adapting this for a younger child" }));
+          child.append(el("p", { class: "small", text: "Keep: " + p.child.keep }));
+          child.append(el("p", { class: "small", text: "Change: " + p.child.change }));
+          child.append(el("p", { class: "caveat", text: "We can't say whether this suits a particular child. Children of the same age differ enormously, and this page has never met yours. You know them; their care team can help you judge." }));
+
+          practiceView(root, p, {
+            blocks: [withSomeone, child],
+            actions: [{ label: "Back", onClick: () => { s.screen = "set"; render(); } }],
+          });
+        },
+      };
+
+      // =====================================================================
+      // D — A separate companion guide
+      // Arrival is identical; one quiet, persistent doorway leads to a single standalone page
+      // about adapting anything in the catalog. Principles, not per-practice steps.
+      // =====================================================================
+      const VariantD = {
+        name: "A separate guide for people caring",
+        render(root) {
+          const s = (VariantD.state ||= { screen: "q", need: null, practice: null, from: "q" });
+
+          const doorway = () => {
+            const d = el("p", { class: "doorway" });
+            d.append(document.createTextNode("Here for someone else, or caring for a younger child? "));
+            d.append(el("button", {
+              class: "linkish", type: "button", text: "Ways to share these with someone",
+              onclick: () => { s.from = s.screen; s.screen = "guide"; render(); },
+            }));
+            return d;
+          };
+
+          if (s.screen === "none") { nothingScreen(root, () => { s.screen = "q"; render(); }); root.append(doorway()); return; }
+
+          if (s.screen === "guide") {
+            root.append(el("h1", { text: "Ways to share these with someone" }));
+            root.append(el("p", { class: "lede", text: "Everything in this resource is written to the person doing it. Nothing changes when you are the one offering it — these are just the things people say help." }));
+
+            const a = el("section", { class: "panel" });
+            a.append(el("h3", { text: "Offering a practice to someone" }));
+            a.append(list([
+              "Offer one thing, not a list. A list is a request to choose, and choosing is work.",
+              "Say it is optional out loud, once, and then let it go.",
+              "“No”, silence, and falling asleep are all complete answers.",
+              "If they take it up, you do not have to join in, and you do not have to leave.",
+              "Do not ask afterwards whether it helped.",
+            ]));
+            root.append(a);
+
+            const b = el("section", { class: "panel" });
+            b.append(el("h3", { text: "Adapting one for a younger child" }));
+            b.append(list([
+              "Keep the heart of the practice; change the size, the words, and the hands doing it.",
+              "Play, drawing, and repetition are usually the child's version of the same thing.",
+              "Expect to do it with them rather than hand it to them.",
+              "Follow their care team's guidance on touch, materials, and anything that leaves the room.",
+              "Stopping in the middle is normal and does not need explaining.",
+            ]));
+            b.append(el("p", { class: "caveat", text: "This resource was written for adolescents and adults, and it has never met your child. It does not say which practice suits which age; that judgement is yours, with their care team. Nothing here is claimed to be right for every child." }));
+            root.append(b);
+
+            const c = el("section", { class: "panel" });
+            c.append(el("h3", { text: "Looking after yourself while you do it" }));
+            c.append(list([
+              "Everything in the catalog is also for you, as yourself, not only as a companion.",
+              "Asking a chaplain to sit with you is on the list for a reason.",
+            ]));
+            root.append(c);
+
+            root.append(el("div", { class: "row" },
+              el("button", { class: "btn secondary", type: "button", text: "Back to the practices", onclick: () => { s.screen = s.from === "guide" ? "q" : s.from; render(); } })));
+            return;
+          }
+
+          if (s.screen === "q") {
+            questionScreen(root, {
+              title: "What might support you right now?",
+              subhead: "Someone shared this page with you. There is no right answer, and nothing you pick is saved.",
+              options: NEEDS,
+              onPick: (o) => { s.need = o.id; s.screen = "set"; render(); },
+              onSkip: (k) => { s.need = null; s.screen = k === "none" ? "none" : "set"; render(); },
+            });
+            root.append(doorway());
+            return;
+          }
+
+          if (s.screen === "set") {
+            suggestionScreen(root, {
+              heading: "A few things people reach for",
+              note: "A starting point, not a result about you. Nothing here was saved.",
+              practices: s.need ? setFor(s.need) : PRACTICES.slice(0, 3),
+              onOpen: (p) => { s.practice = p; s.screen = "detail"; render(); },
+              onAll: () => { s.need = null; render(); },
+              onNone: () => { s.screen = "none"; render(); },
+            });
+            root.append(doorway());
+            return;
+          }
+
+          practiceView(root, s.practice, {
+            actions: [{ label: "Back", onClick: () => { s.screen = "set"; render(); } }],
+          });
+          root.append(doorway());
+        },
+      };
+
+      // ---------------------------------------------------------------------
+      // Switcher
+      // ---------------------------------------------------------------------
+      const VARIANTS = { A: VariantA, B: VariantB, C: VariantC, D: VariantD };
+      const KEYS = Object.keys(VARIANTS);
+
+      function currentKey() {
+        const fromSearch = new URLSearchParams(location.search).get("variant");
+        const fromHash = location.hash.replace("#", "");
+        const key = (fromSearch || fromHash || "A").toUpperCase();
+        return KEYS.includes(key) ? key : "A";
+      }
+
+      function setKey(key) {
+        // file:// blocks replaceState with a query string in some browsers; fall back to the hash.
+        try {
+          const url = new URL(location.href);
+          url.searchParams.set("variant", key);
+          history.replaceState(null, "", url);
+        } catch {
+          location.hash = key;
+        }
+        render();
+      }
+
+      function render() {
+        const key = currentKey();
+        const variant = VARIANTS[key];
+        const root = document.getElementById("app");
+        root.replaceChildren();
+        variant.render(root);
+        document.getElementById("variant-label").textContent = key + " (" + variant.name + ")";
+        document.title = "PROTOTYPE — " + variant.name;
+      }
+
+      function cycle(step) {
+        const i = KEYS.indexOf(currentKey());
+        setKey(KEYS[(i + step + KEYS.length) % KEYS.length]);
+      }
+
+      document.getElementById("prev").addEventListener("click", () => cycle(-1));
+      document.getElementById("next").addEventListener("click", () => cycle(1));
+      document.addEventListener("keydown", (e) => {
+        const t = e.target;
+        if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+        if (e.key === "ArrowLeft") cycle(-1);
+        if (e.key === "ArrowRight") cycle(1);
+      });
+      window.addEventListener("hashchange", render);
+      render();
+    </script>
+  </body>
+</html>
