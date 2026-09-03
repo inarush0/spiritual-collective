@@ -1,0 +1,69 @@
+---
+import Page from '../../layouts/Page.astro';
+import { loadCatalog, pendingIn, release } from '../../catalog/index.js';
+
+// The whole catalog, in the fixed editorial order. `loadCatalog` applies the
+// build's publication filter and the order; this page picks neither.
+const practices = await loadCatalog();
+---
+
+<Page title="Everything">
+	<h1>Everything</h1>
+	<p class="lead">
+		All of it, in one list. Nothing here is ordered by how well it would suit you.
+	</p>
+
+	<ul class="catalog">
+		{
+			practices.map((practice) => (
+				<li>
+					{/*
+					 * Not yet a link: /me/practice/<slug>/ does not exist until the
+					 * practice view ships. A dead link is worse than a plain line —
+					 * someone following a chaplain's link should always meet a
+					 * sentence and a way onward.
+					 */}
+					<h2>{practice.data.name}</h2>
+					<p>{practice.data.invitation}</p>
+					{pendingIn(release, practice.data.publication) && (
+						<p class="pending">in review — not approved yet</p>
+					)}
+				</li>
+			))
+		}
+	</ul>
+</Page>
+
+<style>
+	.lead {
+		color: var(--quiet);
+		margin: 0 0 2rem;
+	}
+
+	.catalog {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.catalog > li + li {
+		margin-top: 1.75rem;
+		padding-top: 1.75rem;
+		border-top: 1px solid var(--rule);
+	}
+
+	.catalog h2 {
+		font-size: 1.125rem;
+		margin: 0 0 0.25rem;
+	}
+
+	.catalog p {
+		margin: 0;
+	}
+
+	.pending {
+		margin-top: 0.5rem;
+		color: var(--quiet);
+		font-size: 0.875rem;
+	}
+</style>

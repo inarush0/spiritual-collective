@@ -1,0 +1,40 @@
+{
+  "name": "spiritual-collective",
+  "version": "1.0.0",
+  "description": "Something to try today — a spiritual-care resource for pediatric hospice and palliative care",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 SITE_BUILD=beta astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "build:beta": "ASTRO_TELEMETRY_DISABLED=1 SITE_BUILD=beta astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inarush0/spiritual-collective.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/inarush0/spiritual-collective/issues"
+  },
+  "homepage": "https://github.com/inarush0/spiritual-collective#readme",
+  "dependencies": {
+    "astro": "^7.3.1",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^26.4.1",
+    "js-yaml": "^4.3.2",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true
+  }
+}

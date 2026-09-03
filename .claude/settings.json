@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "s=\"$(git rev-parse --show-toplevel 2>/dev/null)/.claude/hooks/sync-default-branch.sh\"; [ -x \"$s\" ] && exec \"$s\" || exit 0",
+            "statusMessage": "Syncing the default branch",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "s=\"$(git rev-parse --show-toplevel 2>/dev/null)/.claude/hooks/guard-default-branch.sh\"; [ -x \"$s\" ] && exec \"$s\" || exit 0",
+            "statusMessage": "Checking the branch",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
