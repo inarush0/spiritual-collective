@@ -1,0 +1,168 @@
+---
+import Page from '../../../layouts/Page.astro';
+import SafetyNote from '../../../framing/SafetyNote.astro';
+import {
+	ACTION,
+	BELIEF_LINE,
+	PATH_BADGE,
+	PENDING_MARKER,
+	REFUSAL,
+} from '../../../framing/practice-view.js';
+import { loadCatalog, pendingIn, release } from '../../../catalog/index.js';
+
+/**
+ * The practice view, direct-user path.
+ *
+ * One page per practice this release publishes, so `/me/practice/<slug>/` is
+ * real for everything `/me/everything/` lists and a chaplain can link one
+ * directly. The whole record is here, in the fixed shape — what this involves,
+ * ways to change it, stop guidance, then the action — and **nothing starts on
+ * its own** (`docs/spec/01-journey-and-ia.md`).
+ *
+ * A withdrawn record is published by neither build, so it has no page here yet;
+ * its 200 "not available right now" page is its own ticket.
+ */
+export async function getStaticPaths() {
+	const practices = await loadCatalog();
+	return practices.map((practice) => ({
+		params: { slug: practice.id },
+		props: { practice },
+	}));
+}
+
+const { practice } = Astro.props;
+const record = practice.data;
+---
+
+<Page title={record.name}>
+	{
+		/*
+		 * The badge names the path. "Change who this is for" joins it when
+		 * arrival exists: a link to a page that is not built yet is worse than
+		 * a plain line — someone following a chaplain's link should always meet
+		 * a sentence and a way onward.
+		 */
+	}
+	<p class="badge">{PATH_BADGE}</p>
+
+	<h1>{record.name}</h1>
+	<p class="invitation">{record.invitation}</p>
+	{pendingIn(release, record.publication) && <p class="pending">{PENDING_MARKER}</p>}
+
+	{
+		/*
+		 * Provenance in plain language, never the seed material's author and
+		 * never a tradition endorsing this version; then what the practice asks
+		 * a reader to believe, before they are inside it rather than after.
+		 */
+	}
+	<p class="origin">{record.provenance.origin_line}</p>
+	<p class="belief">{BELIEF_LINE[record.belief_requirement]}</p>
+
+	<section>
+		<h2>What this involves</h2>
+		{/* The canonical sequence, as written. The same steps serve every path. */}
+		<ol>
+			{record.what_this_involves.map((step) => <li>{step}</li>)}
+		</ol>
+	</section>
+
+	<section>
+		<h2>Ways to change it</h2>
+		<p>{record.ways_to_change_it}</p>
+		<p class="smallest">The smallest version of this: {record.smallest_version}</p>
+	</section>
+
+	<section>
+		<h2>If you want to stop</h2>
+		<p>{record.stop_guidance}</p>
+		<SafetyNote />
+	</section>
+
+	<div class="choices">
+		{
+			/*
+			 * The action becomes the link to step one when the stepped view
+			 * lands. It is deliberately last and deliberately quiet: the record
+			 * above is readable in full first, and nothing here advances by
+			 * itself.
+			 */
+		}
+		<p class="action">{ACTION}</p>
+		{/* Refusal is visible, alongside the action rather than beneath it. */}
+		<p class="refusal"><a href="/me/everything/">{REFUSAL}</a></p>
+	</div>
+</Page>
+
+<style>
+	.badge {
+		margin: 0 0 1.5rem;
+		color: var(--quiet);
+		font-size: 0.875rem;
+	}
+
+	.invitation {
+		margin: 0 0 0.75rem;
+		font-size: 1.125rem;
+	}
+
+	.origin,
+	.belief,
+	.smallest {
+		color: var(--quiet);
+	}
+
+	.origin {
+		margin: 0 0 0.25rem;
+	}
+
+	.belief {
+		margin: 0 0 2rem;
+	}
+
+	.pending {
+		margin: 0 0 0.75rem;
+		color: var(--quiet);
+		font-size: 0.875rem;
+	}
+
+	section {
+		margin: 0 0 2rem;
+	}
+
+	h2 {
+		font-size: 1.125rem;
+		margin: 0 0 0.5rem;
+	}
+
+	section p {
+		margin: 0 0 0.5rem;
+	}
+
+	ol {
+		margin: 0;
+		padding-left: 1.25rem;
+	}
+
+	li + li {
+		margin-top: 0.5rem;
+	}
+
+	/*
+	 * The two sit side by side above 26rem and stack below it, at the same
+	 * size either way: a refusal set in smaller type than the action is not a
+	 * visible refusal. No media query is needed for the 320px case.
+	 */
+	.choices {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 2rem;
+		margin: 2.5rem 0 0;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--rule);
+	}
+
+	.choices p {
+		margin: 0;
+	}
+</style>

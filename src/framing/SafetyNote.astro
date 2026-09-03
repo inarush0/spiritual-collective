@@ -1,0 +1,68 @@
+---
+import { CRISIS_LEAD, CRISIS_LINES, LIMITS_LINE } from './safety.js';
+
+/**
+ * The limits line, and the crisis pointer beside it.
+ *
+ * Placed once on the practice view, near the stop control
+ * (`docs/spec/03-safety-and-inclusion.md`). Not on a suggestion set, and not in
+ * the footer: the only persistent chrome is the "What is this?" link.
+ *
+ * The two are visually distinct because they are answers to different
+ * questions. The limits line is for everyone reading; the pointer is for the
+ * one reader in trouble now, and every other reader should be able to pass it
+ * without being handed an emergency framing mid-stillness.
+ */
+---
+
+<p class="limits">{LIMITS_LINE}</p>
+
+{
+	/*
+	 * A named region, so the pointer is a landmark a screen-reader reader can be
+	 * sent to rather than prose they have to find inside the stop section
+	 * (docs/spec/04-accessibility.md).
+	 */
+}
+<aside class="crisis" aria-label={CRISIS_LEAD}>
+	<p class="crisis-lead">{CRISIS_LEAD}</p>
+	{
+		CRISIS_LINES.map((line) => (
+			<p>
+				{line.before}
+				{line.number &&
+					(line.tel ? <a href={`tel:${line.tel}`}>{line.number}</a> : <span>{line.number}</span>)}
+				{line.after}
+			</p>
+		))
+	}
+</aside>
+
+<style>
+	.limits {
+		color: var(--quiet);
+		margin: 1.25rem 0 0;
+	}
+
+	/*
+	 * Bordered rather than coloured: the distinction has to survive a 200%
+	 * zoom, a monochrome screen, and forced colours, and it may not read as a
+	 * warning about the practice it sits under (docs/spec/04-accessibility.md).
+	 */
+	.crisis {
+		margin: 1rem 0 0;
+		padding: 0.75rem 1rem;
+		border: 1px solid var(--rule);
+		border-left: 4px solid var(--ink);
+		border-radius: 0.25rem;
+	}
+
+	.crisis p {
+		margin: 0.5rem 0 0;
+	}
+
+	.crisis-lead {
+		margin: 0;
+		font-weight: 600;
+	}
+</style>

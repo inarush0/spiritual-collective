@@ -1,50 +1,26 @@
-import { execFileSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-
-const ROOT = join(import.meta.dirname, '..');
-
-/** Builds into a throwaway directory so the tests never race `dist/`. */
-function build(release: string | undefined): string {
-	const outDir = mkdtempSync(join(tmpdir(), `catalog-${release ?? 'default'}-`));
-	execFileSync('node', ['node_modules/astro/bin/astro.mjs', 'build', '--outDir', outDir], {
-		cwd: ROOT,
-		env: {
-			...process.env,
-			ASTRO_TELEMETRY_DISABLED: '1',
-			...(release ? { SITE_BUILD: release } : { SITE_BUILD: '' }),
-		},
-		stdio: 'pipe',
-	});
-	return outDir;
-}
+import { PENDING_MARKER } from '../src/framing/practice-view.js';
+import { build, buildBothReleases, pageAt, plainText, ROOT } from './support/build.js';
 
 /** Practice names in the order they appear in the page. */
 function names(html: string): string[] {
-	return [...html.matchAll(/<h2[^>]*>(.*?)<\/h2>/g)].map((match) =>
-		match[1]!.replace(/&#39;/g, "'").replace(/<[^>]+>/g, ''),
-	);
+	return [...html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/g)].map((match) => plainText(match[1]!));
 }
 
-let production: string;
-let beta: string;
+let cleanUp: () => void;
 let productionHtml: string;
 let betaHtml: string;
 
 beforeAll(() => {
-	production = build(undefined);
-	beta = build('beta');
-	productionHtml = readFileSync(join(production, 'me', 'everything', 'index.html'), 'utf8');
-	betaHtml = readFileSync(join(beta, 'me', 'everything', 'index.html'), 'utf8');
+	const { builds, cleanUp: teardown } = buildBothReleases();
+	cleanUp = teardown;
+	productionHtml = pageAt(builds.production, '/me/everything/');
+	betaHtml = pageAt(builds.beta, '/me/everything/');
 });
 
-afterAll(() => {
-	for (const dir of [production, beta]) {
-		if (dir) rmSync(dir, { recursive: true, force: true });
-	}
-});
+afterAll(() => cleanUp?.());
 
 describe('/me/everything/', () => {
 	it('is prerendered as a real page at a real URL', () => {
@@ -65,7 +41,7 @@ describe('one environment variable selects the build', () => {
 	it('includes pending records on beta', () => {
 		expect(names(betaHtml)).toContain('Saying the hard thing');
 		expect(betaHtml).toContain('beta — for review');
-		expect(betaHtml).toContain('in review — not approved yet');
+		expect(betaHtml).toContain(PENDING_MARKER);
 	});
 
 	it('excludes every record that is not approved from production', () => {
@@ -76,7 +52,7 @@ describe('one environment variable selects the build', () => {
 		]);
 		// No review bar and no pending markers: production is not a review surface.
 		expect(productionHtml).not.toContain('beta — for review');
-		expect(productionHtml).not.toContain('in review — not approved yet');
+		expect(productionHtml).not.toContain(PENDING_MARKER);
 	});
 
 	it('refuses to build against a release it does not recognise', () => {

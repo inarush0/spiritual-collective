@@ -55,6 +55,7 @@ permissive release is the one you have to ask for.
 ```
 content/practices/     practice records, one file per record
 src/catalog/           the schema, the fixed editorial order, and the build filter
+src/framing/           framing-surface wording: the limits line, the crisis pointer
 src/gates/             the checks behind `npm run gates`
 src/pages/             one prerendered page per route in the spec's route table
 scripts/gates.ts       the gate command itself
