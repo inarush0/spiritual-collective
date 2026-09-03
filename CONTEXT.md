@@ -120,6 +120,22 @@ _Avoid_: Major edit, rewrite
 The immediate removal of one published practice from the resource, available without approval because leaving harmful content up is the greater risk.
 _Avoid_: Rollback, delete, unpublish, when the whole site rather than one practice is meant
 
+**Release criteria**:
+The binary checklist of observable acts, each owned by a role and leaving one locatable artifact, that must all pass before the resource may go to production, holding the release when unmet and never lapsing into met.
+_Avoid_: Quality bar, definition of done, score, threshold
+
+**Handoff rehearsal**:
+The chaplain reviewer's single walk through the resource on their own phone, saying aloud what they would say while handing it over, ending in a stated yes or no on whether they would actually do it — the act that record-by-record approval is not.
+_Avoid_: Demo, walkthrough, final review
+
+**Conditions walkthrough**:
+The run of the resource against the physical conditions of the care setting, listed by the chaplain reviewer because only they have been in the rooms, asking whether the resource survives the room rather than whether anyone would offer it.
+_Avoid_: Device testing, QA pass, and any merging with the handoff rehearsal
+
+**Adversarial read**:
+The editor's pass over every practice and framing surface read as the person each one is most likely to hurt, recorded as a finding or an explicit nothing-found, asking who this hurts rather than whether it is safe.
+_Avoid_: Safety review, red team, and any substitution for the chaplain's attestation
+
 **Seed material**:
 The two authorized source documents whose spiritual-practice framework and definitions may be adapted, challenged, or omitted without public attribution to their author.
 _Avoid_: Canonical content, approved content
