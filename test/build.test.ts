@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -84,39 +84,8 @@ describe('one environment variable selects the build', () => {
 	});
 });
 
-describe('the weight budget', () => {
-	const files = (dir: string): string[] =>
-		readdirSync(dir, { recursive: true, withFileTypes: true })
-			.filter((entry) => entry.isFile())
-			.map((entry) => join(entry.parentPath, entry.name));
-
-	it('ships no client JavaScript', () => {
-		for (const html of [productionHtml, betaHtml]) {
-			expect(html).not.toMatch(/<script/i);
-		}
-		expect(files(production).filter((file) => file.endsWith('.js'))).toEqual([]);
-	});
-
-	it('makes no request to any third-party origin', () => {
-		for (const html of [productionHtml, betaHtml]) {
-			// Any absolute URL in the markup is a second origin, since the whole
-			// site is served from one. Catches CDNs, web fonts, and embeds.
-			expect(html).not.toMatch(/(?:src|href)\s*=\s*["'](?:https?:)?\/\//i);
-			expect(html).not.toMatch(/@import|url\(\s*["']?https?:/i);
-		}
-	});
-
-	it('ships no raster images', () => {
-		expect(
-			files(production).filter((file) => /\.(png|jpe?g|gif|webp|avif)$/i.test(file)),
-		).toEqual([]);
-	});
-
-	it('stays under 100 KB transferred per page', () => {
-		expect(Buffer.byteLength(productionHtml)).toBeLessThan(100 * 1024);
-		expect(Buffer.byteLength(betaHtml)).toBeLessThan(100 * 1024);
-	});
-});
+// The weight budget and the third-party assertion live in `npm run gates` now:
+// every page rather than this one, both releases, and the same command CI runs.
 
 describe('the schema is the enforcement point for field completeness', () => {
 	// The loader globs the real content directory, so proving the schema is
@@ -124,10 +93,17 @@ describe('the schema is the enforcement point for field completeness', () => {
 	// `finally` and again in `afterAll`, so a failing assertion never leaves a
 	// governed content file behind.
 	const stray = join(ROOT, 'content', 'practices', 'remembering-someone.md');
+	let wrote = false;
 
-	afterAll(() => rmSync(stray, { force: true }));
+	afterAll(() => {
+		if (wrote) rmSync(stray, { force: true });
+	});
 
 	it('fails the build on a record missing a field', () => {
+		// That slot will hold a real, approved record one day. The cleanup below
+		// removes only what this test wrote, and only if it wrote it.
+		expect(existsSync(stray), `${stray} already exists — pick an unused slot`).toBe(false);
+		wrote = true;
 		writeFileSync(
 			stray,
 			['---', 'name: A record with almost nothing in it', 'publication: in-review', '---', ''].join(
