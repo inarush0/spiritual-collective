@@ -83,3 +83,15 @@ _Avoid_: Rollback, delete, unpublish, when the whole site rather than one practi
 **Seed material**:
 The two authorized source documents whose spiritual-practice framework and definitions may be adapted, challenged, or omitted without public attribution to their author.
 _Avoid_: Canonical content, approved content
+
+**Framing surface**:
+Any user-facing wording that surrounds the practices rather than describing one, which the chaplain reviewer must approve but which carries no per-record evidence.
+_Avoid_: Chrome, boilerplate, static copy
+
+**About page**:
+The single path-neutral page holding what the resource is, who made it, how it is reviewed, what it will not do, and what it does not collect, reachable from every screen and never met before the arrival question.
+_Avoid_: Homepage, landing page, privacy policy
+
+**Crisis pointer**:
+The wording that names the people already caring for someone in immediate difficulty, placed only where distress is most likely rather than carried on every screen.
+_Avoid_: Disclaimer, emergency banner, hotline list
