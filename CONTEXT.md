@@ -36,6 +36,18 @@ _Avoid_: Duration, minimum time, quick option
 An adolescent receiving pediatric hospice or palliative care, or an adult family member, who explores the resource independently or alongside a chaplain.
 _Avoid_: Patient, when the intended group also includes family members
 
+**Companion**:
+Someone using the resource on behalf of another person rather than for themselves, who is offered the same practices with notes on being alongside, and who is never told a practice suits a particular person.
+_Avoid_: Caregiver, parent, proxy user
+
+**Audience path**:
+Which of the three ways through the resource a visitor is on — for themselves, alongside someone, or caring for a younger child — chosen by answering the arrival question, changing only what is shown and never recorded about the person.
+_Avoid_: Role, user type, profile, segment
+
+**Standing guide**:
+The single page addressed to a companion rather than to the person doing a practice, holding how to offer and how to adapt, and the statement that the resource cannot say which practice suits which age.
+_Avoid_: Help page, parent guide, instructions
+
 **Chaplain reviewer**:
 The single chaplain who holds the veto on publishing any user-facing wording, and whose approval no one may overrule or grant on their behalf.
 _Avoid_: Administrator, author, owner of the catalog
