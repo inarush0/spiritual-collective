@@ -56,6 +56,26 @@ _Avoid_: Role, user type, profile, segment
 The single page addressed to a companion rather than to the person doing a practice, holding how to offer and how to adapt, and the statement that the resource cannot say which practice suits which age.
 _Avoid_: Help page, parent guide, instructions
 
+**Guide record**:
+The reviewable, promotable unit holding the standing guide, governed at the same strength as a practice record while carrying none of a practice's facets, so that the page a companion is sent to first can be approved, versioned, and withdrawn like everything else user-facing.
+_Avoid_: Framing surface, static page, and any use for the page a visitor meets rather than the unit that is approved
+
+**Adaptation fields**:
+The fields carried by every practice record that say how the practice changes for someone alongside another person or for a younger child, which may only subtract from or soften what the practice already asks and may never add an instruction the practice does not contain.
+_Avoid_: Variations, alternatives, modifications, and any framing that lets an adaptation introduce something new
+
+**Companion note**:
+The adaptation field saying how to be alongside one particular person doing one particular practice.
+_Avoid_: Tips, caregiver instructions
+
+**Companion cautions**:
+The adaptation field naming what not to do while alongside someone in a practice, held apart from the companion note because negative guidance is the part most easily left unwritten and most consequential when missing.
+_Avoid_: Warnings, don'ts, and folding it back into the companion note
+
+**Child keep** / **Child change**:
+The paired adaptation fields for a younger child, one naming what survives the adaptation and one naming what gives way, required together so that an adaptation never reads as a correction.
+_Avoid_: Age guidance, child version, and any wording implying the practice suits a particular age
+
 **Chaplain reviewer**:
 The single chaplain who holds the veto on publishing any user-facing wording, and whose approval no one may overrule or grant on their behalf.
 _Avoid_: Administrator, author, owner of the catalog
