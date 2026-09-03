@@ -131,3 +131,15 @@ _Avoid_: Homepage, landing page, privacy policy
 **Crisis pointer**:
 The wording that names the people already caring for someone in immediate difficulty, placed only where distress is most likely rather than carried on every screen.
 _Avoid_: Disclaimer, emergency banner, hotline list
+
+**Accountability channel**:
+The public, nonurgent email address through which someone can report that published material is wrong, unsafe, or caused harm, monitored for product-safety action rather than support or pastoral care.
+_Avoid_: Contact us, support inbox, pastoral-care mailbox
+
+**Harm report**:
+A message through the resource's accountability channel saying that something published is wrong, unsafe, or caused harm, handled as product-safety input rather than a request for support or pastoral care.
+_Avoid_: Feedback, support request, complaint
+
+**Incident record**:
+The sanitized operational record of a harm report, containing only when it arrived, the affected practice record or framing surface, its classification, the action taken, and its status, without the reporter's identity or message text.
+_Avoid_: Case file, user record, copying the email
