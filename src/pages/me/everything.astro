@@ -1,6 +1,7 @@
 ---
 import Page from '../../layouts/Page.astro';
 import { loadCatalog, pendingIn, release } from '../../catalog/index.js';
+import { PENDING_MARKER } from '../../framing/practice-view.js';
 
 // The whole catalog, in the fixed editorial order. `loadCatalog` applies the
 // build's publication filter and the order; this page picks neither.
@@ -18,15 +19,15 @@ const practices = await loadCatalog();
 			practices.map((practice) => (
 				<li>
 					{/*
-					 * Not yet a link: /me/practice/<slug>/ does not exist until the
-					 * practice view ships. A dead link is worse than a plain line —
-					 * someone following a chaplain's link should always meet a
-					 * sentence and a way onward.
+					 * Every practice this build publishes has a page, so nothing
+					 * listed here is a dead link.
 					 */}
-					<h2>{practice.data.name}</h2>
+					<h2>
+						<a href={`/me/practice/${practice.id}/`}>{practice.data.name}</a>
+					</h2>
 					<p>{practice.data.invitation}</p>
 					{pendingIn(release, practice.data.publication) && (
-						<p class="pending">in review — not approved yet</p>
+						<p class="pending">{PENDING_MARKER}</p>
 					)}
 				</li>
 			))
