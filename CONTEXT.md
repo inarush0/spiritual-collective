@@ -21,12 +21,20 @@ The fixed set of practice-record fields plus the plain-language checklist that e
 _Avoid_: Style guide, template
 
 **Need tag**:
-A state a person may recognize in themselves, carried by every practice record so that practices can be found by what someone is living through rather than by what kind of practice they are.
-_Avoid_: Mood, symptom, goal
+Something a person may want right now, carried by every practice record and offered verbatim as an answer to the discovery question, so that practices can be found by what someone is reaching for rather than by what kind of practice they are.
+_Avoid_: Mood, symptom, goal, and any phrasing that names a state the person is in rather than something they want
 
 **Suggestion set**:
 The small group of practices offered in response to one answer to the discovery question, unranked and fixed editorially rather than computed per visitor, offered as a starting point rather than a result about the person.
 _Avoid_: Results, matches, recommendations
+
+**Set tail**:
+The short list of practices carried below every suggestion set and named as not matching what the person chose, present at the same size on every such screen so that the page never reveals how well-stocked an answer was.
+_Avoid_: More results, related practices, you might also like
+
+**Low-energy variant**:
+The reachable-from-anywhere alternative offered when someone has almost nothing to give, holding only practices that work lying down with eyes closed, and offered on every suggestion set whether or not the chosen answer has any behind it.
+_Avoid_: Easy mode, short version, accessible option
 
 **Smallest version**:
 The least a person can do and still have done the practice, offered so that nothing carries a duration target or completion pressure.
