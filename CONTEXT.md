@@ -40,6 +40,10 @@ _Avoid_: Easy mode, short version, accessible option
 The least a person can do and still have done the practice, offered so that nothing carries a duration target or completion pressure.
 _Avoid_: Duration, minimum time, quick option
 
+**Stepped view**:
+The user-advanced, one-step-at-a-time rendering of a practice entered after someone chooses to try or offer it; on a companion path, its framing addresses the companion while each canonical step remains addressed to the person doing the practice.
+_Avoid_: Guided session, player, completion flow
+
 **Direct user**:
 An adolescent receiving pediatric hospice or palliative care, or an adult family member, who explores the resource independently or alongside a chaplain.
 _Avoid_: Patient, when the intended group also includes family members
