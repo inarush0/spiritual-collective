@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PROTOTYPE — practice-discovery journey (issue #6)</title>
+    <!--
+      THROWAWAY PROTOTYPE. Not production code, not reviewed content.
+      Question (wayfinder ticket #6): what self-guided journey best moves a distressed or fatigued
+      direct user from a shared link to gently trying one fitting practice, without feeling
+      assessed, categorized, pressured, or overwhelmed?
+
+      Three variants of the whole journey (landing -> choosing -> practice), switchable via
+      ?variant=A|B|C (or #A|#B|#C on file://), plus a floating switcher bar.
+        A — Open shelf: everything visible at once, optional filter chips, no questions.
+        B — One gentle question at a time: a short invitation flow that narrows to a few options.
+        C — One offering at a time: a single suggested practice, swap or widen on request.
+
+      Practice copy is placeholder drafting only. It follows the constraints from
+      "Establish pediatric spiritual-care safety guardrails" (#2) and
+      "Audit the seed framework for inclusion and faithful attribution" (#11):
+      Class A / low-risk only, eyes-open options, tradition labels up front, no outcome claims,
+      no timers, refusal always visible. It has had NO chaplain, tradition, or clinical review.
+    -->
+    <style>
+      :root {
+        --ink: #22303c;
+        --ink-soft: #4a5a67;
+        --line: #d9e0e4;
+        --bg: #f7f5f1;
+        --card: #fffdfa;
+        --accent: #3d6b6a;
+        --accent-soft: #e6efee;
+        --focus: #1c4f7c;
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        padding: 0 0 6.5rem;
+        background: var(--bg);
+        color: var(--ink);
+        font: 1.0625rem/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      main { max-width: 44rem; margin: 0 auto; padding: 1.5rem 1.25rem 0; }
+      h1 { font-size: 1.5rem; line-height: 1.3; margin: 0 0 0.5rem; font-weight: 600; }
+      h2 { font-size: 1.2rem; line-height: 1.35; margin: 2rem 0 0.5rem; font-weight: 600; }
+      h3 { font-size: 1.05rem; margin: 0 0 0.35rem; font-weight: 600; }
+      p { margin: 0 0 0.9rem; }
+      .lede { color: var(--ink-soft); }
+      .small { font-size: 0.9375rem; color: var(--ink-soft); }
+      :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+
+      button { font: inherit; cursor: pointer; }
+      .btn {
+        display: inline-block;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        border-radius: 999px;
+        padding: 0.7rem 1.25rem;
+        min-height: 2.75rem;
+        text-align: left;
+      }
+      .btn.secondary { background: transparent; color: var(--accent); }
+      .btn.quiet {
+        background: transparent;
+        color: var(--ink-soft);
+        border-color: var(--line);
+      }
+      .row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1rem 0; }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
+        margin: 0 0 0.85rem;
+        width: 100%;
+        text-align: left;
+        color: inherit;
+        display: block;
+      }
+      button.card:hover { border-color: var(--accent); }
+      .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+      .tag {
+        font-size: 0.8125rem;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink-soft);
+        border-radius: 999px;
+        padding: 0.15rem 0.6rem;
+      }
+      .tag.tradition { background: var(--accent-soft); border-color: #c6dbda; color: #234d4c; }
+
+      .chip {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 0.45rem 0.9rem;
+        min-height: 2.5rem;
+      }
+      .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.1rem 1.2rem;
+        margin: 0 0 1rem;
+      }
+      .panel h3 { margin-top: 0; }
+      ul { margin: 0 0 0.9rem; padding-left: 1.2rem; }
+      li { margin-bottom: 0.35rem; }
+
+      .exit { margin: 1.5rem 0 0; }
+      .boundary {
+        max-width: 44rem;
+        margin: 2.5rem auto 0;
+        padding: 1rem 1.25rem;
+        border-top: 1px solid var(--line);
+        font-size: 0.9375rem;
+        color: var(--ink-soft);
+      }
+
+      /* Prototype switcher — deliberately not part of the design under evaluation. */
+      .switcher {
+        position: fixed;
+        left: 50%;
+        bottom: 1rem;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #16202a;
+        color: #fff;
+        border-radius: 999px;
+        padding: 0.4rem 0.5rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+        z-index: 50;
+        font-size: 0.9375rem;
+      }
+      .switcher button {
+        background: #2c3a47;
+        color: #fff;
+        border: 0;
+        border-radius: 999px;
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1.1rem;
+      }
+      .switcher .label { padding: 0 0.5rem; white-space: nowrap; }
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="app"></main>
+    <footer class="boundary">
+      <p>
+        This is a place to explore, not medical, mental-health, or crisis care. For anything about
+        symptoms, medicines, or equipment, talk with your care team. If you are struggling
+        emotionally or thinking about suicide, call or text <strong>988</strong>. In an emergency,
+        call <strong>911</strong>.
+      </p>
+      <p><strong>Prototype only.</strong> Placeholder wording; not reviewed by a chaplain or clinician.</p>
+    </footer>
+    <div class="switcher" role="group" aria-label="Prototype variant switcher">
+      <button type="button" id="prev" aria-label="Previous variant">&#8592;</button>
+      <span class="label" id="variant-label"></span>
+      <button type="button" id="next" aria-label="Next variant">&#8594;</button>
+    </div>
+
+    <script>
+      // ---------------------------------------------------------------------
+      // Placeholder practice records. Class A (low-risk candidates) only.
+      // ---------------------------------------------------------------------
+      const PRACTICES = [
+        {
+          id: "word",
+          title: "Sit with one word",
+          blurb: "Pick a word that feels true right now and keep it nearby.",
+          tradition: null,
+          pathways: ["contemplative"],
+          needs: ["rest", "meaning"],
+          energy: "very low",
+          time: "1–3 minutes",
+          involves: [
+            "Reading a short list of words and choosing one, or writing your own.",
+            "Keeping it in mind, saying it, or leaving it on the screen. Eyes open the whole time.",
+          ],
+          adapt: [
+            "Someone can read the words aloud to you.",
+            "Any word is allowed, including “tired”, “angry”, or “I don’t know”.",
+          ],
+          stop: "Stop any time. Nothing needs to be finished.",
+        },
+        {
+          id: "notice",
+          title: "Notice one thing in the room",
+          blurb: "Rest your attention on something outside you for a moment.",
+          tradition: null,
+          pathways: ["contemplative", "embodied"],
+          needs: ["rest"],
+          energy: "very low",
+          time: "1–2 minutes",
+          involves: [
+            "Choosing something you can already see or hear — a window, a light, a sound.",
+            "Looking at it for as long as you like. No breathing instructions.",
+          ],
+          adapt: [
+            "Works lying down, with eyes open, and with any amount of movement or none.",
+            "If you can’t see it, someone can describe something instead.",
+          ],
+          stop: "If it becomes uncomfortable, stop and look at whatever you want.",
+        },
+        {
+          id: "lament",
+          title: "Say what is hard",
+          blurb: "Anger, fear, and “this is not fair” belong here too.",
+          tradition: null,
+          pathways: ["contemplative", "devotional"],
+          needs: ["grief", "meaning"],
+          energy: "low",
+          time: "2–5 minutes",
+          involves: [
+            "Naming, out loud or silently, something that is hard right now.",
+            "Nothing is typed, saved, or sent anywhere.",
+          ],
+          adapt: [
+            "You can say it to a person, to God, to no one, or into the air.",
+            "You do not have to find a bright side or feel better afterwards.",
+          ],
+          stop: "Stop whenever you want. You can also skip straight to asking someone to sit with you.",
+        },
+        {
+          id: "lectio",
+          title: "Read a short passage slowly (Lectio Divina)",
+          blurb: "A Christian way of reading a few lines slowly and staying with one phrase.",
+          tradition: "From Christian contemplative traditions",
+          pathways: ["contemplative", "devotional"],
+          needs: ["meaning"],
+          energy: "low",
+          time: "3–6 minutes",
+          involves: [
+            "Reading a few lines of text, then reading them again slowly.",
+            "Staying with one phrase that stands out, if any does.",
+          ],
+          adapt: [
+            "You can use it as a reading practice without praying.",
+            "A nonreligious poem version is available.",
+          ],
+          stop: "Close it any time. There is no right phrase and no wrong reaction.",
+        },
+        {
+          id: "beads",
+          title: "Hold prayer beads",
+          blurb: "Many traditions use beads; the words and meaning differ in each one.",
+          tradition: "Used differently across Catholic, Orthodox, Muslim, Hindu, and Buddhist traditions",
+          pathways: ["devotional", "embodied"],
+          needs: ["meaning"],
+          energy: "low",
+          time: "3–10 minutes",
+          involves: [
+            "Moving through beads you already have, one at a time, with words from your own tradition.",
+            "We describe forms; we do not teach one tradition’s prayers as if they fit everyone.",
+          ],
+          adapt: [
+            "No beads: use fingers, a folded cloth, or the on-screen counter.",
+            "Ask your own faith leader or the chaplain for the form your tradition uses.",
+          ],
+          stop: "Put them down whenever you like; there is no required number.",
+        },
+        {
+          id: "song",
+          title: "Play a song that means something",
+          blurb: "You choose the song, the volume, and when it stops.",
+          tradition: null,
+          pathways: ["embodied", "devotional"],
+          needs: ["grief", "connection", "rest"],
+          energy: "very low",
+          time: "as long as you like",
+          involves: [
+            "Choosing a song on your own device. Nothing plays automatically here.",
+            "Listening, or having it on while someone sits with you.",
+          ],
+          adapt: [
+            "Captions or lyrics instead of audio.",
+            "Silence is also a fine answer.",
+          ],
+          stop: "Stop the song at any point, including partway through.",
+        },
+        {
+          id: "note",
+          title: "Send a few words to someone",
+          blurb: "Small and unfinished is enough.",
+          tradition: null,
+          pathways: ["service", "devotional"],
+          needs: ["connection", "meaning"],
+          energy: "low",
+          time: "2–10 minutes",
+          involves: [
+            "Thinking of one person and what you would want them to know.",
+            "Writing, recording, drawing, or asking someone to write it for you.",
+          ],
+          adapt: [
+            "It can be one word. It does not have to be sent.",
+            "Someone else can do the writing while you talk.",
+          ],
+          stop: "You can leave it unfinished, or not start.",
+        },
+        {
+          id: "company",
+          title: "Ask someone to sit with you",
+          blurb: "Receiving care counts as much as doing something.",
+          tradition: null,
+          pathways: ["service", "contemplative"],
+          needs: ["connection", "rest"],
+          energy: "none needed",
+          time: "however long you want",
+          involves: [
+            "Deciding who you would like nearby — family, a friend, a nurse, the chaplain.",
+            "Asking them, in your own words, to stay for a while. Talking is optional.",
+          ],
+          adapt: [
+            "Someone can ask for you.",
+            "“Company without talking” is a normal thing to ask for.",
+          ],
+          stop: "You can change your mind and ask for quiet instead.",
+        },
+        {
+          id: "chaplain",
+          title: "Talk with a chaplain or your own faith leader",
+          blurb: "For anything specific to your tradition, or nothing in particular.",
+          tradition: null,
+          pathways: ["devotional", "service"],
+          needs: ["connection", "meaning", "grief"],
+          energy: "none needed",
+          time: "up to you",
+          involves: [
+            "Asking your care team to contact the chaplain, or contacting your own community leader.",
+            "You do not need a reason, a belief, or a question ready.",
+          ],
+          adapt: [
+            "Phone, video, or in person.",
+            "You can ask for someone of your own tradition, or someone of none.",
+          ],
+          stop: "You can end the conversation whenever you want.",
+        },
+      ];
+
+      const PATHWAY_LABELS = {
+        contemplative: "Quiet / contemplative",
+        devotional: "Prayer / devotional",
+        embodied: "Creative / embodied",
+        service: "With others / caring",
+      };
+      const NEED_LABELS = {
+        rest: "Rest, nothing to achieve",
+        grief: "Grief, anger, or fear",
+        connection: "Company or connection",
+        meaning: "Meaning or memory",
+      };
+
+      const byId = (id) => PRACTICES.find((p) => p.id === id);
+
+      // ---------------------------------------------------------------------
+      // Shared bits (deliberately minimal — variants own their own layout)
+      // ---------------------------------------------------------------------
+      function el(tag, attrs = {}, ...kids) {
+        const node = document.createElement(tag);
+        for (const [k, v] of Object.entries(attrs)) {
+          if (k === "class") node.className = v;
+          else if (k === "text") node.textContent = v;
+          else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+          else if (v !== null && v !== false) node.setAttribute(k, v);
+        }
+        for (const kid of kids) if (kid) node.append(kid);
+        return node;
+      }
+
+      function tagList(p, extra = []) {
+        const wrap = el("div", { class: "tags" });
+        if (p.tradition) wrap.append(el("span", { class: "tag tradition", text: p.tradition }));
+        else wrap.append(el("span", { class: "tag", text: "No religion needed" }));
+        wrap.append(el("span", { class: "tag", text: p.time }));
+        wrap.append(el("span", { class: "tag", text: "Energy: " + p.energy }));
+        for (const t of extra) wrap.append(el("span", { class: "tag", text: t }));
+        return wrap;
+      }
+
+      // The practice view. Each variant frames the way *back* differently, so the
+      // exits are passed in rather than baked in.
+      function practiceView(p, exits) {
+        const frag = document.createDocumentFragment();
+        frag.append(el("h1", { text: p.title }));
+        frag.append(el("p", { class: "lede", text: p.blurb }));
+        frag.append(tagList(p));
+
+        const involves = el("section", { class: "panel" }, el("h3", { text: "What this involves" }));
+        const ul = el("ul");
+        for (const line of p.involves) ul.append(el("li", { text: line }));
+        involves.append(ul);
+        involves.append(
+          el("p", { class: "small", text: "You can read all of this before deciding. Nothing starts on its own." })
+        );
+        frag.append(involves);
+
+        const adapt = el("section", { class: "panel" }, el("h3", { text: "Ways to change it" }));
+        const ul2 = el("ul");
+        for (const line of p.adapt) ul2.append(el("li", { text: line }));
+        adapt.append(ul2);
+        adapt.append(el("p", { class: "small", text: p.stop }));
+        frag.append(adapt);
+
+        const row = el("div", { class: "row" });
+        row.append(el("button", { class: "btn", type: "button", text: "I’ll try this", onclick: () => alert("Prototype: the practice itself would open here, at your own pace, with no timer.") }));
+        for (const exit of exits) {
+          row.append(
+            el("button", {
+              class: "btn " + (exit.tone || "quiet"),
+              type: "button",
+              text: exit.label,
+              onclick: exit.onClick,
+            })
+          );
+        }
+        frag.append(row);
+        return frag;
+      }
+
+      // ---------------------------------------------------------------------
+      // Variant A — Open shelf.
+      // No questions at all. Everything is on the page from the first second;
+      // optional chips filter in place. Primary affordance: browse and pick.
+      // ---------------------------------------------------------------------
+      const VariantA = {
+        name: "Open shelf",
+        state: { filters: new Set(), open: null },
+        render(root) {
+          const s = VariantA.state;
+          if (s.open) {
+            root.append(
+              practiceView(byId(s.open), [
+                { label: "Not for me — back to the list", onClick: () => { s.open = null; render(); } },
+              ])
+            );
+            return;
+          }
+
+          root.append(el("h1", { text: "Things you could try" }));
+          root.append(
+            el("p", {
+              class: "lede",
+              text: "Everything is here. Nothing is recommended for you, and nothing is expected. Look, or close this page.",
+            })
+          );
+
+          const chips = el("div", { class: "row", role: "group", "aria-label": "Optional filters" });
+          const options = [
+            ...Object.entries(NEED_LABELS),
+            ["very low", "Very little energy"],
+            ["short", "A couple of minutes"],
+            ["nonreligious", "No religion involved"],
+          ];
+          for (const [key, label] of options) {
+            chips.append(
+              el("button", {
+                class: "chip",
+                type: "button",
+                "aria-pressed": s.filters.has(key) ? "true" : "false",
+                text: label,
+                onclick: () => {
+                  s.filters.has(key) ? s.filters.delete(key) : s.filters.add(key);
+                  render();
+                },
+              })
+            );
+          }
+          if (s.filters.size) {
+            chips.append(
+              el("button", { class: "btn quiet", type: "button", text: "Clear", onclick: () => { s.filters.clear(); render(); } })
+            );
+          }
+          root.append(chips);
+
+          const matches = PRACTICES.filter((p) => {
+            for (const f of s.filters) {
+              if (f === "very low" && !["very low", "none needed"].includes(p.energy)) return false;
+              else if (f === "short" && !/^[12]/.test(p.time)) return false;
+              else if (f === "nonreligious" && p.tradition) return false;
+              else if (NEED_LABELS[f] && !p.needs.includes(f)) return false;
+            }
+            return true;
+          });
+
+          root.append(
+            el("p", { class: "small", text: matches.length + " of " + PRACTICES.length + " shown. Filters are just a view — nothing is hidden from you permanently." })
+          );
+
+          for (const p of matches) {
+            const card = el("button", { class: "card", type: "button", onclick: () => { VariantA.state.open = p.id; render(); } });
+            card.append(el("h3", { text: p.title }));
+            card.append(el("p", { class: "small", text: p.blurb }));
+            card.append(tagList(p));
+            root.append(card);
+          }
+          if (!matches.length) {
+            root.append(el("p", { text: "Nothing matches all of those together. Try removing one." }));
+          }
+        },
+      };
+
+      // ---------------------------------------------------------------------
+      // Variant B — One gentle question at a time.
+      // A short, skippable invitation flow (never an assessment) that narrows to
+      // a handful. Every step offers "I'm not sure", "Show me everything", and
+      // "Nothing right now". Primary affordance: answer or skip.
+      // ---------------------------------------------------------------------
+      const VariantB = {
+        name: "One gentle question",
+        state: { step: "need", need: null, energy: null, open: null, showAll: false },
+        render(root) {
+          const s = VariantB.state;
+
+          const escapes = (extra = []) =>
+            el(
+              "div",
+              { class: "row" },
+              ...extra,
+              el("button", { class: "btn quiet", type: "button", text: "Show me everything", onclick: () => { s.showAll = true; s.step = "list"; render(); } }),
+              el("button", { class: "btn quiet", type: "button", text: "Nothing right now", onclick: () => { s.step = "nothing"; render(); } })
+            );
+
+          if (s.open) {
+            root.append(
+              practiceView(byId(s.open), [
+                { label: "Show me a different one", onClick: () => { s.open = null; s.step = "list"; render(); } },
+                { label: "Start over", onClick: () => { Object.assign(s, { step: "need", need: null, energy: null, open: null, showAll: false }); render(); } },
+              ])
+            );
+            return;
+          }
+
+          if (s.step === "need") {
+            // The arrival moment *is* the first question — no doorstep, no "begin" button.
+            root.append(el("h1", { text: "What might support you right now?" }));
+            root.append(
+              el("p", { class: "lede", text: "Someone shared this page with you. There is no right answer, you can change it whenever, and nothing you pick is saved." })
+            );
+            const row = el("div", { class: "row" });
+            for (const [key, label] of Object.entries(NEED_LABELS)) {
+              row.append(el("button", { class: "btn secondary", type: "button", text: label, onclick: () => { s.need = key; s.step = "list"; render(); } }));
+            }
+            row.append(el("button", { class: "btn quiet", type: "button", text: "I’m not sure", onclick: () => { s.need = null; s.step = "list"; render(); } }));
+            root.append(row);
+            root.append(escapes());
+            return;
+          }
+
+          if (s.step === "nothing") {
+            root.append(el("h1", { text: "That’s completely fine" }));
+            root.append(el("p", { class: "lede", text: "You can close this page. It will be the same whenever you come back, and nobody is told whether you opened it." }));
+            root.append(
+              el("div", { class: "row" },
+                el("button", { class: "btn quiet", type: "button", text: "Actually, show me the list", onclick: () => { s.showAll = true; s.step = "list"; render(); } })
+              )
+            );
+            return;
+          }
+
+          // list
+          let matches = PRACTICES;
+          if (s.energy === "low") matches = matches.filter((p) => ["very low", "none needed"].includes(p.energy));
+          if (!s.showAll) {
+            if (s.need) {
+              const byNeed = matches.filter((p) => p.needs.includes(s.need));
+              if (byNeed.length) matches = byNeed;
+            }
+            matches = matches.slice(0, 3);
+          }
+
+          root.append(el("h1", { text: s.showAll ? "Everything we have" : "A few you could try" }));
+          root.append(
+            el("p", {
+              class: "lede",
+              text: s.showAll
+                ? "In no particular order."
+                : "These are just a starting point, not a result about you. Your answers weren’t saved.",
+            })
+          );
+          // Energy was the second question; it is an adjustment here instead, so the
+          // only thing asked before something is offered is the one question.
+          root.append(
+            el("div", { class: "row" },
+              el("button", {
+                class: "chip",
+                type: "button",
+                "aria-pressed": s.energy === "low" ? "true" : "false",
+                text: "Only things that take almost no energy",
+                onclick: () => { s.energy = s.energy === "low" ? null : "low"; render(); },
+              })
+            )
+          );
+
+          for (const p of matches) {
+            const card = el("button", { class: "card", type: "button", onclick: () => { s.open = p.id; render(); } });
+            card.append(el("h3", { text: p.title }));
+            card.append(el("p", { class: "small", text: p.blurb }));
+            card.append(tagList(p));
+            root.append(card);
+          }
+          root.append(
+            el("div", { class: "row" },
+              !s.showAll
+                ? el("button", { class: "btn quiet", type: "button", text: "Show me everything instead", onclick: () => { s.showAll = true; render(); } })
+                : null,
+              el("button", { class: "btn quiet", type: "button", text: "Start over", onclick: () => { Object.assign(s, { step: "need", need: null, energy: null, open: null, showAll: false }); render(); } })
+            )
+          );
+        },
+      };
+
+      // ---------------------------------------------------------------------
+      // Variant C — One offering at a time.
+      // No list and no questions: a single practice is offered on arrival, with
+      // "something else" and "not today" beside it. The list exists but is a
+      // secondary door. Primary affordance: accept, swap, or leave.
+      // ---------------------------------------------------------------------
+      const VariantC = {
+        name: "One offering at a time",
+        state: { index: 0, expanded: false, browsing: false, done: false },
+        render(root) {
+          const s = VariantC.state;
+
+          if (s.done) {
+            root.append(el("h1", { text: "Okay — nothing today" }));
+            root.append(el("p", { class: "lede", text: "This page keeps nothing and expects nothing. It will still be here later." }));
+            root.append(
+              el("div", { class: "row" },
+                el("button", { class: "btn quiet", type: "button", text: "Show me one thing after all", onclick: () => { s.done = false; render(); } })
+              )
+            );
+            return;
+          }
+
+          if (s.browsing) {
+            root.append(el("h1", { text: "All of them" }));
+            root.append(el("p", { class: "lede", text: "Nine things, in no order." }));
+            PRACTICES.forEach((p, i) => {
+              const card = el("button", { class: "card", type: "button", onclick: () => { s.index = i; s.browsing = false; s.expanded = true; render(); } });
+              card.append(el("h3", { text: p.title }));
+              card.append(el("p", { class: "small", text: p.blurb }));
+              card.append(tagList(p));
+              root.append(card);
+            });
+            root.append(
+              el("div", { class: "row" },
+                el("button", { class: "btn quiet", type: "button", text: "Back to one at a time", onclick: () => { s.browsing = false; render(); } })
+              )
+            );
+            return;
+          }
+
+          const p = PRACTICES[s.index % PRACTICES.length];
+
+          if (s.expanded) {
+            root.append(
+              practiceView(p, [
+                { label: "Show me something else", onClick: () => { s.index = (s.index + 1) % PRACTICES.length; s.expanded = false; render(); } },
+                { label: "Not today", onClick: () => { s.done = true; render(); } },
+                { label: "Let me see all of them", onClick: () => { s.browsing = true; render(); } },
+              ])
+            );
+            return;
+          }
+
+          root.append(el("h1", { text: "Here’s one thing you could try" }));
+          root.append(el("p", { class: "lede", text: "Just one, so there is nothing to sort through. If it doesn’t fit, ask for another." }));
+
+          const card = el("section", { class: "panel" });
+          card.append(el("h3", { text: p.title }));
+          card.append(el("p", { text: p.blurb }));
+          card.append(tagList(p));
+          card.append(el("p", { class: "small", text: p.stop }));
+          root.append(card);
+
+          root.append(
+            el("div", { class: "row" },
+              el("button", { class: "btn", type: "button", text: "Tell me more about this", onclick: () => { s.expanded = true; render(); } }),
+              el("button", { class: "btn secondary", type: "button", text: "Show me something else", onclick: () => { s.index = (s.index + 1) % PRACTICES.length; render(); } })
+            )
+          );
+          root.append(
+            el("div", { class: "row" },
+              el("button", { class: "btn quiet", type: "button", text: "Let me see all of them", onclick: () => { s.browsing = true; render(); } }),
+              el("button", { class: "btn quiet", type: "button", text: "Not today", onclick: () => { s.done = true; render(); } })
+            )
+          );
+        },
+      };
+
+      // ---------------------------------------------------------------------
+      // Switcher
+      // ---------------------------------------------------------------------
+      const VARIANTS = { A: VariantA, B: VariantB, C: VariantC };
+      const KEYS = Object.keys(VARIANTS);
+
+      function currentKey() {
+        const fromSearch = new URLSearchParams(location.search).get("variant");
+        const fromHash = location.hash.replace("#", "");
+        const key = (fromSearch || fromHash || "A").toUpperCase();
+        return KEYS.includes(key) ? key : "A";
+      }
+
+      function setKey(key) {
+        // file:// blocks replaceState with a query string in some browsers; fall back to the hash.
+        try {
+          const url = new URL(location.href);
+          url.searchParams.set("variant", key);
+          history.replaceState(null, "", url);
+        } catch {
+          location.hash = key;
+        }
+        render();
+      }
+
+      function render() {
+        const key = currentKey();
+        const variant = VARIANTS[key];
+        const root = document.getElementById("app");
+        root.replaceChildren();
+        variant.render(root);
+        document.getElementById("variant-label").textContent = key + " (" + variant.name + ")";
+        document.title = "PROTOTYPE — " + variant.name;
+      }
+
+      function cycle(step) {
+        const i = KEYS.indexOf(currentKey());
+        setKey(KEYS[(i + step + KEYS.length) % KEYS.length]);
+      }
+
+      document.getElementById("prev").addEventListener("click", () => cycle(-1));
+      document.getElementById("next").addEventListener("click", () => cycle(1));
+      document.addEventListener("keydown", (e) => {
+        const t = e.target;
+        if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+        if (e.key === "ArrowLeft") cycle(-1);
+        if (e.key === "ArrowRight") cycle(1);
+      });
+      window.addEventListener("hashchange", render);
+      render();
+    </script>
+  </body>
+</html>
