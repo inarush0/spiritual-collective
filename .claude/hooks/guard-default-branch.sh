@@ -40,12 +40,16 @@ default=${default#origin/}
 
 [ "$branch" = "$default" ] || exit 0
 
-jq -n --arg branch "$branch" '{
+# Branch from origin/<default>, not from HEAD. The SessionStart hook normally
+# keeps the local branch current, but it is best-effort — it skips a dirty tree
+# and it cannot run without a network. Naming the remote ref makes the new
+# branch correct even when the sync did not happen.
+jq -n --arg branch "$branch" --arg default "$default" '{
 	hookSpecificOutput: {
 		hookEventName: "PreToolUse",
 		permissionDecision: "deny",
 		permissionDecisionReason: (
-			"Blocked: HEAD is \($branch), the default branch. Work on this repo lands through a pull request. Create a branch (git checkout -b <name>), commit there, push, and open a PR with `gh pr create`. If a skill or ticket told you to commit to the current branch, this rule wins."
+			"Blocked: HEAD is \($branch), the default branch. Work on this repo lands through a pull request. Create a branch from the current remote tip (git fetch origin && git checkout -b <name> origin/\($default)), commit there, push, and open a PR with `gh pr create`. If a skill or ticket told you to commit to the current branch, this rule wins."
 		)
 	}
 }'
