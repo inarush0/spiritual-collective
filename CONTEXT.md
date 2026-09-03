@@ -64,9 +64,13 @@ _Avoid_: Administrator, author, owner of the catalog
 The person who composes practice records and decides what is proposed, who may remove published content alone but may never publish without the chaplain reviewer's approval.
 _Avoid_: Author, when the point is the authority to publish rather than the writing
 
+**Safety consult**:
+The one-off attestation by a pediatric palliative clinician that a practice carrying clinical risk is safe to offer unsupervised, asked once about that practice and never standing.
+_Avoid_: Medical review, clinical approval of the resource
+
 **Review record**:
-The part of a practice record holding who attested which gates, on what date, against which version of that practice, so that an approval can be located and trusted long after it was given.
-_Avoid_: Sign-off, audit log
+The part of a practice record holding which role attested which gates, on what date, against which version of that practice, so that an approval can be located and trusted long after it was given, while the identity behind each role is held outside the repository.
+_Avoid_: Sign-off, audit log, and naming any reviewer
 
 **Beta release**:
 The unlisted, uncrawlable copy of the resource where pending content is met as a direct user would meet it, so that review can judge the experience and not only the wording.
@@ -75,6 +79,10 @@ _Avoid_: Staging, draft site, preview
 **Promotion**:
 The movement of one approved practice record into the production release, granted per record so that a practice held back never delays the rest.
 _Avoid_: Deploy, launch, release, when a single record rather than the site is meant
+
+**Held record**:
+A complete practice record that is written and kept but never promoted, because a gate it needs has not been met, so that it can promote later without being rebuilt.
+_Avoid_: Cut, dropped, draft, disabled
 
 **Editorial correction**:
 A change that cannot alter what a person does or how safe it is, which is logged and leaves the existing approval standing.
