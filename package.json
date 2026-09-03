@@ -10,6 +10,7 @@
     "build:beta": "ASTRO_TELEMETRY_DISABLED=1 SITE_BUILD=beta astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "gates": "node scripts/gates.ts",
     "test": "vitest run"
   },
   "repository": {

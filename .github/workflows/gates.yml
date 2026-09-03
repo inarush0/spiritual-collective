@@ -1,0 +1,31 @@
+name: gates
+
+# The same command a contributor runs locally, run on every pull request and on
+# every push to `main`: `docs/spec/07-technical-constraints.md` says one command
+# run identically in both places, and nothing merges past a failure. Making this
+# check required is a branch-protection setting on `main`; the workflow alone
+# reports, it does not block.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# A superseded run tells you nothing worth waiting for.
+concurrency:
+  group: gates-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # `npm run gates` runs TypeScript through node directly, which needs
+          # a version with type stripping on by default.
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run gates
