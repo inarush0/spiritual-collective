@@ -23,6 +23,10 @@
             a "Doing this with someone else" panel, with a younger-child note inside it.
         D — A separate companion guide. Arrival is identical; a quiet persistent link leads to one
             standalone page about adapting, which teaches principles rather than per-practice steps.
+        E — THE VERDICT, added after the driving dev flipped through A–D and chose B. It is B with
+            two amendments: "Myself" gets the need question after the audience question (two screens
+            before an offer, knowingly amending #6), and the younger-child path opens on D's standing
+            guide while keeping B's per-practice keep/change. E is the default variant.
 
       Practice names come from the twelve-practice catalog decided in #7; the copy under them is
       placeholder drafting under the guardrails from #2 (previewable, adaptable, skippable,
@@ -785,17 +789,180 @@
         },
       };
 
+      // =====================================================================
+      // E — THE VERDICT (added after the driving dev reacted to A–D)
+      // B wins, with two amendments:
+      //   · the direct user gets the need question after the audience question, so "Myself"
+      //     costs two screens before an offer (knowingly amending #6's one-question rule);
+      //   · the younger-child path opens on D's standing guide, and keeps B's per-practice
+      //     keep/change inside the practice detail.
+      // =====================================================================
+      const VariantE = {
+        name: "VERDICT — audience first, then need; guide + per-practice for a child",
+        render(root) {
+          const s = (VariantE.state ||= { screen: "who", who: null, need: null, practice: null });
+          const reset = () => { s.screen = "who"; s.who = null; s.need = null; render(); };
+
+          // The guide is reachable again from every companion-path screen, never pushed twice.
+          const guideDoor = () => {
+            if (s.who === "me") return null;
+            const d = el("p", { class: "doorway" });
+            d.append(document.createTextNode("Offering these to someone else? "));
+            d.append(el("button", {
+              class: "linkish", type: "button", text: "Ways to share these",
+              onclick: () => { s.screen = "guide"; render(); },
+            }));
+            return d;
+          };
+
+          if (s.screen === "none") return nothingScreen(root, reset);
+
+          // Screen 1, everyone: audience.
+          if (s.screen === "who") {
+            questionScreen(root, {
+              title: "Who are you here for?",
+              subhead: "Someone shared this page with you. There is no right answer, and nothing you pick is saved.",
+              options: [
+                { id: "me", label: "Myself" },
+                { id: "with", label: "Someone I'm with — I want to be alongside them" },
+                { id: "child", label: "A younger child I'm caring for" },
+              ],
+              onPick: (o) => {
+                s.who = o.id;
+                // "Myself" gets the need question; the companion paths go to their own next screen.
+                s.screen = o.id === "me" ? "need" : o.id === "child" ? "guide" : "set";
+                render();
+              },
+              onSkip: (k) => {
+                s.who = "me";
+                s.screen = k === "none" ? "none" : k === "all" ? "set" : "need";
+                render();
+              },
+            });
+            return;
+          }
+
+          // Screen 2, direct user only: the gentle question, unchanged from #6.
+          if (s.screen === "need") {
+            questionScreen(root, {
+              title: "What might support you right now?",
+              subhead: "A preference, not a question about you. Nothing you pick is saved.",
+              options: NEEDS,
+              onPick: (o) => { s.need = o.id; s.screen = "set"; render(); },
+              onSkip: (k) => { s.need = null; s.screen = k === "none" ? "none" : "set"; render(); },
+            });
+            root.append(el("div", { class: "row" },
+              el("button", { class: "btn quiet", type: "button", text: "Back", onclick: reset })));
+            return;
+          }
+
+          // Screen 2, younger-child path only: the standing guide, met before the catalog.
+          if (s.screen === "guide") {
+            root.append(el("h1", { text: "Ways to share these with someone" }));
+            root.append(el("p", { class: "lede", text: "Everything here is written to the person doing it. Nothing changes when you are the one offering it — these are just the things people say help." }));
+
+            const a = el("section", { class: "panel" });
+            a.append(el("h3", { text: "Offering a practice to someone" }));
+            a.append(list([
+              "Offer one thing, not a list. A list is a request to choose, and choosing is work.",
+              "Say it is optional out loud, once, and then let it go.",
+              "“No”, silence, and falling asleep are all complete answers.",
+              "If they take it up, you do not have to join in, and you do not have to leave.",
+              "Do not ask afterwards whether it helped.",
+            ]));
+            root.append(a);
+
+            const b = el("section", { class: "panel" });
+            b.append(el("h3", { text: "Adapting one for a younger child" }));
+            b.append(list([
+              "Keep the heart of the practice; change the size, the words, and the hands doing it.",
+              "Play, drawing, and repetition are usually the child's version of the same thing.",
+              "Expect to do it with them rather than hand it to them.",
+              "Follow their care team's guidance on touch, materials, and anything that leaves the room.",
+              "Stopping in the middle is normal and does not need explaining.",
+            ]));
+            b.append(el("p", { class: "caveat", text: "This resource was written for adolescents and adults, and it has never met your child. It does not say which practice suits which age; that judgement is yours, with their care team. Nothing here is claimed to be right for every child." }));
+            root.append(b);
+
+            const c = el("section", { class: "panel" });
+            c.append(el("h3", { text: "Looking after yourself while you do it" }));
+            c.append(list([
+              "Everything in the catalog is also for you, as yourself, not only as a companion.",
+              "Asking a chaplain to sit with you is on the list for a reason.",
+            ]));
+            root.append(c);
+
+            root.append(el("div", { class: "row" },
+              el("button", { class: "btn secondary", type: "button", text: "Show me the practices", onclick: () => { s.screen = "set"; render(); } }),
+              el("button", { class: "btn quiet", type: "button", text: "Back", onclick: reset })));
+            return;
+          }
+
+          const label = { me: "For you", with: "Alongside someone", child: "Caring for a younger child" }[s.who];
+
+          if (s.screen === "set") {
+            const tail = el("div", { class: "tail" });
+            tail.append(el("h4", { text: "Adjust these" }));
+            const row = el("div", { class: "row" });
+            NEEDS.forEach((n) => {
+              row.append(el("button", {
+                class: "btn quiet", type: "button", text: n.label,
+                onclick: () => { s.need = s.need === n.id ? null : n.id; render(); },
+              }));
+            });
+            tail.append(row);
+            if (s.who === "child") {
+              tail.append(el("p", { class: "caveat", text: "These are the same practices everyone else sees, with notes on adapting them. We can't say which of them suits a particular child — you can, and so can their care team." }));
+            }
+
+            suggestionScreen(root, {
+              heading: s.who === "me" ? "A few things people reach for" : "A few things you could offer",
+              note: label + ". A starting point, not a result about anyone. Nothing was saved.",
+              practices: s.need ? setFor(s.need) : PRACTICES.slice(0, 3),
+              onOpen: (p) => { s.practice = p; s.screen = "detail"; render(); },
+              onAll: () => { s.need = null; render(); },
+              onNone: () => { s.screen = "none"; render(); },
+              tail,
+            });
+            root.append(guideDoor());
+            return;
+          }
+
+          const p = s.practice;
+          const blocks = [];
+          if (s.who !== "me") {
+            const b = el("section", { class: "panel inset" });
+            b.append(el("h3", { text: s.who === "child" ? "Doing this with a younger child" : "Being alongside someone" }));
+            if (s.who === "child") {
+              b.append(el("p", { class: "small", text: "Keep: " + p.child.keep }));
+              b.append(el("p", { class: "small", text: "Change: " + p.child.change }));
+            }
+            b.append(list(p.companion));
+            blocks.push(b);
+          }
+          practiceView(root, p, {
+            badge: label,
+            blocks,
+            actions: [
+              { label: "Back", onClick: () => { s.screen = "set"; render(); } },
+              { label: "Change who this is for", onClick: reset },
+            ],
+          });
+          root.append(guideDoor());
+        },
+      };
+
       // ---------------------------------------------------------------------
       // Switcher
       // ---------------------------------------------------------------------
-      const VARIANTS = { A: VariantA, B: VariantB, C: VariantC, D: VariantD };
+      const VARIANTS = { E: VariantE, A: VariantA, B: VariantB, C: VariantC, D: VariantD };
       const KEYS = Object.keys(VARIANTS);
 
       function currentKey() {
         const fromSearch = new URLSearchParams(location.search).get("variant");
         const fromHash = location.hash.replace("#", "");
-        const key = (fromSearch || fromHash || "A").toUpperCase();
-        return KEYS.includes(key) ? key : "A";
+        const key = (fromSearch || fromHash || KEYS[0]).toUpperCase();
+        return KEYS.includes(key) ? key : KEYS[0];
       }
 
       function setKey(key) {
