@@ -48,22 +48,46 @@ Each check is one **mailbox-review session**, and it is the unit that matters: a
 
 ## Triage: the four lanes
 
-Read the message once and assign exactly one lane.
+**Nothing arrives labelled.** The lane is a judgment the editor makes on reading, never something the sender declares — there is no form, no category to pick, and there never will be: a form means client JavaScript and a second origin ([ADR 0001](../adr/0001-static-zero-js-no-third-party.md)), and §3 refuses to make a distressed reader triage themselves. What arrives is a plain email.
 
 | Lane | What it is | What happens |
 | --- | --- | --- |
 | **1 — safety or harm** | a specific, plausible claim that current published material is unsafe or caused harm | [precautionary action](#precautionary-action) in this session, then investigate |
 | **2 — wrong or inaccessible** | an error or an access barrier, without plausible harm | assess as an editorial correction or a substantive change under §5's ordinary rules |
-| **3 — distress or request for care** | someone reaching for help, or for a person to talk to | the [distress reply](#2-distress), once, and close |
+| **3 — distress or request for care** | someone reaching for help, or for a person to talk to | the [distress reply](#2-distress), once |
 | **4 — spam or unrelated** | everything else | discard. **No incident record.** |
 
-Lanes 1–3 each create an [incident record](#the-incident-register). When lane 1 and lane 2 are genuinely ambiguous, it is lane 1: uncertainty resolves toward protection.
+### Which lane this is
+
+Read once, then ask in this order:
+
+1. **Does it refer to anything on the site at all?** No → lane 4. Because the address is published on a public page it will be scraped, so this is most of the volume and the easiest call.
+2. **Is the subject the person writing, or the material?** The person → lane 3, and read on, because it may be lane 3 *and* something else.
+3. **Is there a plausible claim of harm or danger from the material?** Yes → lane 1. No → lane 2.
+
+The discriminator between 1 and 2 is the harm claim, and **a genuine tie is lane 1**: uncertainty resolves toward protection.
+
+### Lane 3 rides alongside
+
+**Lanes 1 and 2 exclude each other. Lane 3 does not exclude either of them**, because the outputs are different kinds of thing — a content lane produces an *action*, lane 3 produces a *reply shape* — and they compose rather than compete.
+
+The message this channel exists for is often both at once: *this practice made me feel worse and I do not want to be here any more* is a safety report about published material **and** a person in distress. When that happens:
+
+- **The content lane governs the action** — the withdrawal or revert happens, in this session, exactly as lane 1 requires.
+- **Lane 3 governs the reply** — the [distress reply](#2-distress) is sent, in place of the acknowledgement, never in addition to it. Two replies to that message is the exchange §5 forbids.
+- **The incident record carries both lanes**, and closes on the content lane's terms: retired, or corrected and through every applicable gate. The distress side closes with the reply.
+
+Forcing a single lane here is the failure mode worth naming, because under the pressure of reading that sentence the thing likeliest to be dropped is the withdrawal.
+
+Lanes 1–3 each create an [incident record](#the-incident-register), one per message, whatever combination it carries.
 
 ### The one follow-up
 
 The editor may ask **one** narrowly scoped follow-up, and only about the material:
 
 > Thank you — one question so we can find the right thing: which page or practice were you looking at, and what appeared wrong or unsafe about it?
+
+**Never send it to a message carrying distress.** Asking *which page were you looking at* of someone who has just said they do not want to be here reads as a request for paperwork at the worst possible moment. The distress reply goes, and the editor identifies the material themselves from what the message already says — an unidentifiable practice is withdrawn on the editor's best reading, not clarified out of the reporter.
 
 **Never** ask for identity, age, diagnosis, institution, or medical history — not to "understand the context", not to assess severity. **No reply never becomes evidence that a protective action should be reversed.** If the follow-up goes unanswered, the withdrawal stands and the incident closes on the editor's and chaplain's judgment of the material itself.
 
@@ -133,7 +157,7 @@ One record per non-spam report, holding **only** these fields:
 | --- | --- |
 | receipt date | `2026-__-__` |
 | affected record or framing surface, and version | `practice-07`, `<commit SHA>` |
-| intake lane | `1 — safety or harm` |
+| intake lane | `1 — safety or harm`, or `1 + 3` where [lane 3 rides alongside](#lane-3-rides-alongside) |
 | protective action and time | `withdrawn, same session, 2026-__-__ 09:__` |
 | required review roles | `editor + chaplain; safety consult required` |
 | outcome | `retired` / `revised and re-approved` / `no change, both agreed` |
@@ -141,7 +165,7 @@ One record per non-spam report, holding **only** these fields:
 
 **Never** in the register: sender identity, quoted message text, diagnosis, institution, or narrative detail. If a field seems to need a sentence of story to make sense, that is the signal it is being written down at the wrong grain — the version pointer and the outcome carry the meaning.
 
-**A content incident closes only when** the material is retired, or a corrected or restored version has passed every applicable gate. **A distress incident closes** after the boundary response is sent.
+**A content incident closes only when** the material is retired, or a corrected or restored version has passed every applicable gate. **A distress-only incident closes** after the boundary response is sent. **A combined record closes on the content lane's terms** — the reply has already gone, and the material is what is left open.
 
 ## Deleting the source email
 
@@ -159,6 +183,7 @@ Send four test messages to the real address from an address outside the project,
 - [ ] **Lane 3 (distress)** — distress reply sent, once; incident record created and closed on the reply.
 - [ ] **Lane 2 (wrong content)** — assessed as an editorial correction or a substantive change; incident record carries the version pointer.
 - [ ] **Lane 1 (safety)** — protective action in the same session: a real **withdrawal or revert performed** against the real site, chaplain notified, record returned to review. Then acknowledgement sent, closing sent, incident record closed, and the content restored through the ordinary gates afterwards.
+- [ ] **Lanes 1 + 3 combined** — a fifth message carrying both a safety claim and distress. Beyond what §6 asks for, and the case the channel most exists for: the protective action happens, the distress reply goes *instead of* the acknowledgement, one incident record carries both lanes, and no follow-up question is sent.
 - [ ] **One-business-day detection demonstrated** — the elapsed time between sending and the protective action is recorded, and it is under one business day. Demonstrated, not asserted.
 - [ ] **Backup access exercised** — the chaplain reviewer signs in and reads the mailbox as part of the drill, not afterwards.
 - [ ] **Replies landed in an inbox, not a spam folder** — checked at the receiving end for every reply sent during the drill, ideally against more than one provider. A reply the reporter never sees fails the channel as completely as never sending one.
