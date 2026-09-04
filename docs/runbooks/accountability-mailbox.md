@@ -2,7 +2,7 @@
 
 The operating procedure that turns the address on `/about/` into a **channel** rather than an address. [`docs/spec/05-governance.md`](../spec/05-governance.md) is authoritative for the rules; this document is how they are carried out, and it holds the drafted wording the procedure needs at the moment it is needed. Tracked in [#39](https://github.com/inarush0/spiritual-collective/issues/39).
 
-> **Status: not provisioned.** `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) is `report@example.invalid`, deliberately unroutable. The release gate in [`docs/spec/06-release-criteria.md`](../spec/06-release-criteria.md) holds production until every box in [Before the address ships](#before-the-address-ships) is ticked.
+> **Status: mailbox provisioned, drill not yet run.** `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) is still `report@example.invalid`, deliberately unroutable. The release gate in [`docs/spec/06-release-criteria.md`](../spec/06-release-criteria.md) holds production until every box in [Before the address ships](#before-the-address-ships) is ticked.
 
 **Nothing in this file is an identity.** The editor and the chaplain reviewer are named by role, here as everywhere in this repository ([ADR 0002](../adr/0002-two-person-asymmetric-governance.md)). Nothing from a real report — sender address, message text, or paraphrase — is ever added to this file or any other file in git.
 
@@ -13,8 +13,30 @@ Owner: **editor**. All of it is human work; none of it is in this repository.
 - [ ] **A real mailbox on the resource's own domain.** Not a personal address, not a free-provider address on someone's own name: the address is spoken on `/about/` as the resource's accountability channel, and it must survive one person changing jobs, phones, or providers.
 - [ ] **Owner access confirmed** — the editor can read, reply from the address, and permanently delete.
 - [ ] **Backup access confirmed** — the chaplain reviewer can do the same, tested by actually signing in, not by being handed a credential. A credential nobody has exercised is an unavailable credential, and §6 fails publication on exactly that.
-- [ ] **No forwarding into a personal archive, and no provider-side backup that outlives deletion.** Source-email deletion is a promise the about page makes on the resource's behalf; a copy sitting in someone's personal mail history breaks it silently. Disable auto-archive, auto-backup, and any "deleted items keep forever" retention.
+- [ ] **No forwarding into a personal archive, and no provider-side backup that outlives the 30-day maximum.** Source-email deletion is a promise the about page makes on the resource's behalf; a copy sitting in someone's personal mail history breaks it silently. Disable auto-archive, auto-forward, and any "deleted items keep forever" retention. A short provider restore window is acceptable and must be [written down](#what-deleted-actually-means) rather than assumed away.
 - [ ] **Spam filtering set to quarantine, not silent discard**, and the quarantine checked on the same daily rhythm. A safety report that a filter ate is indistinguishable from a channel that does not exist.
+- [ ] **Outbound mail authenticated**, so the three replies land in an inbox rather than a spam folder. A distress reply nobody sees is the harm this channel exists to prevent, and a young domain's first outbound mail is exactly where it happens.
+- [ ] **Recovery codes and the registrar login in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person.
+
+### As provisioned
+
+The address is **`report@spiritual-collective.com`**, hosted at **Fastmail**, with DNS on **Squarespace Domains** (`nsb1`–`nsb4.squarespacedns.com`). Recorded here so the next person changing DNS knows what mail depends on; there is nothing secret in it, and credentials live in the vault, never in git.
+
+| Host | Type | Value |
+| --- | --- | --- |
+| `@` | MX 10 | `us1-smtp.messagingengine.com` |
+| `@` | MX 20 | `us2-smtp.messagingengine.com` |
+| `@` | TXT | `v=spf1 include:spf.messagingengine.com ?all` |
+| `fm1`–`fm3._domainkey` | CNAME | `fm<n>.spiritual-collective.com.dkim.fmhosted.com` |
+| `_dmarc` | TXT | `v=DMARC1; p=none; rua=mailto:report@spiritual-collective.com` |
+
+**Squarespace appends the domain to whatever is in the Host field.** The root records are `@`, never the full domain — entering `spiritual-collective.com` produces `spiritual-collective.com.spiritual-collective.com`, which resolves as nothing and takes the mailbox down silently. This cost a round of debugging once already.
+
+**DMARC starts at `p=none` deliberately.** Tighten to `p=quarantine` and then `p=reject` once the aggregate reports confirm Fastmail is the only sender. SPF stays at Fastmail's `?all`: the protection comes from DKIM and DMARC, and `-all` would break any future sender for no gain here.
+
+### What "deleted" actually means
+
+**Fastmail keeps a short restore window** — on the order of a week — during which deleted mail can be recovered by the account owner, and it is not a setting that can be turned off. That is well inside the 30-day maximum, so the promise on `/about/` holds. It is written down here rather than glossed because the honest sentence is *deleted, with a provider restore window of about a week*, not *deleted instantly*, and a procedure that overstates its own guarantees is the kind that quietly stops being followed. Confirm the current figure against Fastmail's own documentation before the drill.
 
 ## The daily rhythm
 
@@ -139,6 +161,7 @@ Send four test messages to the real address from an address outside the project,
 - [ ] **Lane 1 (safety)** — protective action in the same session: a real **withdrawal or revert performed** against the real site, chaplain notified, record returned to review. Then acknowledgement sent, closing sent, incident record closed, and the content restored through the ordinary gates afterwards.
 - [ ] **One-business-day detection demonstrated** — the elapsed time between sending and the protective action is recorded, and it is under one business day. Demonstrated, not asserted.
 - [ ] **Backup access exercised** — the chaplain reviewer signs in and reads the mailbox as part of the drill, not afterwards.
+- [ ] **Replies landed in an inbox, not a spam folder** — checked at the receiving end for every reply sent during the drill, ideally against more than one provider. A reply the reporter never sees fails the channel as completely as never sending one.
 - [ ] **Source-email deletion performed** on all four test messages, trash and quarantine included.
 - [ ] **A sanitized incident record created** for lanes 1–3, and checked against the field list above — nothing extra in it.
 
@@ -146,7 +169,8 @@ Send four test messages to the real address from an address outside the project,
 
 The last box is the one that touches code, and it is last on purpose.
 
-- [ ] [Provisioning](#provisioning) complete, including confirmed backup access
+- [x] The mailbox exists, on the resource's own domain, with MX, SPF, DKIM, and DMARC verified live
+- [ ] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded, recovery in the shared vault
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain
 - [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly
