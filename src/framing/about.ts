@@ -37,6 +37,10 @@ export const CHROME_LINK = 'What is this?';
  * looked real would take reports into a void, which is the harm the channel
  * exists to prevent. An address that cannot receive mail is the honest
  * stand-in until the mailbox is provisioned.
+ *
+ * Replacing this is the *last* step of `docs/runbooks/accountability-mailbox.md`,
+ * after the mailbox, the backup access, the replies, the register, and the
+ * drill — never before.
  */
 export const REPORT_ADDRESS = 'report@example.invalid';
 
