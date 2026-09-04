@@ -1,0 +1,54 @@
+---
+import Page from '../layouts/Page.astro';
+import { ABOUT_SECTIONS, CHROME_LINK } from '../framing/about.js';
+
+/**
+ * The about page: one path-neutral page, the same facts for every reader.
+ *
+ * Reachable from every screen by the chrome link and never met before arrival —
+ * nothing in the journey sends a reader here, so it is somewhere to go rather
+ * than somewhere to pass through (`docs/spec/01-journey-and-ia.md`).
+ *
+ * Every sentence lives in `src/framing/about.ts`; this template holds no
+ * wording of its own, not even the heading. The page's own title is the chrome
+ * link's words on purpose: a reader arrives here having clicked a question, and
+ * meets that question answered.
+ */
+---
+
+<Page title={CHROME_LINK}>
+	<h1>{CHROME_LINK}</h1>
+
+	{
+		/*
+		 * Each section is a short paragraph, deliberately not a heading with
+		 * prose beneath it: six headings would make this read as a policy
+		 * document, and the whole page is meant to be read straight through in
+		 * a screen or two.
+		 */
+		ABOUT_SECTIONS.map((section) => (
+			<p>
+				{section.sentences.map((sentence, index) => (
+					<>
+						{index > 0 && ' '}
+						{typeof sentence === 'string' ? (
+							sentence
+						) : (
+							<>
+								{sentence.before}
+								<a href={`mailto:${sentence.address}`}>{sentence.address}</a>
+								{sentence.after}
+							</>
+						)}
+					</>
+				))}
+			</p>
+		))
+	}
+</Page>
+
+<style>
+	p {
+		margin: 0 0 1.5rem;
+	}
+</style>

@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 
 /**
  * A real `astro build`, into a throwaway directory so the tests never race
@@ -59,6 +59,20 @@ export function buildBothReleases(): { builds: Builds; cleanUp: () => void } {
 /** The markup a reader would meet at `route`, from a built directory. */
 export function pageAt(dir: string, route: string): string {
 	return readFileSync(join(dir, ...route.split('/').filter(Boolean), 'index.html'), 'utf8');
+}
+
+/**
+ * Every route the build wrote a page for.
+ *
+ * Site-wide rules — the chrome link on every screen, no date anywhere — are
+ * assertions about the whole route table rather than about a page a test
+ * happens to name, so the enumeration is read from the build.
+ */
+export function routesIn(dir: string): string[] {
+	return readdirSync(dir, { recursive: true, withFileTypes: true })
+		.filter((entry) => entry.isFile() && entry.name === 'index.html')
+		.map((entry) => relative(dir, entry.parentPath).split(sep).filter(Boolean))
+		.map((segments) => `/${segments.map((segment) => `${segment}/`).join('')}`);
 }
 
 /** Whether the build wrote a page at `route`. */
