@@ -33,7 +33,7 @@ import { AUDIENCE_PATHS } from '../../framing/routes.js';
  */
 export async function getStaticPaths() {
 	const catalog = await loadCatalog();
-	const practices = practicesIn(catalog, NOT_SURE_SET);
+	const practices = practicesIn(catalog, NOT_SURE_SET, '/<path>/not-sure/');
 	const offered = offeredNeedTags(catalog);
 	return AUDIENCE_PATHS.map((path) => ({ params: { path }, props: { path, practices, offered } }));
 }

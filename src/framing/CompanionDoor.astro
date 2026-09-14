@@ -47,7 +47,7 @@ const { path } = Astro.props;
  * tag's set screen, which the adjustments below lead to.
  */
 const catalog = await loadCatalog();
-const practices = practicesIn(catalog, COMPANION_SET);
+const practices = practicesIn(catalog, COMPANION_SET, '/with/ and /child/set/');
 const offered = offeredNeedTags(catalog);
 /**
  * The two doors differ in the tab, not in the heading: the set is the same one

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { NEED_TAGS, type NeedTag } from '../src/catalog/practice-record.js';
 import {
+	COMPANION_SET,
 	NOT_SURE_SET,
 	needTagBySlug,
 	needTagSlug,
@@ -122,19 +123,41 @@ describe('offeredNeedTags', () => {
 	});
 });
 
-describe('the fixed set behind /me/not-sure/', () => {
-	it('is the three the spec names', () => {
+describe('the fixed sets', () => {
+	it('are the ones the spec names', () => {
 		expect(NOT_SURE_SET).toEqual([
 			'noticing-whats-around-you',
 			'rest-without-a-task',
 			'letting-someone-sit-with-you',
 		]);
+		expect(COMPANION_SET).toEqual([
+			'letting-someone-sit-with-you',
+			'saying-the-hard-thing',
+			'remembering-someone',
+		]);
 	});
 
-	it('holds the named practices this build publishes, in the fixed editorial order', () => {
-		expect(practicesIn(entries, NOT_SURE_SET).map((e) => e.id)).toEqual([
+	it('hold the named practices this build publishes, in the fixed editorial order', () => {
+		expect(practicesIn(entries, NOT_SURE_SET, '/me/not-sure/').map((e) => e.id)).toEqual([
 			'noticing-whats-around-you',
 			'rest-without-a-task',
 		]);
+	});
+
+	it('warn loudly when a build publishes none of them, once per door', () => {
+		// A door whose whole set is unpublished is a coverage hole, not a
+		// reason to fail the build: an urgent withdrawal must never wait on
+		// writing a replacement. But nobody should have to find the empty
+		// screen in a browser.
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			practicesIn(entries, COMPANION_SET, '/with/');
+			practicesIn(entries, COMPANION_SET, '/with/');
+			expect(warn).toHaveBeenCalledTimes(1);
+			expect(warn.mock.calls[0]![0]).toContain('/with/');
+			expect(warn.mock.calls[0]![0]).toContain('saying-the-hard-thing');
+		} finally {
+			warn.mockRestore();
+		}
 	});
 });

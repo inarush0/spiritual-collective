@@ -23,11 +23,6 @@ export const AUDIENCE_PATHS = ['me', 'with', 'child'] as const;
 
 export type AudiencePath = (typeof AUDIENCE_PATHS)[number];
 
-/** Whether `segment` is a path this site serves, for a routed URL segment. */
-export function isAudiencePath(segment: string): segment is AudiencePath {
-	return (AUDIENCE_PATHS as readonly string[]).includes(segment);
-}
-
 /**
  * The two paths held by someone acting alongside another person.
  *
@@ -85,9 +80,6 @@ export function routesFor(path: AudiencePath): PathRoutes {
 		practice: (slug) => `${root}practice/${slug}/`,
 	};
 }
-
-/** The discovery question: the direct user's one question, and their set door. */
-export const QUESTION_ROUTE = DOORS.me;
 
 /**
  * Two screens this route tree points at and does not build: arrival, where

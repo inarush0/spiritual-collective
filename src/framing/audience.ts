@@ -48,6 +48,32 @@ const BADGES: Record<AudiencePath, string> = {
 	child: CHILD_BADGE,
 };
 
+/** The wording a direct user meets, and a companion's beside it. */
+type PathWords = Pick<
+	PathFraming,
+	'setLead' | 'setTitle' | 'action' | 'notSureLines' | 'catalogLead' | 'lowEnergyLink' | 'lowEnergyLead'
+>;
+
+const DIRECT_WORDS: PathWords = {
+	setLead: SET_LEAD,
+	setTitle: SET_TITLE,
+	action: ACTION,
+	notSureLines: NOT_SURE_LINES,
+	catalogLead: CATALOG_LEAD,
+	lowEnergyLink: LOW_ENERGY_LINK,
+	lowEnergyLead: LOW_ENERGY_LEAD,
+};
+
+const COMPANION_WORDS: PathWords = {
+	setLead: COMPANION_SET_LEAD,
+	setTitle: COMPANION_SET_TITLE,
+	action: COMPANION_ACTION,
+	notSureLines: COMPANION_NOT_SURE_LINES,
+	catalogLead: COMPANION_CATALOG_LEAD,
+	lowEnergyLink: COMPANION_LOW_ENERGY_LINK,
+	lowEnergyLead: COMPANION_LOW_ENERGY_LEAD,
+};
+
 /** Everything one path renders differently, and the routes it renders them at. */
 export interface PathFraming {
 	path: AudiencePath;
@@ -94,19 +120,17 @@ export interface PathFraming {
  */
 export function framingFor(path: AudiencePath): PathFraming {
 	const companion = isCompanionPath(path);
+	const routes = routesFor(path);
 	return {
 		path,
-		routes: routesFor(path),
+		routes,
 		companion,
 		badge: BADGES[path],
-		setLead: companion ? COMPANION_SET_LEAD : SET_LEAD,
-		setTitle: companion ? COMPANION_SET_TITLE : SET_TITLE,
-		action: companion ? COMPANION_ACTION : ACTION,
-		actionRoute: (slug) => (companion ? null : `${routesFor(path).practice(slug)}1/`),
-		notSureLines: companion ? COMPANION_NOT_SURE_LINES : NOT_SURE_LINES,
-		catalogLead: companion ? COMPANION_CATALOG_LEAD : CATALOG_LEAD,
-		lowEnergyLink: companion ? COMPANION_LOW_ENERGY_LINK : LOW_ENERGY_LINK,
-		lowEnergyLead: companion ? COMPANION_LOW_ENERGY_LEAD : LOW_ENERGY_LEAD,
+		// One table rather than a ternary per line: what turns with the path is
+		// then a thing that can be read at a glance and counted, and a sentence
+		// cannot be given to the wrong reader by a condition written backwards.
+		...(companion ? COMPANION_WORDS : DIRECT_WORDS),
+		actionRoute: (slug) => (companion ? null : `${routes.practice(slug)}1/`),
 	};
 }
 

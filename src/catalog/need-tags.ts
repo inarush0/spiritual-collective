@@ -92,6 +92,9 @@ export function practicesFor<T extends TaggedEntry>(
 	return sortByEditorialOrder(practices.filter((practice) => practice.data.need_tags.includes(tag)));
 }
 
+/** Doors already warned about, so an unstocked one is said once per build. */
+const warnedDoors = new Set<string>();
+
 /**
  * The practices a fixed set names, in the fixed editorial order.
  *
@@ -99,13 +102,33 @@ export function practicesFor<T extends TaggedEntry>(
  * written yet is simply absent instead of breaking the page: the door still
  * opens onto what exists. Each named slug is checked against the editorial
  * order, so a typo fails the build rather than quietly shrinking the set.
+ *
+ * **A door whose whole set is unpublished is a loud build warning**, for the
+ * same reason a need tag at zero is: it is a coverage hole for the editor to
+ * fill, and failing the build on it would make an urgent withdrawal wait on
+ * writing a replacement (`docs/spec/07-technical-constraints.md`). The screen
+ * itself still holds together — the **set tail** below the divider is drawn
+ * from the whole catalog and is on the page either way — but a reader meets a
+ * lead-in over nothing, and nobody should have to notice that in a browser.
  */
 export function practicesIn<T extends { id: string }>(
 	practices: readonly T[],
 	slugs: readonly string[],
+	door: string,
 ): T[] {
 	for (const slug of slugs) editorialRank(slug);
-	return sortByEditorialOrder(practices.filter((practice) => slugs.includes(practice.id)));
+	const inSet = sortByEditorialOrder(practices.filter((practice) => slugs.includes(practice.id)));
+
+	if (inSet.length === 0 && !warnedDoors.has(door)) {
+		warnedDoors.add(door);
+		console.warn(
+			`[fixed sets] this build publishes none of the practices ${door} names, so that ` +
+				'screen offers an empty set. Write or approve one of ' +
+				`${slugs.join(', ')}.`,
+		);
+	}
+
+	return inSet;
 }
 
 /**
@@ -162,12 +185,13 @@ export function offeredNeedTags(practices: readonly TaggedEntry[]): NeedTagOffer
 }
 
 /**
- * The fixed set behind `/me/not-sure/` (`docs/spec/01-journey-and-ia.md`).
+ * The fixed set behind `/<path>/not-sure/` (`docs/spec/01-journey-and-ia.md`).
  *
  * Named by slug because this set is editorial rather than derived: "I'm not
  * sure" is an escape from the question, so it cannot be answered by a tag.
- * It is the only set on this path that does not come from the records, and it
- * is the smallest, lowest-demand door the catalog has.
+ * The same three on every path: a reader who said they were not sure has said
+ * the same thing whichever tree they are in, and a different set for one of
+ * them would be the page deciding something about who is reading it.
  */
 export const NOT_SURE_SET: readonly string[] = [
 	'noticing-whats-around-you',
