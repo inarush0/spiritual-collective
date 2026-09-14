@@ -16,11 +16,11 @@ Owner: **editor**. All of it is human work; none of it is in this repository.
 - [x] **No forwarding into a personal archive, and no provider-side backup that outlives the 30-day maximum.** Source-email deletion is a promise the about page makes on the resource's behalf; a copy sitting in someone's personal mail history breaks it silently. Disable auto-archive, auto-forward, and any "deleted items keep forever" retention. A short provider restore window is acceptable and must be [written down](#what-deleted-actually-means) rather than assumed away.
 - [x] **Spam filtering set to quarantine, not silent discard**, and the quarantine checked on the same daily rhythm. A safety report that a filter ate is indistinguishable from a channel that does not exist.
 - [x] **Outbound mail authenticated**, so the three replies land in an inbox rather than a spam folder. A distress reply nobody sees is the harm this channel exists to prevent, and a young domain's first outbound mail is exactly where it happens.
-- [ ] **Recovery codes and the registrar login in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person.
+- [ ] **Recovery codes and the registrar login in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person. The vault is an **Apple Passwords shared group**; the Fastmail password is in it, and [three things are not](#what-the-vault-still-needs).
 
-Provisioning is complete **except the shared vault, which does not exist yet**. Backup access was exercised by signing in, not granted on paper; the drill exercises it again against live messages.
+Provisioning is complete **except what the shared vault still holds**. Backup access was exercised by signing in, not granted on paper; the drill exercises it again against live messages.
 
-**What the vault is actually for.** The chaplain reviewer can already sign in, so day-to-day backup access is covered. The open case is *recovery*: the editor is unreachable, or the second factor on the mailbox is lost with the device holding it. Without somewhere both people can reach the Fastmail recovery codes and the Squarespace registrar login, the accountability channel has one point of failure wearing the appearance of two. §6 names that failure by name — publication fails if any step depends on an inaccessible credential — so this box gates the release on its own, independently of the drill.
+**What the vault is actually for.** The chaplain reviewer can already sign in, so day-to-day backup access is covered. The open case is *recovery*: the editor is unreachable, or the second factor on the mailbox is lost with the device holding it. A shared password does not answer either one. Until the recovery codes and the registrar login are reachable by both people, the accountability channel has one point of failure wearing the appearance of two. §6 names that failure by name — publication fails if any step depends on an inaccessible credential — so this gates the release on its own, independently of the drill.
 
 ### As provisioned
 
@@ -37,6 +37,18 @@ The address is **`report@spiritual-collective.com`**, hosted at **Fastmail**, wi
 **Squarespace appends the domain to whatever is in the Host field.** The root records are `@`, never the full domain — entering `spiritual-collective.com` produces `spiritual-collective.com.spiritual-collective.com`, which resolves as nothing and takes the mailbox down silently. This cost a round of debugging once already.
 
 **DMARC starts at `p=none` deliberately.** Tighten to `p=quarantine` and then `p=reject` once the aggregate reports confirm Fastmail is the only sender. SPF stays at Fastmail's `?all`: the protection comes from DKIM and DMARC, and `-all` would break any future sender for no gain here.
+
+### What the vault still needs
+
+The vault is an **Apple Passwords shared group**, holding the Fastmail password. Recorded here for the same reason the DNS is: the next person needs to know where the keys live. Nothing secret is written down — the name of the thing, never its contents.
+
+A password is not recovery. Three things are still missing, and each covers a case the password does not:
+
+- **The Fastmail recovery codes.** A password does not get you in when the second factor is gone with the device holding it. This is the likeliest way the mailbox is lost, and the password is no help in it.
+- **The Squarespace Domains login.** Mail depends on DNS. An intact mailbox behind unreachable nameservers receives nothing, and the records are fiddly enough that [this already cost a debugging round](#as-provisioned).
+- **The incident register link**, so the register is reachable by the person who did not create it.
+
+One thing to know about the shared group: it depends on both people staying in the Apple ecosystem. That is acceptable and worth writing down rather than discovering — if either person changes phones away from Apple, the vault moves, and the move is the kind of task that gets postponed until it is needed.
 
 ### What "deleted" actually means
 
@@ -250,7 +262,8 @@ The last box is the one that touches code, and it is last on purpose.
 
 - [x] The mailbox exists, on the resource's own domain, with MX, SPF, DKIM, and DMARC verified live
 - [x] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded
-- [ ] A shared vault exists, holding the Fastmail recovery codes and the Squarespace registrar login
+- [x] A shared vault exists — an Apple Passwords shared group, holding the Fastmail password
+- [ ] [The vault holds the rest](#what-the-vault-still-needs) — the Fastmail recovery codes and the Squarespace registrar login
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
 - [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly
