@@ -341,7 +341,7 @@ The last box is the one that touches code, and it is last on purpose.
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
 - [ ] [Both availability notices](#the-temporary-availability-notice) agreed, and somewhere they can be published from quickly
-- [x] [The incident register](#the-incident-register) exists, empty, outside this repository
+- [x] [The incident register](#the-incident-register) exists outside this repository, created empty and now carrying sitting 1's drill records, marked as such
 - [x] The register shared with the chaplain reviewer
 - [x] [The drill](#the-drill), **sitting 1** — the channel, passed in full
 - [ ] [The drill](#the-drill), **sitting 2** — the withdrawal, after [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33)
