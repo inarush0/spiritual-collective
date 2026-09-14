@@ -1,0 +1,46 @@
+---
+import Page from '../../layouts/Page.astro';
+import Escapes from '../../framing/Escapes.astro';
+import PracticeSet from '../../framing/PracticeSet.astro';
+import { loadCatalog } from '../../catalog/index.js';
+import { NOT_SURE_SET, practicesIn } from '../../catalog/need-tags.js';
+import { NOT_SURE_LINES, NOT_SURE_TITLE, SET_LEAD } from '../../framing/discovery.js';
+
+/**
+ * The door that skips the question: `/me/not-sure/`.
+ *
+ * "I'm not sure" is an escape from the discovery question, so it cannot be
+ * answered by a need tag — this set is fixed editorially instead: noticing
+ * what's around you, rest without a task, letting someone sit with you
+ * (`docs/spec/01-journey-and-ia.md`). The three are the lowest-demand doors
+ * the catalog has, and two of them ask nothing of the reader at all.
+ *
+ * It is **shaped like any other set**: same lead-in, same list, same escapes,
+ * and no second question anywhere on it. A practice the fixed set names but
+ * this build does not publish is simply absent; the door still opens.
+ */
+const practices = practicesIn(await loadCatalog(), NOT_SURE_SET);
+---
+
+<Page title={NOT_SURE_TITLE}>
+	<h1>{NOT_SURE_TITLE}</h1>
+	{NOT_SURE_LINES.map((line) => <p class="lead">{line}</p>)}
+	{SET_LEAD.map((line) => <p class="lead">{line}</p>)}
+
+	<PracticeSet practices={practices} />
+
+	{/* The set tail and the low-energy link slot in here, as on every set. */}
+
+	<Escapes />
+</Page>
+
+<style>
+	.lead {
+		margin: 0 0 0.5rem;
+		color: var(--quiet);
+	}
+
+	.lead:last-of-type {
+		margin-bottom: 2rem;
+	}
+</style>

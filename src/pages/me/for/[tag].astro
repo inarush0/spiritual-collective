@@ -1,0 +1,88 @@
+---
+import Page from '../../../layouts/Page.astro';
+import Escapes from '../../../framing/Escapes.astro';
+import PracticeSet from '../../../framing/PracticeSet.astro';
+import { loadCatalog } from '../../../catalog/index.js';
+import { offeredNeedTags, practicesFor } from '../../../catalog/need-tags.js';
+import { SET_LEAD, SET_TITLE } from '../../../framing/discovery.js';
+
+/**
+ * A suggestion set, direct-user path: `/me/for/<need-tag-slug>/`.
+ *
+ * Every published practice carrying that need tag, in the fixed editorial
+ * order, **uncapped** — no curation layer, no per-tag hand-picked list, no
+ * algorithm (`docs/spec/01-journey-and-ia.md`). Membership is computed at
+ * build time from the records' `need tags` and from nothing else, so there is
+ * no second source of truth to go stale.
+ *
+ * One page per tag the question offers, and none for a tag at zero: a set
+ * screen with nothing on it is the one thing this page must never be.
+ *
+ * Neither the limits line nor the crisis pointer belongs here
+ * (`docs/spec/03-safety-and-inclusion.md`): this is the moment someone is
+ * deciding to try something, and a disclaimer reads as a warning about the
+ * practices themselves.
+ */
+export async function getStaticPaths() {
+	const practices = await loadCatalog();
+	return offeredNeedTags(practices).map((offer) => ({
+		params: { tag: offer.slug },
+		props: { tag: offer.tag, practices: practicesFor(practices, offer.tag) },
+	}));
+}
+
+const { tag, practices } = Astro.props;
+---
+
+<Page title={tag}>
+	{
+		/*
+		 * The answer the reader picked, in their own words rather than a label
+		 * for it — the same string they clicked, said back plainly. It is a
+		 * heading, not a claim: the page knows what was clicked and nothing
+		 * else about them.
+		 */
+	}
+	<p class="said">{SET_TITLE}</p>
+	<h1>{tag}</h1>
+
+	{SET_LEAD.map((line) => <p class="lead">{line}</p>)}
+
+	<PracticeSet practices={practices} />
+
+	{
+		/*
+		 * The set tail goes here, below a quiet divider and labelled as not
+		 * matching what was chosen, along with the low-energy link
+		 * ([#25](https://github.com/inarush0/spiritual-collective/issues/25),
+		 * [#26](https://github.com/inarush0/spiritual-collective/issues/26)).
+		 * Nothing is drawn for them yet: an empty divider would be a promise
+		 * the page cannot keep, and the layout rule they exist to serve — that
+		 * a screen never reveals how well-stocked an answer was — only starts
+		 * holding when there is something below the line on every set.
+		 */
+	}
+
+	<Escapes />
+</Page>
+
+<style>
+	.said {
+		margin: 0 0 0.25rem;
+		color: var(--quiet);
+		font-size: 0.875rem;
+	}
+
+	h1 {
+		margin-bottom: 1rem;
+	}
+
+	.lead {
+		margin: 0 0 0.5rem;
+		color: var(--quiet);
+	}
+
+	.lead:last-of-type {
+		margin-bottom: 2rem;
+	}
+</style>

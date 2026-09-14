@@ -1,0 +1,57 @@
+---
+import { ESCAPES } from './discovery.js';
+
+/**
+ * The three escapes, on every screen in the direct-user flow.
+ *
+ * One component rather than a block per template, so that "on every screen" is
+ * a thing a page opts into in one line and cannot spell differently
+ * (`docs/spec/01-journey-and-ia.md`). They are ordinary links, at one size,
+ * below a quiet rule: none of the three is the recommended one, and leaving is
+ * not a smaller act than choosing.
+ *
+ * The escape pointing at the screen the reader is already on is rendered as a
+ * plain line, marked as the current page for anyone listening to it, rather
+ * than as a link back to here.
+ */
+const here = `${Astro.url.pathname.replace(/\/$/, '')}/`;
+---
+
+{
+	/*
+	 * A list, not a landmark: the escapes are part of the screen a reader is
+	 * reading, and `<nav>` would make them a second bar riding along on every
+	 * page. The only persistent chrome is the one "What is this?" link
+	 * (`docs/spec/01-journey-and-ia.md`), and `test/about.test.ts` holds that.
+	 */
+}
+<ul class="escapes">
+	{
+		ESCAPES.map((escape) =>
+			escape.route === here ? (
+				<li aria-current="page">{escape.words}</li>
+			) : (
+				<li>
+					<a href={escape.route}>{escape.words}</a>
+				</li>
+			),
+		)
+	}
+</ul>
+
+<style>
+	.escapes {
+		list-style: none;
+		margin: 2.5rem 0 0;
+		padding: 1.5rem 0 0;
+		border-top: 1px solid var(--rule);
+	}
+
+	li + li {
+		margin-top: 0.75rem;
+	}
+
+	li[aria-current] {
+		color: var(--quiet);
+	}
+</style>
