@@ -2,7 +2,9 @@
 
 The operating procedure that turns the address on `/about/` into a **channel** rather than an address. [`docs/spec/05-governance.md`](../spec/05-governance.md) is authoritative for the rules; this document is how they are carried out, and it holds the drafted wording the procedure needs at the moment it is needed. Tracked in [#39](https://github.com/inarush0/spiritual-collective/issues/39).
 
-> **Status: provisioning complete; the replies are out for agreement and the drill has not run.** `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) is still `report@example.invalid`, deliberately unroutable. The release gate in [`docs/spec/06-release-criteria.md`](../spec/06-release-criteria.md) holds production until every box in [Before the address ships](#before-the-address-ships) is ticked. The drill runs in [two sittings](#why-it-runs-in-two-sittings), and the second is blocked on [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33).
+> **Status: provisioned, and the channel is proven.** [Drill sitting 1](#sitting-1-the-channel) has passed in full — a message reaching this address is detected, judged, answered, recorded, and deleted, demonstrated rather than asserted. What remains is the chaplain reviewer's agreement on the wording, and [sitting 2](#sitting-2-the-withdrawal), which proves a safety report can move published material off the site and is blocked on [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33).
+>
+> `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) is still `report@example.invalid`, deliberately unroutable. The release gate in [`docs/spec/06-release-criteria.md`](../spec/06-release-criteria.md) holds production until every box in [Before the address ships](#before-the-address-ships) is ticked.
 
 **Nothing in this file is an identity.** The editor and the chaplain reviewer are named by role, here as everywhere in this repository ([ADR 0002](../adr/0002-two-person-asymmetric-governance.md)). Nothing from a real report — sender address, message text, or paraphrase — is ever added to this file or any other file in git.
 
@@ -18,9 +20,9 @@ Owner: **editor**. All of it is human work; none of it is in this repository.
 - [x] **Outbound mail authenticated**, so the three replies land in an inbox rather than a spam folder. A distress reply nobody sees is the harm this channel exists to prevent, and a young domain's first outbound mail is exactly where it happens.
 - [x] **What the chaplain reviewer needs to recover the mailbox, in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person. See [the shared vault](#the-shared-vault) — and note that the registrar login is deliberately *not* in it.
 
-Provisioning is complete **except what the shared vault still holds**. Backup access was exercised by signing in, not granted on paper; the drill exercises it again against live messages.
+**Provisioning is complete.** Backup access was exercised by signing in rather than granted on paper, and [drill sitting 1](#sitting-1-the-channel) exercised it again against live messages.
 
-**What the vault is actually for.** The chaplain reviewer can already sign in, so day-to-day backup access is covered. The open case is *recovery*: the editor is unreachable, or the second factor on the mailbox is lost with the device holding it. A shared password does not answer either one. Until the recovery codes and the registrar login are reachable by both people, the accountability channel has one point of failure wearing the appearance of two. §6 names that failure by name — publication fails if any step depends on an inaccessible credential — so this gates the release on its own, independently of the drill.
+**What the vault is actually for.** The chaplain reviewer can already sign in, so day-to-day backup access was never the open question. The case the vault answers is *recovery*: the editor unreachable, or the second factor lost with the device holding it. A shared password answers neither. [The shared vault](#the-shared-vault) now holds what does.
 
 ### As provisioned
 
@@ -302,14 +304,14 @@ If the honest answer is *substantive change*, the drill records that and stops. 
 
 Three test messages, one each for lanes 4, 3, and 2, worked end to end.
 
-- [ ] **Lane 4 (spam)** — discarded. **No incident record created**, and confirm that: the absence is the thing being tested.
-- [ ] **Lane 3 (distress)** — the distress reply sent, once, as written. Incident record created and closed on the reply. **No follow-up question sent**, and no second reply when the drill message is answered.
-- [ ] **Lane 2 (wrong content)** — assessed as an editorial correction or a substantive change. The one follow-up sent, in its drafted wording. Incident record carries the version pointer.
-- [ ] **One-business-day detection demonstrated** — the elapsed time between a message being sent and the editor reading it is recorded, and it is under one business day. Demonstrated, not asserted. The *action* half of the same promise is measured in sitting 2.
-- [ ] **Backup access exercised** — the chaplain reviewer signs in and reads the drill messages during the sitting, not afterwards and not on a screenshot.
-- [ ] **Replies landed in an inbox, not a spam folder** — checked at the receiving end for every reply sent, against more than one provider. A reply the reporter never sees fails the channel as completely as never sending one.
-- [ ] **Source-email deletion performed** on all three, trash and quarantine included, inside the procedure's own timing rather than at the end of the day.
-- [ ] **Sanitized incident records** for lanes 2 and 3, checked against the [field list](#the-incident-register) — nothing extra in them.
+- [x] **Lane 4 (spam)** — discarded. **No incident record created**, and confirm that: the absence is the thing being tested.
+- [x] **Lane 3 (distress)** — the distress reply sent, once, as written. Incident record created and closed on the reply. **No follow-up question sent**, and no second reply when the drill message is answered.
+- [x] **Lane 2 (wrong content)** — assessed as an editorial correction or a substantive change. The one follow-up sent, in its drafted wording. Incident record carries the version pointer.
+- [x] **One-business-day detection demonstrated** — the elapsed time between a message being sent and the editor reading it is recorded, and it is under one business day. Demonstrated, not asserted. The *action* half of the same promise is measured in sitting 2.
+- [x] **Backup access exercised** — the chaplain reviewer signs in and reads the drill messages during the sitting, not afterwards and not on a screenshot.
+- [x] **Replies landed in an inbox, not a spam folder** — checked at the receiving end for every reply sent, against more than one provider. A reply the reporter never sees fails the channel as completely as never sending one.
+- [x] **Source-email deletion performed** on all three, trash and quarantine included, inside the procedure's own timing rather than at the end of the day.
+- [x] **Sanitized incident records** for lanes 2 and 3, checked against the [field list](#the-incident-register) — nothing extra in them.
 
 Lane 1 is deliberately absent. Its closing reply says the material *has been removed*, which cannot truthfully be sent before it has been; opening a lane-1 record here would leave it hanging until #33 lands, and its source email would hit the 30-day deletion maximum long before the record could close. Lane 1 is worked whole, in sitting 2, on a fresh message.
 
@@ -341,7 +343,7 @@ The last box is the one that touches code, and it is last on purpose.
 - [ ] [Both availability notices](#the-temporary-availability-notice) agreed, and somewhere they can be published from quickly
 - [x] [The incident register](#the-incident-register) exists, empty, outside this repository
 - [x] The register shared with the chaplain reviewer
-- [ ] [The drill](#the-drill), **sitting 1** — the channel
+- [x] [The drill](#the-drill), **sitting 1** — the channel, passed in full
 - [ ] [The drill](#the-drill), **sitting 2** — the withdrawal, after [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33)
 - [ ] **Only then**: replace `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) with the real address
 
