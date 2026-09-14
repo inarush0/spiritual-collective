@@ -16,7 +16,16 @@
  * "Leave this here" — belongs to the companion route trees, not here.
  */
 
-/** Where the reader is in the sequence. Orientation, never a progress claim. */
+/**
+ * Where the reader is in the sequence.
+ *
+ * The total is named as well as the position, and it is orientation rather
+ * than a meter: the whole sequence is already on the practice view, read in
+ * full before anything starts, so "of 4" tells a reader nothing they were not
+ * shown. A reader who cannot see how much is left has to guess, and guessing
+ * is its own pressure. It says where you are; it says nothing about how far
+ * you ought to get, and no screen here treats the last step as the point.
+ */
 export function stepLabel(step: number, total: number): string {
 	return `Step ${step} of ${total}`;
 }
@@ -53,6 +62,3 @@ export const STOP = 'Stop.';
  * harder thing to come back from.
  */
 export const CHANGE_THIS = 'Change this';
-
-/** The quiet way back to the whole record, from any step. */
-export const READ_THE_WHOLE_THING = 'Read the whole thing again';

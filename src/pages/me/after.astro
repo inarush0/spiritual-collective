@@ -1,7 +1,6 @@
 ---
 import Page from '../../layouts/Page.astro';
-import { PATH_BADGE } from '../../framing/practice-view.js';
-import { EXIT_LINES, EXIT_TITLE, EXITS } from '../../framing/exits.js';
+import { EXIT_LINES, EXIT_TITLE, WAYS_ONWARD } from '../../framing/exits.js';
 
 /**
  * The exit, direct-user path: `/me/after/`.
@@ -16,13 +15,16 @@ import { EXIT_LINES, EXIT_TITLE, EXITS } from '../../framing/exits.js';
  * same URL. The route is named "after" rather than "done" because "done" is a
  * claim about the reader that this resource is in no position to make.
  *
+ * No path badge here, and none on the kind screen either: the badge belongs
+ * beside "Change who this is for", which is one of the ways onward below. A
+ * second naming of the path on the way out would be the resource talking about
+ * itself at the moment a reader is leaving.
+ *
  * Every sentence lives in `src/framing/exits.ts`; this template holds none.
  */
 ---
 
 <Page title={EXIT_TITLE}>
-	<p class="badge">{PATH_BADGE}</p>
-
 	<h1>{EXIT_TITLE}</h1>
 	{EXIT_LINES.map((line) => <p class="lead">{line}</p>)}
 
@@ -35,20 +37,14 @@ import { EXIT_LINES, EXIT_TITLE, EXITS } from '../../framing/exits.js';
 	}
 	<ul class="exits">
 		{
-			EXITS.map((exit) => (
-				<li>{exit.route ? <a href={exit.route}>{exit.words}</a> : exit.words}</li>
+			WAYS_ONWARD.map((onward) => (
+				<li>{onward.route ? <a href={onward.route}>{onward.words}</a> : onward.words}</li>
 			))
 		}
 	</ul>
 </Page>
 
 <style>
-	.badge {
-		margin: 0 0 1.5rem;
-		color: var(--quiet);
-		font-size: 0.875rem;
-	}
-
 	.lead {
 		margin: 0 0 1rem;
 		color: var(--quiet);

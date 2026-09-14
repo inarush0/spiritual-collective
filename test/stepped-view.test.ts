@@ -1,14 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CRISIS_LEAD, LIMITS_LINE } from '../src/framing/safety.js';
-import { ACTION } from '../src/framing/practice-view.js';
+import { ACTION, PENDING_MARKER } from '../src/framing/practice-view.js';
+import { CHROME_LINK } from '../src/framing/about.js';
 import {
 	EXIT_LINES,
 	EXIT_ROUTE,
 	EXIT_TITLE,
-	EXITS,
 	NOTHING_LINES,
 	NOTHING_ROUTE,
 	NOTHING_TITLE,
+	WAYS_ONWARD,
 } from '../src/framing/exits.js';
 import { CHANGE_THIS, LAST_STEP, NEXT, ONWARD, STOP, stepLabel } from '../src/framing/stepped-view.js';
 import { buildBothReleases, hasPageAt, pageAt, plainText } from './support/build.js';
@@ -64,6 +65,13 @@ describe('one step per page', () => {
 		// Pending records are on beta only, steps included.
 		expect(hasPageAt(beta, '/me/practice/saying-the-hard-thing/1/')).toBe(true);
 		expect(hasPageAt(production, '/me/practice/saying-the-hard-thing/1/')).toBe(false);
+	});
+
+	it('marks a pending record on every step, on beta and nowhere else', () => {
+		expect(plainText(pageAt(beta, '/me/practice/saying-the-hard-thing/2/'))).toContain(
+			PENDING_MARKER,
+		);
+		expect(step(2)).not.toContain(PENDING_MARKER);
 	});
 
 	it('carries its own canonical step, verbatim, and no other', () => {
@@ -185,15 +193,23 @@ describe('the exit', () => {
 		// Nothing to answer, and nowhere to answer it: no question mark outside
 		// the chrome link, and no form control of any kind.
 		expect(html).not.toMatch(/<(form|input|select|textarea|button)\b/i);
-		expect(exit.replace('What is this?', '')).not.toContain('?');
+		expect(exit.replace(CHROME_LINK, '')).not.toContain('?');
 	});
 
 	it('offers choose something else, change who this is for, and nothing right now', () => {
-		for (const exitOption of EXITS) {
-			expect(exit, exitOption.words).toContain(exitOption.words);
-			if (exitOption.route) expect(html).toContain(`href="${exitOption.route}"`);
+		const offered = ['Choose something else.', 'Change who this is for.', 'Nothing right now.'];
+		expect(WAYS_ONWARD.map((onward) => onward.words)).toEqual(offered);
+
+		let from = 0;
+		for (const words of offered) {
+			// All three, in order, on the page a reader actually meets.
+			const index = exit.indexOf(words, from);
+			expect(index, `the exit does not offer: ${words}`).toBeGreaterThan(-1);
+			from = index;
 		}
-		expect(EXITS.map((option) => option.words)).toHaveLength(3);
+		for (const { route } of WAYS_ONWARD) {
+			if (route) expect(html).toContain(`href="${route}"`);
+		}
 	});
 
 	it('links nowhere that was not built', () => {

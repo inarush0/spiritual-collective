@@ -30,18 +30,23 @@ export const EXIT_ROUTE = '/me/after/';
 /** The kind screen: a real resting state, not a dead end. */
 export const NOTHING_ROUTE = '/me/nothing-right-now/';
 
+/** The direct user's set screen, until the suggestion sets land (#24). */
+const CATALOG_ROUTE = '/me/everything/';
+
 export const EXIT_TITLE = 'That is as far as this goes.';
 
 /**
- * The two lines under the heading.
+ * The one line under the heading.
  *
- * They say what is *not* being asked, because a reader arriving here from a
- * stop control is most likely to expect that it is. Neither line asks anything
- * back.
+ * It says what the page does not know, because a reader arriving from a stop
+ * control is most likely to expect that it does. One line and no more: every
+ * further sentence here is a sentence about how the practice went, and naming
+ * the evaluation is most of the way to asking for it. The reassurance that
+ * nobody need ask whether the practice helped belongs to the companion paths,
+ * where the spec puts it.
  */
 export const EXIT_LINES: readonly string[] = [
 	'You stopped, or the steps ran out. Either one is the same to this page, and nothing here kept a record of which.',
-	'You do not have to work out whether it was any good.',
 ];
 
 /** One way onward from the exit. `route` is null while its page is unbuilt. */
@@ -64,8 +69,8 @@ export interface Exit {
  * ([#24](https://github.com/inarush0/spiritual-collective/issues/24)); that is
  * the direct user's set screen today.
  */
-export const EXITS: readonly Exit[] = [
-	{ words: 'Choose something else.', route: '/me/everything/' },
+export const WAYS_ONWARD: readonly Exit[] = [
+	{ words: 'Choose something else.', route: CATALOG_ROUTE },
 	{ words: 'Change who this is for.', route: null },
 	{ words: 'Nothing right now.', route: NOTHING_ROUTE },
 ];
@@ -85,10 +90,23 @@ export const NOTHING_LINES: readonly string[] = [
 	'Nothing on this page is waiting for you, and nothing carries on without you. You can close it and it keeps nothing.',
 ];
 
+/**
+ * A sentence with a link inside it — the same shape as `CrisisLine` in
+ * `./safety.ts` and `AddressSentence` in `./about.ts`, and for the same
+ * reason: a template that had to find the link inside a string would be a
+ * second place that knows what the sentence says.
+ */
+export interface LinkedSentence {
+	before: string;
+	words: string;
+	route: string;
+	after: string;
+}
+
 /** The way back, if it is wanted. Quiet, and last. */
-export const NOTHING_ONWARD = {
+export const NOTHING_ONWARD: LinkedSentence = {
 	before: 'If you want to look again, whenever that is, it is all in ',
 	words: 'one list',
-	route: '/me/everything/',
+	route: CATALOG_ROUTE,
 	after: '.',
 };
