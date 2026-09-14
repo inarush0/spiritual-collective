@@ -252,7 +252,8 @@ The last box is the one that touches code, and it is last on purpose.
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
 - [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly
 - [x] [The incident register](#the-incident-register) exists, empty, outside this repository
-- [ ] The register shared with the chaplain reviewer, and its link in the shared vault
+- [x] The register shared with the chaplain reviewer
+- [ ] The register's link in the shared vault, beside the mailbox recovery codes
 - [ ] [The drill](#the-drill), **sitting 1** — the channel
 - [ ] [The drill](#the-drill), **sitting 2** — the withdrawal, after [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33)
 - [ ] **Only then**: replace `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) with the real address
