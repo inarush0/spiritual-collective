@@ -292,6 +292,12 @@ It is also the honest target for a second reason: at the moment the drill runs, 
 
 ### Sitting 1 — the channel
 
+**Nothing is removed in this sitting, and nothing needs to be live.** Lane 1 is the only lane that takes material down, and it is wholly in sitting 2. What is being tested here is whether a message reaching the address gets detected, judged, answered, recorded, and deleted — all of which is mailbox work and none of which touches the site.
+
+**What the lane-2 message refers to.** Write it about a real practice record in `content/practices/`, named by its slug, as a reader would describe it: something in it is wrong, or hard to follow. The records are placeholder drafting, which does not matter — the lane-2 output is a *classification*, not an edit. The editor reads the record as it stands in git and decides whether the reported problem would be an [editorial correction or a substantive change](#triage-the-four-lanes). The incident record carries the slug and the current commit SHA as its version pointer.
+
+If the honest answer is *substantive change*, the drill records that and stops. Returning a record to review is the ordinary governance path, not part of this gate, and these records have no approval to void yet.
+
 Three test messages, one each for lanes 4, 3, and 2, worked end to end.
 
 - [ ] **Lane 4 (spam)** — discarded. **No incident record created**, and confirm that: the absence is the thing being tested.
