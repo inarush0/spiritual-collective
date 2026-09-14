@@ -16,7 +16,7 @@ Owner: **editor**. All of it is human work; none of it is in this repository.
 - [x] **No forwarding into a personal archive, and no provider-side backup that outlives the 30-day maximum.** Source-email deletion is a promise the about page makes on the resource's behalf; a copy sitting in someone's personal mail history breaks it silently. Disable auto-archive, auto-forward, and any "deleted items keep forever" retention. A short provider restore window is acceptable and must be [written down](#what-deleted-actually-means) rather than assumed away.
 - [x] **Spam filtering set to quarantine, not silent discard**, and the quarantine checked on the same daily rhythm. A safety report that a filter ate is indistinguishable from a channel that does not exist.
 - [x] **Outbound mail authenticated**, so the three replies land in an inbox rather than a spam folder. A distress reply nobody sees is the harm this channel exists to prevent, and a young domain's first outbound mail is exactly where it happens.
-- [ ] **Recovery codes and the registrar login in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person. The vault is an **Apple Passwords shared group**; the Fastmail password is in it, and [three things are not](#what-the-vault-still-needs).
+- [x] **What the chaplain reviewer needs to recover the mailbox, in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person. See [the shared vault](#the-shared-vault) — and note that the registrar login is deliberately *not* in it.
 
 Provisioning is complete **except what the shared vault still holds**. Backup access was exercised by signing in, not granted on paper; the drill exercises it again against live messages.
 
@@ -38,22 +38,23 @@ The address is **`report@spiritual-collective.com`**, hosted at **Fastmail**, wi
 
 **DMARC starts at `p=none` deliberately.** Tighten to `p=quarantine` and then `p=reject` once the aggregate reports confirm Fastmail is the only sender. SPF stays at Fastmail's `?all`: the protection comes from DKIM and DMARC, and `-all` would break any future sender for no gain here.
 
-### What the vault still needs
+### The shared vault
 
-The vault is an **Apple Passwords shared group**, holding the Fastmail password. Recorded here for the same reason the DNS is: the next person needs to know where the keys live. Nothing secret is written down — the name of the thing, never its contents.
+An **Apple Passwords shared group**, holding three things: the Fastmail password, the Fastmail recovery code, and the link to the incident register. Recorded here for the same reason the DNS is — the next person needs to know where the keys live. Nothing secret is written down, only the name of the thing.
 
-**Only what the chaplain reviewer will actually use belongs in it** — Fastmail and the register, and nothing else. A credential they will never sign in with is not a backup; it is a copy of a secret in one more place. [The registrar stays with the editor](#the-registrar-stays-with-the-editor).
+**Only what the chaplain reviewer will actually use belongs in it.** A credential they will never sign in with is not a backup; it is a copy of a secret in one more place. [The registrar stays with the editor](#the-registrar-stays-with-the-editor).
 
-A password is not recovery. Two things are still missing:
+**The chaplain reviewer has read all three back from their own device.** That read-back is the check that matters, not the act of sharing: a share nobody has opened is not a share, and it is the only thing that catches a note added to a personal copy of a login rather than to the shared one — which looks identical from the side that added it.
 
-- **The Fastmail recovery code.** Account recovery runs through the **editor's cellphone number**, which is set up and works — for the editor. It is not a shared recovery method, and the chaplain reviewer cannot use it. Fastmail issues a recovery code for exactly this and [recommends keeping it somewhere safe](https://www.fastmail.help/hc/en-us/articles/360058752374-Using-two-step-verification-2FA); the shared group is that place. It is found at **Settings → Privacy & Security → Account recovery**, already generated — copy it while the screen is open, because Fastmail does not document whether it can be viewed again. It goes in the notes of the **shared** entry: a note on a personal copy of the same login is not shared with anybody.
-- **The incident register link**, so the register is reachable by the person who did not create it.
+#### Why the recovery code had to be in there
 
-**This gap is currently silent, which is why it is worth closing before the drill.** Fastmail lets a device be marked trusted, and the chaplain reviewer's is, so their sign-in works today and will keep appearing to work. The failure arrives later and all at once: a new phone, a reinstall, or cleared browser data drops the trust, Fastmail asks for a second factor, and the second factor is a text message to the editor's phone. Backup access that depends on the person it is a backup for is the condition §6 fails publication on, and it will pass every check until the day it matters.
+Account recovery runs through the **editor's cellphone number**. That works, and it works only for the editor; it is not a shared method and the chaplain reviewer cannot use it. The recovery code is the shared equivalent, at **Settings → Privacy & Security → Account recovery** — already generated rather than created on demand, and [worth copying while the screen is open](https://www.fastmail.help/hc/en-us/articles/360058752374-Using-two-step-verification-2FA), because Fastmail does not document whether it can be viewed twice.
 
-Fastmail supports **more than one two-step verification device**. Registering the chaplain reviewer's own is the sturdier fix and does not replace the recovery code — do both if it is easy, the code if only one.
+**The gap it closed was silent**, which is why it is written down now that it is shut. Fastmail lets a device be marked trusted, and the chaplain reviewer's is, so their sign-in works today and would have kept appearing to work. The failure arrives later and all at once: a new phone, a reinstall, or cleared browser data drops the trust, Fastmail asks for a second factor, and that factor is a text message to the editor's phone. Backup access that depends on the person it is a backup for is the condition §6 fails publication on, and it passes every check until the day it matters.
 
-One thing to know about the shared group: it depends on both people staying in the Apple ecosystem. That is acceptable and worth writing down rather than discovering — if either person changes phones away from Apple, the vault moves, and the move is the kind of task that gets postponed until it is needed.
+**Still available, and sturdier:** Fastmail supports more than one two-step verification device, so the chaplain reviewer can register their own. That removes the dependency rather than working around it, and it does not replace the recovery code.
+
+**One property of the shared group:** it depends on both people staying in the Apple ecosystem. Acceptable, and worth writing down rather than discovering — if either person moves off Apple, the vault moves with them, and that is the kind of task postponed until the day it is needed.
 
 ### What the chaplain reviewer can and cannot do
 
@@ -298,7 +299,6 @@ Three test messages, one each for lanes 4, 3, and 2, worked end to end.
 - [ ] **Lane 2 (wrong content)** — assessed as an editorial correction or a substantive change. The one follow-up sent, in its drafted wording. Incident record carries the version pointer.
 - [ ] **One-business-day detection demonstrated** — the elapsed time between a message being sent and the editor reading it is recorded, and it is under one business day. Demonstrated, not asserted. The *action* half of the same promise is measured in sitting 2.
 - [ ] **Backup access exercised** — the chaplain reviewer signs in and reads the drill messages during the sitting, not afterwards and not on a screenshot.
-- [ ] **The chaplain reviewer reads the recovery code back**, from their own device, out of the shared group. A share nobody has opened is not a share, and this is the one credential whose whole purpose is to work on a day the editor cannot be asked whether it arrived. It is also the only check that catches the note having been added to a personal entry instead of the shared one.
 - [ ] **Replies landed in an inbox, not a spam folder** — checked at the receiving end for every reply sent, against more than one provider. A reply the reporter never sees fails the channel as completely as never sending one.
 - [ ] **Source-email deletion performed** on all three, trash and quarantine included, inside the procedure's own timing rather than at the end of the day.
 - [ ] **Sanitized incident records** for lanes 2 and 3, checked against the [field list](#the-incident-register) — nothing extra in them.
@@ -326,12 +326,11 @@ The last box is the one that touches code, and it is last on purpose.
 
 - [x] The mailbox exists, on the resource's own domain, with MX, SPF, DKIM, and DMARC verified live
 - [x] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded
-- [x] A shared vault exists — an Apple Passwords shared group, holding the Fastmail password
-- [ ] [The vault holds the rest](#what-the-vault-still-needs) — the Fastmail recovery code and the register's link
+- [x] [The shared vault](#the-shared-vault) holds the Fastmail password, the recovery code, and the register's link — all three read back by the chaplain reviewer from their own device
 - [x] Domain auto-renew confirmed on, with renewal warnings reaching an address that a domain expiry would not take down
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
-- [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly
+- [ ] [Both availability notices](#the-temporary-availability-notice) agreed, and somewhere they can be published from quickly
 - [x] [The incident register](#the-incident-register) exists, empty, outside this repository
 - [x] The register shared with the chaplain reviewer
 - [ ] [The drill](#the-drill), **sitting 1** — the channel
