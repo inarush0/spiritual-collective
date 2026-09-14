@@ -25,6 +25,16 @@ export const ACTION = "I'll try this.";
  */
 export const REFUSAL = 'Not this one. Show me everything.';
 
+/**
+ * How the **smallest version** is introduced wherever it is shown.
+ *
+ * The practice view says it and so does "Change this" inside the stepped view,
+ * so the words are one string rather than a literal in each template: nothing
+ * carries a duration target or completion pressure, and that promise is easier
+ * to keep in one place than in two.
+ */
+export const SMALLEST_LEAD = 'The smallest version of this:';
+
 /** The badge naming the current path. */
 export const PATH_BADGE = 'You are reading this for yourself.';
 

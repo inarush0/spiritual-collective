@@ -99,6 +99,17 @@ const onAbout = `${Astro.url.pathname.replace(/\/$/, '')}/` === ABOUT_ROUTE;
 	}
 
 	/*
+	 * The badge naming the current audience path, on every screen that names
+	 * one. Here rather than in each page because every screen of every path
+	 * will carry it and three templates had already spelled it identically.
+	 */
+	.badge {
+		margin: 0 0 1.5rem;
+		color: var(--quiet);
+		font-size: 0.875rem;
+	}
+
+	/*
 	 * Quiet and last, in the reading order as well as on the page: it is a way
 	 * out for a reader who wants to know what they have landed in, not a thing
 	 * competing with what they came for.

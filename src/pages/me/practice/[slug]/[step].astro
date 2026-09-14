@@ -1,0 +1,176 @@
+---
+import Page from '../../../../layouts/Page.astro';
+import {
+	PATH_BADGE,
+	PENDING_MARKER,
+	SMALLEST_LEAD,
+} from '../../../../framing/practice-view.js';
+import { EXIT_ROUTE } from '../../../../framing/exits.js';
+import {
+	CHANGE_THIS,
+	LAST_STEP,
+	NEXT,
+	ONWARD,
+	STOP,
+	stepLabel,
+} from '../../../../framing/stepped-view.js';
+import { loadCatalog, pendingIn, release } from '../../../../catalog/index.js';
+
+/**
+ * The stepped view, direct-user path: `/me/practice/<slug>/1..n/`.
+ *
+ * One canonical step per page, user-advanced. Nothing advances automatically —
+ * no timer, no audio, and no recorded state, because the only thing that moves
+ * the practice on is a link the reader follows and the only place the position
+ * is held is the URL (`docs/spec/01-journey-and-ia.md`).
+ *
+ * The canonical sequence is rendered **verbatim** from the record. The same
+ * sequence and order serve all three paths; a path may wrap a step but may
+ * never rewrite, add to, or reorder one.
+ *
+ * A page exists for every step of every practice this release publishes, and
+ * for nothing beyond the last: `n + 1` is the exit, not a step.
+ */
+export async function getStaticPaths() {
+	const practices = await loadCatalog();
+	return practices.flatMap((practice) =>
+		practice.data.what_this_involves.map((step, index) => ({
+			params: { slug: practice.id, step: String(index + 1) },
+			props: { practice, step, number: index + 1 },
+		})),
+	);
+}
+
+const { practice, step, number } = Astro.props;
+const record = practice.data;
+
+const total = record.what_this_involves.length;
+const practiceRoute = `/me/practice/${practice.id}/`;
+const label = stepLabel(number, total);
+const isLast = number === total;
+---
+
+<Page title={`${record.name} — ${label}`}>
+	<p class="badge">{PATH_BADGE}</p>
+
+	{
+		/*
+		 * The practice, named and linked: the whole record stays one click away
+		 * from inside the steps, so a reader who wants to see what they are in
+		 * the middle of never has to guess their way back.
+		 */
+	}
+	<p class="from"><a href={practiceRoute}>{record.name}</a></p>
+	<p class="where">{label}</p>
+	{
+		/*
+		 * A pending record is marked on every screen it can be met on, not only
+		 * where its list entry was: a chaplain reading beta arrives here from
+		 * the practice view and should not have to remember what they clicked.
+		 */
+		pendingIn(release, record.publication) && <p class="pending">{PENDING_MARKER}</p>
+	}
+
+	{
+		/*
+		 * The step itself is the heading, because it is what the screen is for.
+		 * It is also what a screen reader should land on first after the page's
+		 * quiet preamble, at 320px and at 200% zoom alike.
+		 */
+	}
+	<h1 class="step">{step}</h1>
+
+	{
+		/*
+		 * Disclosed in place rather than linked away: a reader who finds a step
+		 * hard should be able to make it smaller without leaving the practice.
+		 * `<details>` is markup, not script — nothing here needs JavaScript.
+		 */
+	}
+	<details class="change">
+		<summary>{CHANGE_THIS}</summary>
+		<p>{record.ways_to_change_it}</p>
+		<p class="smallest">{SMALLEST_LEAD} {record.smallest_version}</p>
+	</details>
+
+	<div class="choices">
+		{
+			/*
+			 * Onward and out, at the same size. On the last step the onward link
+			 * goes where the stop control goes: there is one exit, and it is
+			 * reached the same way whether the steps ran out or the reader left.
+			 */
+			isLast ? (
+				<p class="onward">
+					<span class="last">{LAST_STEP}</span>
+					<a href={EXIT_ROUTE}>{ONWARD}</a>
+				</p>
+			) : (
+				<p class="onward">
+					<a href={`${practiceRoute}${number + 1}/`}>{NEXT}</a>
+				</p>
+			)
+		}
+		<p class="stop"><a href={EXIT_ROUTE}>{STOP}</a></p>
+	</div>
+</Page>
+
+<style>
+	.from,
+	.where,
+	.pending {
+		margin: 0;
+		color: var(--quiet);
+		font-size: 0.875rem;
+	}
+
+	/*
+	 * The step is the page. Roomier than an h1 elsewhere because there is one
+	 * of them and nothing is competing with it.
+	 */
+	.step {
+		font-size: 1.375rem;
+		line-height: 1.4;
+		margin: 1.5rem 0 2.5rem;
+	}
+
+	.change {
+		border-top: 1px solid var(--rule);
+		padding-top: 1rem;
+	}
+
+	.change summary {
+		cursor: pointer;
+	}
+
+	.change p {
+		margin: 0.75rem 0 0;
+	}
+
+	.smallest {
+		color: var(--quiet);
+	}
+
+	/*
+	 * Onward and stop sit side by side above 26rem and stack below it, at the
+	 * same size either way — the same rule the practice view's action and
+	 * refusal follow, and for the same reason.
+	 */
+	.choices {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 2rem;
+		margin: 2.5rem 0 0;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--rule);
+	}
+
+	.choices p {
+		margin: 0;
+	}
+
+	.last {
+		display: block;
+		color: var(--quiet);
+	}
+</style>

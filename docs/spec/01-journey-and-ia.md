@@ -31,6 +31,7 @@ Path is encoded in the URL; there is no session, cookie, or query-string state.
 /me/nothing-right-now/              the kind screen
 /me/practice/<slug>/                practice view, direct user
 /me/practice/<slug>/1..n/           stepped view, one step per page
+/me/after/                          the exit, direct user
 
 /with/                              suggestion set, companion (no question)
 /with/for/<need-tag-slug>/          adjusted set, companion
@@ -39,12 +40,14 @@ Path is encoded in the URL; there is no session, cookie, or query-string state.
 /with/practice/<slug>/              practice view, companion
 /with/practice/<slug>/before/       "Before you offer this"
 /with/practice/<slug>/1..n/         stepped view, companion framing
+/with/after/                        the exit, companion
 
 /child/                             the standing guide
 /child/set/                         suggestion set, younger child
 /child/for/<need-tag-slug>/  /child/for/<need-tag-slug>/low/
 /child/not-sure/  /child/everything/  /child/nothing-right-now/
 /child/practice/<slug>/  /child/practice/<slug>/before/  /child/practice/<slug>/1..n/
+/child/after/                       the exit, younger child
 
 /about/                             the about page
 ```
@@ -119,7 +122,7 @@ User-advanced, one step per page, **no timer and no audio** ([#7](https://github
 
 ## Exits
 
-Stopping and reaching the final step lead to **the same** quiet, path-specific exit. No completion claim, no reflection or rating question, no praise. It offers:
+Stopping and reaching the final step lead to **the same** quiet, path-specific exit, at `/<path>/after/` — **one page per audience path, not one per practice**. It carries nothing about which practice was open, and no state says whether the reader stopped or ran out of steps, because there is none to say it with. Named `after` rather than `done`: the URL may not make a claim the page refuses to. No completion claim, no reflection or rating question, no praise. It offers:
 
 - **Choose something else** → the same audience path's suggestion set
 - **Change who this is for** → arrival

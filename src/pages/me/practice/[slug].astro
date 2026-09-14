@@ -7,6 +7,7 @@ import {
 	PATH_BADGE,
 	PENDING_MARKER,
 	REFUSAL,
+	SMALLEST_LEAD,
 } from '../../../framing/practice-view.js';
 import { loadCatalog, pendingIn, release } from '../../../catalog/index.js';
 
@@ -70,7 +71,7 @@ const record = practice.data;
 	<section>
 		<h2>Ways to change it</h2>
 		<p>{record.ways_to_change_it}</p>
-		<p class="smallest">The smallest version of this: {record.smallest_version}</p>
+		<p class="smallest">{SMALLEST_LEAD} {record.smallest_version}</p>
 	</section>
 
 	<section>
@@ -82,25 +83,19 @@ const record = practice.data;
 	<div class="choices">
 		{
 			/*
-			 * The action becomes the link to step one when the stepped view
-			 * lands. It is deliberately last and deliberately quiet: the record
-			 * above is readable in full first, and nothing here advances by
-			 * itself.
+			 * The action is the way into the stepped view, and the only one:
+			 * step one is reached by clicking this and by nothing else. It is
+			 * deliberately last and deliberately quiet — the record above is
+			 * readable in full first, and nothing here advances by itself.
 			 */
 		}
-		<p class="action">{ACTION}</p>
+		<p class="action"><a href={`/me/practice/${practice.id}/1/`}>{ACTION}</a></p>
 		{/* Refusal is visible, alongside the action rather than beneath it. */}
 		<p class="refusal"><a href="/me/everything/">{REFUSAL}</a></p>
 	</div>
 </Page>
 
 <style>
-	.badge {
-		margin: 0 0 1.5rem;
-		color: var(--quiet);
-		font-size: 0.875rem;
-	}
-
 	.invitation {
 		margin: 0 0 0.75rem;
 		font-size: 1.125rem;

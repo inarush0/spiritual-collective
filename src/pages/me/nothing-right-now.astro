@@ -1,0 +1,42 @@
+---
+import Page from '../../layouts/Page.astro';
+import { NOTHING_LINES, NOTHING_ONWARD, NOTHING_TITLE } from '../../framing/exits.js';
+
+/**
+ * The kind screen, direct-user path: `/me/nothing-right-now/`.
+ *
+ * "Nothing right now" is offered as an escape from the exit and, when the set
+ * screens land, from every one of them. It is therefore a place a person
+ * actually arrives at, and it has to hold them: neutral, kind, and making no
+ * attempt to win them back (`docs/spec/01-journey-and-ia.md`).
+ *
+ * It is also not a dead end. The one way onward is last, quiet, and phrased as
+ * a way back rather than an invitation to reconsider.
+ *
+ * Every sentence lives in `src/framing/exits.ts`; this template holds none.
+ */
+---
+
+<Page title={NOTHING_TITLE}>
+	<h1>{NOTHING_TITLE}</h1>
+	{NOTHING_LINES.map((line) => <p>{line}</p>)}
+
+	<p class="onward">
+		{NOTHING_ONWARD.before}
+		<a href={NOTHING_ONWARD.route}>{NOTHING_ONWARD.words}</a>
+		{NOTHING_ONWARD.after}
+	</p>
+</Page>
+
+<style>
+	p {
+		margin: 0 0 1.25rem;
+	}
+
+	.onward {
+		margin: 2.5rem 0 0;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--rule);
+		color: var(--quiet);
+	}
+</style>
