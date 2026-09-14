@@ -1,13 +1,17 @@
 ---
 import type { NeedTag } from '../catalog/practice-record.js';
-import { SET_TITLE } from './discovery.js';
+import { framingFor } from './audience.js';
+import type { AudiencePath } from './routes.js';
 
 interface Props {
 	/** The answer the reader picked, said back in their own words. */
 	tag: NeedTag;
+	/** Which reader picked it. */
+	path: AudiencePath;
 }
 
-const { tag } = Astro.props;
+const { tag, path } = Astro.props;
+const { setTitle } = framingFor(path);
 
 /**
  * The heading over a set an answer opened: the answer, and the fact that they
@@ -25,7 +29,7 @@ const { tag } = Astro.props;
  */
 ---
 
-<p class="said">{SET_TITLE}</p>
+<p class="said">{setTitle}</p>
 <h1>{tag}</h1>
 
 <style>

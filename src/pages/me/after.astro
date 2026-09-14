@@ -1,6 +1,6 @@
 ---
 import Page from '../../layouts/Page.astro';
-import { EXIT_LINES, EXIT_TITLE, WAYS_ONWARD } from '../../framing/exits.js';
+import { EXIT_LINES, EXIT_TITLE, waysOnward } from '../../framing/exits.js';
 
 /**
  * The exit, direct-user path: `/me/after/`.
@@ -21,7 +21,12 @@ import { EXIT_LINES, EXIT_TITLE, WAYS_ONWARD } from '../../framing/exits.js';
  * itself at the moment a reader is leaving.
  *
  * Every sentence lives in `src/framing/exits.ts`; this template holds none.
+ *
+ * The companion paths' exits are [#29](https://github.com/inarush0/spiritual-collective/issues/29),
+ * which is where the line they add — that the companion does not need to ask
+ * whether the practice helped — is written.
  */
+const onward = waysOnward('me');
 ---
 
 <Page title={EXIT_TITLE}>
@@ -37,8 +42,8 @@ import { EXIT_LINES, EXIT_TITLE, WAYS_ONWARD } from '../../framing/exits.js';
 	}
 	<ul class="exits">
 		{
-			WAYS_ONWARD.map((onward) => (
-				<li>{onward.route ? <a href={onward.route}>{onward.words}</a> : onward.words}</li>
+			onward.map((way) => (
+				<li>{way.route ? <a href={way.route}>{way.words}</a> : way.words}</li>
 			))
 		}
 	</ul>

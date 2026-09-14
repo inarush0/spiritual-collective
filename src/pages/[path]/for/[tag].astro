@@ -1,0 +1,108 @@
+---
+import Page from '../../../layouts/Page.astro';
+import Adjustments from '../../../framing/Adjustments.astro';
+import Escapes from '../../../framing/Escapes.astro';
+import GuideDoorway from '../../../framing/GuideDoorway.astro';
+import LowEnergyLink from '../../../framing/LowEnergyLink.astro';
+import PathBadge from '../../../framing/PathBadge.astro';
+import PracticeSet from '../../../framing/PracticeSet.astro';
+import SetHeading from '../../../framing/SetHeading.astro';
+import SetTail from '../../../framing/SetTail.astro';
+import { loadCatalog } from '../../../catalog/index.js';
+import { offeredNeedTags, practicesFor } from '../../../catalog/need-tags.js';
+import { framingFor } from '../../../framing/audience.js';
+import { AUDIENCE_PATHS } from '../../../framing/routes.js';
+
+/**
+ * A suggestion set for one need tag, on every audience path:
+ * `/me/for/<need-tag-slug>/`, `/with/for/…`, `/child/for/…`.
+ *
+ * Every published practice carrying that need tag, in the fixed editorial
+ * order, **uncapped** — no curation layer, no per-tag hand-picked list, no
+ * algorithm (`docs/spec/01-journey-and-ia.md`). Membership is computed at
+ * build time from the records' `need tags` and from nothing else, so there is
+ * no second source of truth to go stale.
+ *
+ * **One template for all three paths**, and that is the mechanism rather than
+ * the tidiness: §1 promises that no path shows a smaller catalog than another,
+ * and membership here is computed once and rendered three times. There is no
+ * per-path filter to get wrong, because there is no per-path filter.
+ *
+ * One page per tag the question offers, per path, and none for a tag at zero:
+ * a set screen with nothing on it is the one thing this page must never be.
+ * The direct user reaches these by answering the question; a companion, who is
+ * never asked one, reaches them through the adjustments below the set.
+ *
+ * Neither the limits line nor the crisis pointer belongs here
+ * (`docs/spec/03-safety-and-inclusion.md`): this is the moment someone is
+ * deciding to try something, and a disclaimer reads as a warning about the
+ * practices themselves.
+ */
+export async function getStaticPaths() {
+	const practices = await loadCatalog();
+	const offered = offeredNeedTags(practices);
+	return AUDIENCE_PATHS.flatMap((path) =>
+		offered.map((offer) => ({
+			params: { path, tag: offer.slug },
+			props: { path, tag: offer.tag, practices: practicesFor(practices, offer.tag), offered },
+		})),
+	);
+}
+
+const { path, tag, practices, offered } = Astro.props;
+const framing = framingFor(path);
+---
+
+<Page title={tag}>
+	{
+		/*
+		 * The badge names the path on the companion screens, where `/with/` and
+		 * `/child/` are the same set with different notes behind it and telling
+		 * them apart matters. The direct user's set screens have no confusable
+		 * sibling and are left as they were built.
+		 */
+		framing.companion && <PathBadge path={path} />
+	}
+
+	<SetHeading tag={tag} path={path} />
+
+	{framing.setLead.map((line) => <p class="lead">{line}</p>)}
+
+	<PracticeSet practices={practices} path={path} />
+
+	<SetTail set={practices} path={path} />
+
+	{
+		/*
+		 * Below the tail, and present whether or not this tag has any
+		 * low-energy practices behind it. The component holds no condition to
+		 * make it otherwise, and says why.
+		 */
+	}
+	<LowEnergyLink tag={tag} path={path} />
+
+	{
+		/*
+		 * The other adjustment: the eight need tags themselves. Companion
+		 * screens only for now — the direct user meets the same eight as the
+		 * discovery question, one screen back, and giving them a second copy
+		 * here is a change to screens this ticket is not rebuilding.
+		 */
+		framing.companion && <Adjustments offered={offered} path={path} current={tag} />
+	}
+
+	<Escapes path={path} />
+
+	<GuideDoorway path={path} />
+</Page>
+
+<style>
+	.lead {
+		margin: 0 0 0.5rem;
+		color: var(--quiet);
+	}
+
+	.lead:last-of-type {
+		margin-bottom: 2rem;
+	}
+</style>

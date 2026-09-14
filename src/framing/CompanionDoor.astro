@@ -1,0 +1,104 @@
+---
+import Adjustments from './Adjustments.astro';
+import Escapes from './Escapes.astro';
+import GuideDoorway from './GuideDoorway.astro';
+import PathBadge from './PathBadge.astro';
+import PracticeSet from './PracticeSet.astro';
+import SetTail from './SetTail.astro';
+import Page from '../layouts/Page.astro';
+import { loadCatalog } from '../catalog/index.js';
+import { COMPANION_SET, offeredNeedTags, practicesIn } from '../catalog/need-tags.js';
+import {
+	CHILD_SET_TAB,
+	COMPANION_OFFER,
+	COMPANION_STARTING_POINT,
+	NO_SUITABILITY,
+	WITH_TAB,
+} from './companion.js';
+import type { AudiencePath } from './routes.js';
+
+interface Props {
+	/** Which companion path's door this is. */
+	path: Extract<AudiencePath, 'with' | 'child'>;
+}
+
+const { path } = Astro.props;
+
+/**
+ * The screen a companion lands on: `/with/`, and `/child/set/`.
+ *
+ * A companion is **never asked a question** (`docs/spec/01-journey-and-ia.md`),
+ * so there is no discovery question on these paths and no answer behind this
+ * set. It is fixed editorially — letting someone sit with you, saying the hard
+ * thing, remembering someone — and it is otherwise shaped like any other set:
+ * same lead-in, same list, same tail, same escapes.
+ *
+ * **One component for both doors, reading one array.** The younger-child path
+ * reuses the companion set unchanged, because a set hand-picked for a young
+ * child would be an age-suitability judgement expressed as page order, and
+ * this path states twice that it makes no such judgement
+ * ([#12](https://github.com/inarush0/spiritual-collective/issues/12)). Two
+ * templates could drift into making it; one cannot. What `/child/set/` adds is
+ * the **no-suitability statement** over the set, which is the second of the two
+ * places that claim binds — the first being the **standing guide** itself.
+ *
+ * The **low-energy variant** is not linked from here, per §1: the variant
+ * varies a need tag, and this door was opened without one. It is on every
+ * tag's set screen, which the adjustments below lead to.
+ */
+const catalog = await loadCatalog();
+const practices = practicesIn(catalog, COMPANION_SET, '/with/ and /child/set/');
+const offered = offeredNeedTags(catalog);
+/**
+ * The two doors differ in the tab, not in the heading: the set is the same one
+ * and the page says the same thing about it, and a title claiming otherwise
+ * would be the younger-child path presenting a selection of its own.
+ */
+const tab = path === 'child' ? CHILD_SET_TAB : WITH_TAB;
+---
+
+<Page title={tab}>
+	<PathBadge path={path} />
+
+	{
+		/*
+		 * The lead-in's first line is the heading here. A tag's set screen is
+		 * headed by the tag, because that is what the set is of; this one was
+		 * opened by no answer at all, so what the page is about is what it says
+		 * it is offering.
+		 */
+	}
+	<h1>{COMPANION_OFFER}</h1>
+
+	{
+		/*
+		 * Above the lead-in on `/child/set/`, not below the set: a reader has
+		 * to meet the refusal before the list it is about, or the list has
+		 * already been read as a selection made for their child.
+		 */
+		path === 'child' && NO_SUITABILITY.map((line) => <p class="lead">{line}</p>)
+	}
+
+	<p class="lead">{COMPANION_STARTING_POINT}</p>
+
+	<PracticeSet practices={practices} path={path} />
+
+	<SetTail set={practices} path={path} />
+
+	<Adjustments offered={offered} path={path} />
+
+	<Escapes path={path} />
+
+	<GuideDoorway path={path} />
+</Page>
+
+<style>
+	.lead {
+		margin: 0 0 0.5rem;
+		color: var(--quiet);
+	}
+
+	.lead:last-of-type {
+		margin-bottom: 2rem;
+	}
+</style>

@@ -4,6 +4,7 @@ import Escapes from '../../framing/Escapes.astro';
 import { loadCatalog } from '../../catalog/index.js';
 import { offeredNeedTags } from '../../catalog/need-tags.js';
 import { ORIENTATION_LINES, QUESTION } from '../../framing/discovery.js';
+import { routesFor } from '../../framing/routes.js';
 
 /**
  * The discovery question, direct-user path: `/me/`.
@@ -19,6 +20,13 @@ import { ORIENTATION_LINES, QUESTION } from '../../framing/discovery.js';
  * room — and never hides one because it is sparsely stocked.
  */
 const offered = offeredNeedTags(await loadCatalog());
+/**
+ * The question is the direct user's door, so its answers lead into the direct
+ * user's tree. A need tag knows its own string and its own URL segment and
+ * nothing about paths; the path a link leads to is decided by the screen the
+ * reader is standing on.
+ */
+const routes = routesFor('me');
 ---
 
 <Page title={QUESTION}>
@@ -37,13 +45,13 @@ const offered = offeredNeedTags(await loadCatalog());
 		{
 			offered.map((offer) => (
 				<li>
-					<a href={offer.route}>{offer.tag}</a>
+					<a href={routes.forTag(offer.tag)}>{offer.tag}</a>
 				</li>
 			))
 		}
 	</ul>
 
-	<Escapes />
+	<Escapes path="me" />
 </Page>
 
 <style>

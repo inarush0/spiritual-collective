@@ -1,0 +1,92 @@
+---
+import Page from '../../layouts/Page.astro';
+import Adjustments from '../../framing/Adjustments.astro';
+import Escapes from '../../framing/Escapes.astro';
+import GuideDoorway from '../../framing/GuideDoorway.astro';
+import PathBadge from '../../framing/PathBadge.astro';
+import PracticeSet from '../../framing/PracticeSet.astro';
+import SetTail from '../../framing/SetTail.astro';
+import { loadCatalog } from '../../catalog/index.js';
+import { NOT_SURE_SET, offeredNeedTags, practicesIn } from '../../catalog/need-tags.js';
+import { framingFor } from '../../framing/audience.js';
+import { NOT_SURE_TITLE } from '../../framing/discovery.js';
+import { AUDIENCE_PATHS } from '../../framing/routes.js';
+
+/**
+ * The door that skips the question, on every path: `/<path>/not-sure/`.
+ *
+ * "I'm not sure" is an escape from the discovery question, so it cannot be
+ * answered by a need tag — this set is fixed editorially instead: noticing
+ * what's around you, rest without a task, letting someone sit with you
+ * (`docs/spec/01-journey-and-ia.md`). The three are the lowest-demand doors
+ * the catalog has, and two of them ask nothing of the reader at all.
+ *
+ * A companion was never asked the question, so "I'm not sure" means something
+ * slightly different to them — not knowing what would help rather than not
+ * knowing what they want. The set is the same one, because a different set for
+ * a reader who said the same thing would be this page deciding something about
+ * them; the line under the heading is what turns.
+ *
+ * It is **shaped like any other set**: same lead-in, same list, same escapes,
+ * and no second question anywhere on it. A practice the fixed set names but
+ * this build does not publish is simply absent; the door still opens.
+ */
+export async function getStaticPaths() {
+	const catalog = await loadCatalog();
+	const practices = practicesIn(catalog, NOT_SURE_SET, '/<path>/not-sure/');
+	const offered = offeredNeedTags(catalog);
+	return AUDIENCE_PATHS.map((path) => ({ params: { path }, props: { path, practices, offered } }));
+}
+
+const { path, practices, offered } = Astro.props;
+const framing = framingFor(path);
+---
+
+<Page title={NOT_SURE_TITLE}>
+	{framing.companion && <PathBadge path={path} />}
+
+	<h1>{NOT_SURE_TITLE}</h1>
+	{framing.notSureLines.map((line) => <p class="lead">{line}</p>)}
+	{framing.setLead.map((line) => <p class="lead">{line}</p>)}
+
+	<PracticeSet practices={practices} path={path} />
+
+	{
+		/*
+		 * Shaped like any other set, tail included
+		 * (`docs/spec/01-journey-and-ia.md`): the door that skips the question
+		 * must not be the one screen where the space below the divider is
+		 * missing.
+		 *
+		 * The **low-energy variant** is not offered here, per §1: the variant
+		 * varies a need tag, and this door was taken by a reader who could not
+		 * answer the question, so there is no tag to vary
+		 * ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
+		 */
+	}
+	<SetTail set={practices} path={path} />
+
+	{
+		/*
+		 * The adjustments are the companion's only way to a tag's set, since
+		 * no question is ever put to them. No tag is current here: this screen
+		 * was opened by an answer that is not one of the eight.
+		 */
+		framing.companion && <Adjustments offered={offered} path={path} />
+	}
+
+	<Escapes path={path} />
+
+	<GuideDoorway path={path} />
+</Page>
+
+<style>
+	.lead {
+		margin: 0 0 0.5rem;
+		color: var(--quiet);
+	}
+
+	.lead:last-of-type {
+		margin-bottom: 2rem;
+	}
+</style>

@@ -1,8 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { NEED_TAGS } from '../src/catalog/practice-record.js';
-import { needTagRoute, needTagSlug } from '../src/catalog/need-tags.js';
+import { needTagSlug } from '../src/catalog/need-tags.js';
+import { escapesFor } from '../src/framing/audience.js';
+import { routesFor } from '../src/framing/routes.js';
 import {
-	ESCAPES,
 	LOW_ENERGY_EMPTY,
 	LOW_ENERGY_LEAD,
 	LOW_ENERGY_LINK,
@@ -17,6 +18,10 @@ import {
 } from '../src/framing/discovery.js';
 import { CRISIS_LEAD, LIMITS_LINE } from '../src/framing/safety.js';
 import { buildBothReleases, hasPageAt, pageAt, plainText } from './support/build.js';
+
+/** The direct user's own routes and escapes: this suite is about their tree. */
+const { forTag: needTagRoute } = routesFor('me');
+const ESCAPES = escapesFor('me');
 
 /**
  * The discovery question and the suggestion sets, direct-user path.

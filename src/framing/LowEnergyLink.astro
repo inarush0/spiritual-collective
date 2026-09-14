@@ -1,14 +1,17 @@
 ---
-import { lowEnergyRoute } from '../catalog/need-tags.js';
 import type { NeedTag } from '../catalog/practice-record.js';
-import { LOW_ENERGY_LINK } from './discovery.js';
+import { framingFor } from './audience.js';
+import type { AudiencePath } from './routes.js';
 
 interface Props {
 	/** The answer whose set this is. The variant lives under its route. */
 	tag: NeedTag;
+	/** The path the set screen is on. */
+	path: AudiencePath;
 }
 
-const { tag } = Astro.props;
+const { tag, path } = Astro.props;
+const { routes, lowEnergyLink } = framingFor(path);
 
 /**
  * The link to the **low-energy variant**, below the **set tail** on every set
@@ -25,11 +28,16 @@ const { tag } = Astro.props;
  * It sits below the tail rather than beside the set, because it is an
  * adjustment to what is on screen rather than another thing on it, and above
  * the escapes, because it is still a way further in rather than a way out.
+ *
+ * The **wording turns with the path** while the need tags do not. A need tag
+ * is a first-person string a reader is offered verbatim; this is the page
+ * talking to whoever is holding the screen, and on a companion path that is
+ * not the person who would be lying down.
  */
 ---
 
 <p class="low-energy">
-	<a href={lowEnergyRoute(tag)}>{LOW_ENERGY_LINK}</a>
+	<a href={routes.lowEnergy(tag)}>{lowEnergyLink}</a>
 </p>
 
 <style>

@@ -1,4 +1,5 @@
-import { CATALOG_ROUTE, NOTHING_ROUTE } from './routes.js';
+import { CHANGE_PATH } from './audience.js';
+import { ARRIVAL_ROUTE, isCompanionPath, routesFor, type AudiencePath } from './routes.js';
 
 /**
  * The exit, and the kind screen it can lead to.
@@ -18,9 +19,13 @@ import { CATALOG_ROUTE, NOTHING_ROUTE } from './routes.js';
  * - **No praise.** Praise implies the alternative was worse.
  *
  * The exit is **path-specific**: one per **audience path**, holding nothing
- * about which practice was open. The companion paths' exits — which also
- * repeat that the companion need not ask whether the practice helped — belong
- * to the companion route trees, not here.
+ * about which practice was open, so the sentences that name a route are
+ * written as functions of the path rather than as constants pointing at the
+ * direct user's. The extra line the companion exits carry — that the companion
+ * does not need to ask whether the practice helped — belongs with the
+ * companion stepped view
+ * ([#29](https://github.com/inarush0/spiritual-collective/issues/29)), which
+ * is where those two pages land.
  *
  * **Tier-2 framing surfaces** (`docs/spec/05-governance.md`): placeholder
  * drafting until the chaplain reviewer has read them.
@@ -57,16 +62,24 @@ export interface Exit {
  * following a chaplain's link should always meet a way onward that works. The
  * wording is here now so that arrival landing is one route, not a rewrite.
  *
- * "Choose something else" goes to a suggestion set, as the spec says, and the
- * whole catalog is the set that asks nothing: a reader leaving a practice has
- * not thereby said what they want, and sending them back to the discovery
- * question would put a question on the way out of one.
+ * "Choose something else" goes to a suggestion set, as the spec says. For the
+ * direct user that is the whole catalog, the set that asks nothing: they have
+ * not said what they want by leaving a practice, and sending them back to the
+ * discovery question would put a question on the way out of one. A companion
+ * was never asked in the first place, so their own door is already a set, and
+ * it is the one they came in through.
  */
-export const WAYS_ONWARD: readonly Exit[] = [
-	{ words: 'Choose something else.', route: CATALOG_ROUTE },
-	{ words: 'Change who this is for.', route: null },
-	{ words: 'Nothing right now.', route: NOTHING_ROUTE },
-];
+export function waysOnward(path: AudiencePath): Exit[] {
+	const routes = routesFor(path);
+	return [
+		{
+			words: 'Choose something else.',
+			route: isCompanionPath(path) ? routes.door : routes.everything,
+		},
+		{ words: CHANGE_PATH, route: ARRIVAL_ROUTE },
+		{ words: 'Nothing right now.', route: routes.nothing },
+	];
+}
 
 export const NOTHING_TITLE = 'Nothing right now.';
 
@@ -96,10 +109,18 @@ export interface LinkedSentence {
 	after: string;
 }
 
-/** The way back, if it is wanted. Quiet, and last. */
-export const NOTHING_ONWARD: LinkedSentence = {
-	before: 'If you want to look again, whenever that is, it is all in ',
-	words: 'one list',
-	route: CATALOG_ROUTE,
-	after: '.',
-};
+/**
+ * The way back, if it is wanted. Quiet, and last.
+ *
+ * It leads to the catalog of the path the reader is on, so that the one way
+ * out of the kind screen does not also change who the resource thinks they
+ * are.
+ */
+export function nothingOnward(path: AudiencePath): LinkedSentence {
+	return {
+		before: 'If you want to look again, whenever that is, it is all in ',
+		words: 'one list',
+		route: routesFor(path).everything,
+		after: '.',
+	};
+}

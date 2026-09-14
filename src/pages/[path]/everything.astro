@@ -1,0 +1,60 @@
+---
+import Page from '../../layouts/Page.astro';
+import Adjustments from '../../framing/Adjustments.astro';
+import Escapes from '../../framing/Escapes.astro';
+import GuideDoorway from '../../framing/GuideDoorway.astro';
+import PathBadge from '../../framing/PathBadge.astro';
+import PracticeSet from '../../framing/PracticeSet.astro';
+import { loadCatalog } from '../../catalog/index.js';
+import { offeredNeedTags } from '../../catalog/need-tags.js';
+import { framingFor } from '../../framing/audience.js';
+import { CATALOG_TITLE } from '../../framing/discovery.js';
+import { AUDIENCE_PATHS } from '../../framing/routes.js';
+
+/**
+ * The whole catalog, in the fixed editorial order: `/<path>/everything/`.
+ *
+ * The other door that skips the question, and one of the three escapes, so it
+ * is shaped like any other set and carries the escapes itself
+ * (`docs/spec/01-journey-and-ia.md`). `loadCatalog` applies the build's
+ * publication filter and the order; this page picks neither, and it is the
+ * same list on every path — the same practices, in the same order, linked to
+ * the reading of them the reader is already on.
+ *
+ * It carries neither the **set tail** nor the **low-energy variant** link, for
+ * the two reasons §1 gives: a screen already showing everything has nothing it
+ * is not showing, so the tail is empty by its own rule
+ * ([#49](https://github.com/inarush0/spiritual-collective/issues/49)), and the
+ * variant varies a need tag this door was taken without choosing.
+ */
+export async function getStaticPaths() {
+	const practices = await loadCatalog();
+	const offered = offeredNeedTags(practices);
+	return AUDIENCE_PATHS.map((path) => ({ params: { path }, props: { path, practices, offered } }));
+}
+
+const { path, practices, offered } = Astro.props;
+const framing = framingFor(path);
+---
+
+<Page title={CATALOG_TITLE}>
+	{framing.companion && <PathBadge path={path} />}
+
+	<h1>{CATALOG_TITLE}</h1>
+	<p class="lead">{framing.catalogLead}</p>
+
+	<PracticeSet practices={practices} path={path} />
+
+	{framing.companion && <Adjustments offered={offered} path={path} />}
+
+	<Escapes path={path} />
+
+	<GuideDoorway path={path} />
+</Page>
+
+<style>
+	.lead {
+		color: var(--quiet);
+		margin: 0 0 2rem;
+	}
+</style>

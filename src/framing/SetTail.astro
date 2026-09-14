@@ -4,13 +4,16 @@ import { loadCatalog } from '../catalog/index.js';
 import { setTail } from '../catalog/set-tail.js';
 import PracticeSet from './PracticeSet.astro';
 import { TAIL_LEAD, TAIL_TITLE } from './discovery.js';
+import type { AudiencePath } from './routes.js';
 
 interface Props {
 	/** What is already on screen above the divider, in the editorial order. */
 	set: Practice[];
+	/** The path the set screen is on; its entries link there too. */
+	path: AudiencePath;
 }
 
-const { set } = Astro.props;
+const { set, path } = Astro.props;
 
 /**
  * The **set tail**, below every suggestion set
@@ -40,7 +43,12 @@ const { set } = Astro.props;
  * leak anything by showing nothing more, and a divider under a label saying
  * "these are not what you chose" over an empty list would be the stranger
  * page. `/me/everything/` is that case by definition, so it does not carry a
- * tail at all.
+ * tail at all, on any path, and §1 carries the carve-out
+ * ([#49](https://github.com/inarush0/spiritual-collective/issues/49)).
+ *
+ * The tail's own wording does not change with the path. It says these are not
+ * what the reader chose and where they came from instead, and both facts are
+ * about the list rather than about whoever is reading it.
  */
 const tail = setTail(await loadCatalog(), set);
 ---
@@ -52,7 +60,7 @@ const tail = setTail(await loadCatalog(), set);
 			{TAIL_LEAD.map((line) => (
 				<p class="lead">{line}</p>
 			))}
-			<PracticeSet practices={tail} level={3} />
+			<PracticeSet practices={tail} path={path} level={3} />
 		</section>
 	)
 }

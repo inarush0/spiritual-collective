@@ -2,10 +2,16 @@
 import type { Practice } from '../catalog/index.js';
 import { pendingIn, release } from '../catalog/index.js';
 import { PENDING_MARKER } from './practice-view.js';
-import { practiceRoute } from './routes.js';
+import { routesFor, type AudiencePath } from './routes.js';
 
 interface Props {
 	practices: Practice[];
+	/**
+	 * Which path's practice views the entries link to. The same practices are
+	 * listed on every path, and an entry leads to the reading of it the reader
+	 * is already on rather than to the direct user's.
+	 */
+	path: AudiencePath;
 	/**
 	 * Which heading level the entries sit at. The default is the set a page
 	 * leads with; the **set tail** passes 3, because its entries sit under a
@@ -17,12 +23,13 @@ interface Props {
 	level?: 2 | 3;
 }
 
-const { practices, level = 2 } = Astro.props;
+const { practices, path, level = 2 } = Astro.props;
 const Heading = level === 2 ? 'h2' : 'h3';
+const routes = routesFor(path);
 
 /**
  * A list of practices as a reader meets it: every set screen, and
- * `/me/everything/`.
+ * `/*​/everything/`, on all three paths.
  *
  * One component because the rules about how a set is *presented* are rules
  * about every set (`docs/spec/01-journey-and-ia.md`), and a second template
@@ -43,7 +50,7 @@ const Heading = level === 2 ? 'h2' : 'h3';
 			<li>
 				{/* Everything this build publishes has a page, so no entry is a dead link. */}
 				<Heading>
-					<a href={practiceRoute(practice.id)}>{practice.data.name}</a>
+					<a href={routes.practice(practice.id)}>{practice.data.name}</a>
 				</Heading>
 				<p>{practice.data.invitation}</p>
 				{pendingIn(release, practice.data.publication) && <p class="pending">{PENDING_MARKER}</p>}
