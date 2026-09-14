@@ -112,7 +112,11 @@ One week is well inside the 30-day maximum, so the promise on `/about/` holds. I
 
 Each check is one **mailbox-review session**, and it is the unit that matters: a report that names a specific, plausible harm gets its protective action *during the session it is read in* — before investigation, before any reply — and no later than one business day after receipt under normal coverage.
 
-**Planned absence is an explicit handoff.** The editor tells the chaplain reviewer the dates and confirms they will check; the chaplain confirms back. An assumed handoff is not a handoff. The handoff covers **monitoring and replies only** — [the chaplain reviewer cannot perform a protective action](#what-the-chaplain-reviewer-can-and-cannot-do), and the handoff says so out loud rather than leaving it to be discovered on the day it matters.
+**Coverage is ad-hoc, not a rota.** The editor holds the daily check and asks the chaplain reviewer for cover on the specific days they need it. There is no standing schedule and no rotation to fall out of, which suits two people and one unpaid volunteer better than a calendar nobody maintains.
+
+**Planned absence is an explicit handoff.** The editor tells the chaplain reviewer the dates and confirms they will check; the chaplain confirms back. An assumed handoff is not a handoff, and ad-hoc coverage makes that confirmation more load-bearing rather than less: there is no rota to fall back on if the request is never answered.
+
+**The cost of ad-hoc is the unplanned absence.** If the editor is suddenly unavailable, nobody has been asked, so nobody is reading — and the [availability notice](#the-temporary-availability-notice) cannot go up either, because publishing it is a change to the site. The daily check lapses silently and the address keeps accepting mail. There is no fix for this available to two people; it is the same standing-capacity limit [ADR 0002](../adr/0002-two-person-asymmetric-governance.md) records, and it is written here so it is a known cost rather than a surprise. The handoff covers **monitoring and replies only** — [the chaplain reviewer cannot perform a protective action](#what-the-chaplain-reviewer-can-and-cannot-do), and the handoff says so out loud rather than leaving it to be discovered on the day it matters.
 
 Publish the [temporary availability notice](#the-temporary-availability-notice) when **nobody can act within one business day** — which is a wider condition than nobody being able to read. An editor away with the chaplain reviewer watching the mailbox means reports are read and answered but nothing can be taken down, and a reader is owed that fact rather than an unstated wait. The notice is itself a change to the site, so it goes up **before** the absence, never during.
 
@@ -340,10 +344,10 @@ The last box is the one that touches code, and it is last on purpose.
 - [x] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded
 - [x] [The shared vault](#the-shared-vault) holds the Fastmail password, the recovery code, and the register's link — all three read back by the chaplain reviewer from their own device
 - [x] Domain auto-renew confirmed on, with renewal warnings reaching an address that a domain expiry would not take down
-- [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
+- [x] The daily check is in place — the editor's, with [ad-hoc coverage](#the-daily-rhythm) requested per absence and confirmed back
 - [x] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md) — agreed as drafted, nothing held, transcription confirmed
 - [x] [Both availability notices](#the-temporary-availability-notice) agreed
-- [ ] Somewhere the notices can be published from quickly, decided and written down
+- [ ] Somewhere the notices can be published from quickly — [#45](https://github.com/inarush0/spiritual-collective/issues/45), a one-value edit in `src/framing/about.ts` rather than hand-editing approved copy during an absence
 - [x] [The incident register](#the-incident-register) exists outside this repository, created empty and now carrying sitting 1's drill records, marked as such
 - [x] The register shared with the chaplain reviewer
 - [x] [The drill](#the-drill), **sitting 1** — the channel, passed in full
