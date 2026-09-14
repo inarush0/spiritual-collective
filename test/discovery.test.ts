@@ -3,9 +3,11 @@ import { NEED_TAGS } from '../src/catalog/practice-record.js';
 import { needTagRoute, needTagSlug } from '../src/catalog/need-tags.js';
 import {
 	ESCAPES,
+	LOW_ENERGY_EMPTY,
 	LOW_ENERGY_LEAD,
 	LOW_ENERGY_LINK,
 	LOW_ENERGY_OUTSIDE_LEAD,
+	LOW_ENERGY_TAB,
 	NOT_SURE_TITLE,
 	ORIENTATION_LINES,
 	QUESTION,
@@ -236,15 +238,18 @@ describe('the set tail', () => {
 	});
 });
 
+/**
+ * The **low-energy variant**: the alternative for someone with almost nothing
+ * to give ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
+ *
+ * Production publishes one low-energy practice, rest without a task, which
+ * carries two of the eight tags — so the built site holds both cases the page
+ * has to read well in: a tag with one of its own, and a tag with none. The
+ * third case, a catalog with no low-energy practice anywhere, is not buildable
+ * from the written records and is held at the data layer in
+ * `test/low-energy.test.ts`.
+ */
 describe('the low-energy variant', () => {
-	/**
-	 * The alternative for someone with almost nothing to give
-	 * ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
-	 *
-	 * Production publishes one low-energy practice, rest without a task, which
-	 * carries two of the tags — so the built site holds both cases the page has
-	 * to read well in: a tag with one of its own, and a tag with none.
-	 */
 	/** A tag whose set has a low-energy practice in it. */
 	const STILL_LOW = `${STILL}low/`;
 	/** A tag whose set has none, so the page falls back past it. */
@@ -305,6 +310,21 @@ describe('the low-energy variant', () => {
 			const page = plainText(pageAt(production, route));
 			for (const line of LOW_ENERGY_LEAD) expect(page, route).toContain(line);
 			expect(pageAt(production, route), route).toContain(`href="${route.replace(/low\/$/, '')}"`);
+		}
+	});
+
+	it('is not the set screen wearing the same name in a tab or a bookmark', () => {
+		const titleOf = (route: string) => pageAt(production, route).match(/<title>([^<]*)<\/title>/)?.[1];
+		expect(titleOf(STILL_LOW)).toBe(LOW_ENERGY_TAB('I want to be still'));
+		expect(titleOf(STILL_LOW)).not.toBe(titleOf(STILL));
+	});
+
+	it('does not say the list is empty while it is showing one', () => {
+		// The other half of that branch — a lead over no list — needs a build
+		// publishing no low-energy practice at all, which the written records
+		// cannot produce.
+		for (const route of [STILL_LOW, MAKING_LOW]) {
+			expect(plainText(pageAt(production, route)), route).not.toContain(LOW_ENERGY_EMPTY);
 		}
 	});
 

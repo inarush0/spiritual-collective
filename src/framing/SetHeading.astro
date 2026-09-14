@@ -1,0 +1,41 @@
+---
+import type { NeedTag } from '../catalog/practice-record.js';
+import { SET_TITLE } from './discovery.js';
+
+interface Props {
+	/** The answer the reader picked, said back in their own words. */
+	tag: NeedTag;
+}
+
+const { tag } = Astro.props;
+
+/**
+ * The heading over a set an answer opened: the answer, and the fact that they
+ * said it.
+ *
+ * It is a heading, not a claim. The page knows what was clicked and nothing
+ * else about the reader, and the wording says only that
+ * (`docs/spec/01-journey-and-ia.md`): the need tag verbatim, with no label
+ * layer over it and no sentence about what it means.
+ *
+ * One component because the set screen and its **low-energy variant** are the
+ * same answer seen two ways, and the reader has answered one question to reach
+ * either. Spelled twice, the variant could drift into introducing itself as a
+ * second choice the reader made.
+ */
+---
+
+<p class="said">{SET_TITLE}</p>
+<h1>{tag}</h1>
+
+<style>
+	.said {
+		margin: 0 0 0.25rem;
+		color: var(--quiet);
+		font-size: 0.875rem;
+	}
+
+	h1 {
+		margin-bottom: 1rem;
+	}
+</style>

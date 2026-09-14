@@ -105,10 +105,15 @@ export const LOW_ENERGY_LINK = 'Things that work lying down, with your eyes clos
  * will otherwise be read as an abridgement — these are whole practices, and
  * the **smallest version** on each one is where the least a person can do is
  * already said.
+ *
+ * That second line may not reach for the words it is refusing. Naming what
+ * this page is not — a short version, an easy mode — puts the frame in the
+ * reader's head whichever way the sentence points, on the one screen whose
+ * whole job is not to read as a lesser offer. So it says what they are.
  */
 export const LOW_ENERGY_LEAD: readonly string[] = [
 	'Everything here works lying down, with your eyes closed.',
-	'They are whole practices, not shortened versions of the others.',
+	'They are whole practices, complete as they are.',
 ];
 
 /**
@@ -145,8 +150,25 @@ export const LOW_ENERGY_OUTSIDE_LEAD: readonly string[] = [
  */
 export const LOW_ENERGY_EMPTY = 'There is nothing on the list that works this way right now.';
 
-/** The way back from the variant to the whole set the reader came from. */
-export const LOW_ENERGY_BACK = 'Everything for this answer.';
+/**
+ * The way back from the variant to the whole set the reader came from.
+ *
+ * Not "everything for this answer": it would sit two lines above "Show me
+ * everything", which goes to the whole catalog, and the two would read as the
+ * same size of move. This one is the smaller of them, and says so by naming
+ * what the reader did rather than how much is behind it.
+ */
+export const LOW_ENERGY_BACK = 'Back to what you chose.';
+
+/**
+ * The variant's browser-tab title.
+ *
+ * The set and its variant are two prerendered pages under one answer, and a
+ * reader returning through history or a bookmark has only this to tell them
+ * apart. It repeats the link's own words rather than inventing a name for the
+ * page, so the thing they followed is the thing they find in the list.
+ */
+export const LOW_ENERGY_TAB = (tag: string): string => `${tag} — lying down`;
 
 /** The heading and lead of `/me/not-sure/`, the door that skips the question. */
 export const NOT_SURE_TITLE = 'Not sure is fine.';

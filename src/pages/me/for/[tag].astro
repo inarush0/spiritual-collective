@@ -4,9 +4,10 @@ import Escapes from '../../../framing/Escapes.astro';
 import PracticeSet from '../../../framing/PracticeSet.astro';
 import SetTail from '../../../framing/SetTail.astro';
 import LowEnergyLink from '../../../framing/LowEnergyLink.astro';
+import SetHeading from '../../../framing/SetHeading.astro';
 import { loadCatalog } from '../../../catalog/index.js';
 import { offeredNeedTags, practicesFor } from '../../../catalog/need-tags.js';
-import { SET_LEAD, SET_TITLE } from '../../../framing/discovery.js';
+import { SET_LEAD } from '../../../framing/discovery.js';
 
 /**
  * A suggestion set, direct-user path: `/me/for/<need-tag-slug>/`.
@@ -37,16 +38,7 @@ const { tag, practices } = Astro.props;
 ---
 
 <Page title={tag}>
-	{
-		/*
-		 * The answer the reader picked, in their own words rather than a label
-		 * for it — the same string they clicked, said back plainly. It is a
-		 * heading, not a claim: the page knows what was clicked and nothing
-		 * else about them.
-		 */
-	}
-	<p class="said">{SET_TITLE}</p>
-	<h1>{tag}</h1>
+	<SetHeading tag={tag} />
 
 	{SET_LEAD.map((line) => <p class="lead">{line}</p>)}
 
@@ -57,9 +49,8 @@ const { tag, practices } = Astro.props;
 	{
 		/*
 		 * Below the tail, and present whether or not this tag has any
-		 * low-energy practices behind it — the component holds no condition to
-		 * make it otherwise
-		 * ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
+		 * low-energy practices behind it. The component holds no condition to
+		 * make it otherwise, and says why.
 		 */
 	}
 	<LowEnergyLink tag={tag} />
@@ -68,16 +59,6 @@ const { tag, practices } = Astro.props;
 </Page>
 
 <style>
-	.said {
-		margin: 0 0 0.25rem;
-		color: var(--quiet);
-		font-size: 0.875rem;
-	}
-
-	h1 {
-		margin-bottom: 1rem;
-	}
-
 	.lead {
 		margin: 0 0 0.5rem;
 		color: var(--quiet);

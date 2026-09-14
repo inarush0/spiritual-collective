@@ -12,12 +12,10 @@ import type { NeedTag } from './practice-record.js';
  * its own.
  *
  * The fallback is the same idea as the **set tail**, for the same reason. The
- * link to this page is offered on every set screen whether or not the chosen
- * answer has anything behind it, because offering it only where it is stocked
- * would leak a verdict about the answer the reader picked. Having offered it
- * unconditionally, the page it opens cannot then be blank — so where the filter
- * is empty it shows what does work this way, said plainly to be not from what
- * they chose.
+ * link to this page is unconditional — `src/framing/LowEnergyLink.astro` says
+ * why — and a page offered unconditionally cannot then be blank. So where the
+ * filter is empty it shows what does work this way, said plainly to be not
+ * from what they chose.
  *
  * What the fallback is **not** is a top-up. A tag with one low-energy practice
  * keeps its one: padding a thin result from the rest of the catalog would be
@@ -28,9 +26,13 @@ import type { NeedTag } from './practice-record.js';
  * tag populations the written records do not hold.
  */
 
-/** The shape this needs from a record: its tags, and whether it works lying down. */
+/**
+ * The shape this needs from a record: what a set needs, plus whether the
+ * practice works lying down. Extended from `TaggedEntry` rather than restated,
+ * so the tag field is described in one place.
+ */
 export interface LowEnergyEntry extends TaggedEntry {
-	data: { need_tags: readonly NeedTag[]; low_energy: boolean };
+	data: TaggedEntry['data'] & { low_energy: boolean };
 }
 
 /** A low-energy variant: what it holds, and whether it came from the tag. */

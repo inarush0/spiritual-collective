@@ -2,6 +2,7 @@
 import Page from '../../../../layouts/Page.astro';
 import Escapes from '../../../../framing/Escapes.astro';
 import PracticeSet from '../../../../framing/PracticeSet.astro';
+import SetHeading from '../../../../framing/SetHeading.astro';
 import { loadCatalog } from '../../../../catalog/index.js';
 import { lowEnergySet } from '../../../../catalog/low-energy.js';
 import { needTagRoute, offeredNeedTags } from '../../../../catalog/need-tags.js';
@@ -10,7 +11,7 @@ import {
 	LOW_ENERGY_EMPTY,
 	LOW_ENERGY_LEAD,
 	LOW_ENERGY_OUTSIDE_LEAD,
-	SET_TITLE,
+	LOW_ENERGY_TAB,
 } from '../../../../framing/discovery.js';
 
 /**
@@ -19,8 +20,8 @@ import {
  * The reachable-from-anywhere alternative for someone with almost nothing to
  * give — the practices carrying that tag whose `low energy` is true, and where
  * the tag has none, the ones from outside it that do
- * (`docs/spec/01-journey-and-ia.md`). Membership is `../../../catalog/low-energy.ts`;
- * this page decides only how the two cases read.
+ * (`docs/spec/01-journey-and-ia.md`). Membership is `src/catalog/low-energy.ts`;
+ * this page decides only how the cases read.
  *
  * **Its own prerendered path, not a toggle or a query string.** Every state of
  * the journey is a real page ([ADR 0001](../../../../../docs/adr/0001-static-zero-js-no-third-party.md)),
@@ -28,12 +29,12 @@ import {
  * be sent straight here by a chaplain, and reach the same page either way.
  *
  * **One page for every tag the question offers**, built from the same
- * `offeredNeedTags` as the set itself, so the link every set screen carries is
- * never a dead one. That is what makes it safe for the link to be
- * unconditional — and the link being unconditional is what stops the set
- * screen leaking how well-stocked the reader's answer was.
+ * `offeredNeedTags` as the set itself, so the unconditional link in
+ * `src/framing/LowEnergyLink.astro` is never a dead one.
  *
- * **No set tail here.** The tail keeps every set screen the same shape by
+ * **No set tail here**, which is this page's one departure from the shape §1
+ * gives every set screen, recorded there as well. The tail keeps a screen the
+ * same shape by
  * filling it out from the editorial order, but the order knows nothing about
  * energy: a tail under this page would put practices that need getting up on
  * the one page promising the opposite. The fallback is this page's version of
@@ -56,26 +57,29 @@ export async function getStaticPaths() {
 const { tag, practices, fromOutsideTheTag } = Astro.props;
 
 /**
- * Emptiness is read before the fallback flag. A catalog with no low-energy
- * practice anywhere has fallen back to nothing, and "these are not from what
- * you chose" over an empty list would be the strangest page on the site.
+ * Emptiness is read before the fallback flag, and it silences the lead as well
+ * as the list. A catalog holding no low-energy practice anywhere has fallen
+ * back to nothing, and every line the page would otherwise say is about a list
+ * that is not there: "everything here works lying down" is a promise made over
+ * nothing, and "these are not from what you chose" would be the strangest
+ * sentence on the site. One line, and the escapes.
  */
 const empty = practices.length === 0;
 ---
 
-<Page title={tag}>
+<Page title={LOW_ENERGY_TAB(tag)}>
 	{
 		/*
-		 * The answer that opened the set this is a variant of, said back the
-		 * same way the set screen says it. The reader has not answered a second
-		 * question to get here, and the heading does not suggest they have.
+		 * The same heading as the set this varies, from the same component: the
+		 * reader has answered one question, not two, and nothing here suggests
+		 * otherwise.
 		 */
 	}
-	<p class="said">{SET_TITLE}</p>
-	<h1>{tag}</h1>
+	<SetHeading tag={tag} />
 
 	<div class="leads">
-		{LOW_ENERGY_LEAD.map((line) => <p>{line}</p>)}
+		{empty && <p>{LOW_ENERGY_EMPTY}</p>}
+		{!empty && LOW_ENERGY_LEAD.map((line) => <p>{line}</p>)}
 		{
 			/*
 			 * Where the tag had none of its own, the label goes between the
@@ -84,7 +88,6 @@ const empty = practices.length === 0;
 			 */
 			fromOutsideTheTag && !empty && LOW_ENERGY_OUTSIDE_LEAD.map((line) => <p>{line}</p>)
 		}
-		{empty && <p>{LOW_ENERGY_EMPTY}</p>}
 	</div>
 
 	{!empty && <PracticeSet practices={practices} />}
@@ -97,16 +100,6 @@ const empty = practices.length === 0;
 </Page>
 
 <style>
-	.said {
-		margin: 0 0 0.25rem;
-		color: var(--quiet);
-		font-size: 0.875rem;
-	}
-
-	h1 {
-		margin-bottom: 1rem;
-	}
-
 	/*
 	 * The lead-in paragraphs sit in one block so the space before the list is
 	 * the same whether or not the fallback added a line to them. The block's

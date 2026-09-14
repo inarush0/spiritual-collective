@@ -86,9 +86,7 @@ export function needTagRoute(tag: NeedTag): string {
  * Its own prerendered path under the set's, not a toggle or a query string
  * (`docs/spec/01-journey-and-ia.md`): the variant is a state of the journey,
  * and every state of the journey is a real page. Derived from the set route so
- * the two cannot drift apart, and offered for every tag the question offers —
- * a link that appeared only where the variant was stocked would leak a verdict
- * about the answer the reader picked
+ * the two cannot drift apart, and issued for every tag the question offers
  * ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
  */
 export function lowEnergyRoute(tag: NeedTag): string {
