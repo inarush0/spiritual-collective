@@ -1,0 +1,94 @@
+/**
+ * The exit, and the kind screen it can lead to.
+ *
+ * Stopping and reaching the final step lead to **the same** quiet exit
+ * (`docs/spec/01-journey-and-ia.md`). The exit is unconditional: it is reached
+ * the same way whether the reader did every step or left on the first one, and
+ * it never learns which, because nothing about a visitor is recorded.
+ *
+ * Three rules shape every sentence below, and all three are rules about what
+ * is *absent*:
+ *
+ * - **No completion claim.** The resource cannot know what happened, and
+ *   completion language is banned phrasing (`docs/spec/03-safety-and-inclusion.md`).
+ * - **No reflection or rating question.** Asking "did that help?" hands the
+ *   reader homework on the way out and turns a practice into a test.
+ * - **No praise.** Praise implies the alternative was worse.
+ *
+ * The exit is **path-specific**: one per **audience path**, holding nothing
+ * about which practice was open. The companion paths' exits — which also
+ * repeat that the companion need not ask whether the practice helped — belong
+ * to the companion route trees, not here.
+ *
+ * **Tier-2 framing surfaces** (`docs/spec/05-governance.md`): placeholder
+ * drafting until the chaplain reviewer has read them.
+ */
+
+/** The direct user's exit. Every stop control and every last step lands here. */
+export const EXIT_ROUTE = '/me/after/';
+
+/** The kind screen: a real resting state, not a dead end. */
+export const NOTHING_ROUTE = '/me/nothing-right-now/';
+
+export const EXIT_TITLE = 'That is as far as this goes.';
+
+/**
+ * The two lines under the heading.
+ *
+ * They say what is *not* being asked, because a reader arriving here from a
+ * stop control is most likely to expect that it is. Neither line asks anything
+ * back.
+ */
+export const EXIT_LINES: readonly string[] = [
+	'You stopped, or the steps ran out. Either one is the same to this page, and nothing here kept a record of which.',
+	'You do not have to work out whether it was any good.',
+];
+
+/** One way onward from the exit. `route` is null while its page is unbuilt. */
+export interface Exit {
+	words: string;
+	route: string | null;
+}
+
+/**
+ * The three ways onward, in order.
+ *
+ * "Change who this is for" carries no route yet: arrival is its own ticket
+ * ([#28](https://github.com/inarush0/spiritual-collective/issues/28)), and a
+ * link to a page that does not exist is worse than a sentence — someone
+ * following a chaplain's link should always meet a way onward that works. The
+ * wording is here now so that arrival landing is one route, not a rewrite.
+ *
+ * "Choose something else" points at the whole catalog until the discovery
+ * question and the suggestion sets land
+ * ([#24](https://github.com/inarush0/spiritual-collective/issues/24)); that is
+ * the direct user's set screen today.
+ */
+export const EXITS: readonly Exit[] = [
+	{ words: 'Choose something else.', route: '/me/everything/' },
+	{ words: 'Change who this is for.', route: null },
+	{ words: 'Nothing right now.', route: NOTHING_ROUTE },
+];
+
+export const NOTHING_TITLE = 'Nothing right now.';
+
+/**
+ * The kind screen.
+ *
+ * Offered as an escape on every screen, so it has to be somewhere a person can
+ * actually land: neutral, kind, and making no attempt to win them back. The
+ * last line is the one thing keeping it from being a dead end, and it is a way
+ * back rather than an invitation to reconsider.
+ */
+export const NOTHING_LINES: readonly string[] = [
+	'That is a whole answer. You do not owe anyone a reason for it, and nobody here is asking for one.',
+	'Nothing on this page is waiting for you, and nothing carries on without you. You can close it and it keeps nothing.',
+];
+
+/** The way back, if it is wanted. Quiet, and last. */
+export const NOTHING_ONWARD = {
+	before: 'If you want to look again, whenever that is, it is all in ',
+	words: 'one list',
+	route: '/me/everything/',
+	after: '.',
+};

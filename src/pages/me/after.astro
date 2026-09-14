@@ -1,0 +1,67 @@
+---
+import Page from '../../layouts/Page.astro';
+import { PATH_BADGE } from '../../framing/practice-view.js';
+import { EXIT_LINES, EXIT_TITLE, EXITS } from '../../framing/exits.js';
+
+/**
+ * The exit, direct-user path: `/me/after/`.
+ *
+ * Stopping and reaching the final step lead here, and the page cannot tell
+ * which — there is no state to tell it with, and that is the point. It makes
+ * no completion claim, asks no reflection or rating question, and offers no
+ * praise (`docs/spec/01-journey-and-ia.md`).
+ *
+ * **One exit per audience path, not per practice**: it carries nothing about
+ * which practice was open, so every stop control on the path can reach the
+ * same URL. The route is named "after" rather than "done" because "done" is a
+ * claim about the reader that this resource is in no position to make.
+ *
+ * Every sentence lives in `src/framing/exits.ts`; this template holds none.
+ */
+---
+
+<Page title={EXIT_TITLE}>
+	<p class="badge">{PATH_BADGE}</p>
+
+	<h1>{EXIT_TITLE}</h1>
+	{EXIT_LINES.map((line) => <p class="lead">{line}</p>)}
+
+	{
+		/*
+		 * The three ways onward, as ordinary links and at one size: none of
+		 * them is the recommended one. "Change who this is for" is a plain line
+		 * until arrival exists — a dead link would be the worse half-measure.
+		 */
+	}
+	<ul class="exits">
+		{
+			EXITS.map((exit) => (
+				<li>{exit.route ? <a href={exit.route}>{exit.words}</a> : exit.words}</li>
+			))
+		}
+	</ul>
+</Page>
+
+<style>
+	.badge {
+		margin: 0 0 1.5rem;
+		color: var(--quiet);
+		font-size: 0.875rem;
+	}
+
+	.lead {
+		margin: 0 0 1rem;
+		color: var(--quiet);
+	}
+
+	.exits {
+		list-style: none;
+		margin: 2.5rem 0 0;
+		padding: 1.5rem 0 0;
+		border-top: 1px solid var(--rule);
+	}
+
+	.exits li + li {
+		margin-top: 0.75rem;
+	}
+</style>
