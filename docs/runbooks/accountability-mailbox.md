@@ -251,6 +251,8 @@ One record per non-spam report, holding **only** these fields:
 
 The column headings *are* the field list, which is the reason for a sheet rather than a document: a field that has no column is a field nobody can add in a hurry. Note the one thing the tool will not enforce — **revision history retains text that was typed and deleted**, so a slip pasted in and removed does not go away. The discipline below is what protects the register, not the software.
 
+**Drill records say they are drill records.** The register's first rows are test messages the editor wrote to themselves, and nothing in the seven fields distinguishes them from a report a real person sent. Mark them in the outcome field — `drill, sitting 1` — because §6 keeps them as the gate's artifact rather than letting them be cleaned up, and the scheduled post-production review reads this register expecting incidents. A year from now, an unmarked drill row is a harm report nobody remembers receiving.
+
 **Never** in the register: sender identity, quoted message text, diagnosis, institution, or narrative detail. If a field seems to need a sentence of story to make sense, that is the signal it is being written down at the wrong grain — the version pointer and the outcome carry the meaning.
 
 **A content incident closes only when** the material is retired, or a corrected or restored version has passed every applicable gate. **A distress-only incident closes** after the boundary response is sent. **A combined record closes on the content lane's terms** — the reply has already gone, and the material is what is left open.
