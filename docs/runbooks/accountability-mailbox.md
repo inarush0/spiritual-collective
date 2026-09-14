@@ -2,7 +2,9 @@
 
 The operating procedure that turns the address on `/about/` into a **channel** rather than an address. [`docs/spec/05-governance.md`](../spec/05-governance.md) is authoritative for the rules; this document is how they are carried out, and it holds the drafted wording the procedure needs at the moment it is needed. Tracked in [#39](https://github.com/inarush0/spiritual-collective/issues/39).
 
-> **Status: provisioned, and the channel is proven.** [Drill sitting 1](#sitting-1-the-channel) has passed in full — a message reaching this address is detected, judged, answered, recorded, and deleted, demonstrated rather than asserted. What remains is the chaplain reviewer's agreement on the wording, and [sitting 2](#sitting-2-the-withdrawal), which proves a safety report can move published material off the site and is blocked on [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33).
+> **Status: provisioned, the wording approved, and the channel proven.** [Drill sitting 1](#sitting-1-the-channel) has passed in full — a message reaching this address is detected, judged, answered, recorded, and deleted, demonstrated rather than asserted. Every reply and both notices are [agreed by the chaplain reviewer](accountability-replies-review.md#outcome), as drafted, with the transcription confirmed.
+>
+> **One thing remains, and it is [sitting 2](#sitting-2-the-withdrawal)** — proof that a safety report can move published material off the site. It is blocked on [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33), because there is no deployed site to take anything down from.
 >
 > `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) is still `report@example.invalid`, deliberately unroutable. The release gate in [`docs/spec/06-release-criteria.md`](../spec/06-release-criteria.md) holds production until every box in [Before the address ships](#before-the-address-ships) is ticked.
 
@@ -339,8 +341,9 @@ The last box is the one that touches code, and it is last on purpose.
 - [x] [The shared vault](#the-shared-vault) holds the Fastmail password, the recovery code, and the register's link — all three read back by the chaplain reviewer from their own device
 - [x] Domain auto-renew confirmed on, with renewal warnings reaching an address that a domain expiry would not take down
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
-- [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
-- [ ] [Both availability notices](#the-temporary-availability-notice) agreed, and somewhere they can be published from quickly
+- [x] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md) — agreed as drafted, nothing held, transcription confirmed
+- [x] [Both availability notices](#the-temporary-availability-notice) agreed
+- [ ] Somewhere the notices can be published from quickly, decided and written down
 - [x] [The incident register](#the-incident-register) exists outside this repository, created empty and now carrying sitting 1's drill records, marked as such
 - [x] The register shared with the chaplain reviewer
 - [x] [The drill](#the-drill), **sitting 1** — the channel, passed in full

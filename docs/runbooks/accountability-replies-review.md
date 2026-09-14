@@ -139,18 +139,25 @@ This section, unlike the template above, **is** filled in and committed. It can 
 
 | Reply | Outcome | Date |
 | --- | --- | --- |
-| Acknowledgement | `agreed` / `agreed with changes` / `held` | |
-| Distress | | |
-| Closing — removed | | |
-| Closing — corrected | | |
-| Closing — no change | | |
-| The one follow-up | | |
-| Availability notice | | |
+| Acknowledgement | agreed | 2026-09-13 |
+| Distress | agreed | 2026-09-13 |
+| Closing — removed | agreed | 2026-09-13 |
+| Closing — corrected | agreed | 2026-09-13 |
+| Closing — no change | agreed | 2026-09-13 |
+| The one follow-up | agreed | 2026-09-13 |
+| Availability notice — nobody is reading | agreed | 2026-09-13 |
+| Availability notice — read, nothing can be changed | agreed | 2026-09-13 |
 
-- **Date sent** `<date>` · **version sent** `<SHA of accountability-mailbox.md at that moment>`
-- **Transcription confirmed by the chaplain reviewer on** `<date>`
-- **Agreed changes carried back into** [`accountability-mailbox.md`](accountability-mailbox.md) **in** `<SHA>`
+**Agreed as drafted, with no changes requested.** Every reply and both notices.
 
-That last line is the one that matters a year from now. It says the approved wording and the shipped wording are the same thing.
+- **Version reviewed** `ff5168b` — the last commit to change any of the approved wording
+- **Transcription confirmed by the chaplain reviewer on** 2026-09-13
+- **Agreed changes carried back** — none. Nothing was held and nothing was revised, so there is no follow-on commit.
+
+**The approved wording is what ships.** Verified rather than assumed: the section from *The three replies* to *The incident register* is byte-identical between `ff5168b` and the current head, and the availability notices are unchanged since the commit that added the second one. Later commits to this runbook touched the vault, the drill, and the register, none of which is wording a reader receives.
+
+That verification is the line that matters a year from now. An approval is a signature over a version ([ADR 0002](../adr/0002-two-person-asymmetric-governance.md)), and the question someone will actually ask is whether the sentences going out are the sentences that were signed.
+
+**Re-review is required if any reply or notice changes.** Not this file — the wording in [`accountability-mailbox.md`](accountability-mailbox.md). Editing the drill section does not void this; editing the distress reply does.
 
 Anything **held** is revised and re-sent as a new packet against a new version. A held reply does not go out in the drill, and does not ship.
