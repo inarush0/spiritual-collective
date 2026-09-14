@@ -87,7 +87,7 @@ Every set screen, at every size, contains:
 | `/with/` and `/child/set/` | letting someone sit with you · saying the hard thing · remembering someone |
 | `/*/everything/` | the whole catalog in the fixed editorial order |
 
-Each fixed set is shaped like any other set, tail included. The younger-child path **reuses the companion set unchanged**: a set hand-picked for a young child would be an age-suitability judgement expressed as page order, and this path states twice that it makes no such judgement ([#12](https://github.com/inarush0/spiritual-collective/issues/12)).
+Each fixed set is shaped like any other set, tail included — **except `/*/everything/`, which carries no tail on any path** ([#49](https://github.com/inarush0/spiritual-collective/issues/49)). The tail is the next practices in the editorial order *not already on screen*, and this screen is every practice there is, so the tail is empty by its own rule rather than suppressed by this one. Nothing is leaked by the absence: a screen showing the whole catalog cannot reveal how well-stocked an answer was, because no answer was given. A divider and a label reading "these are not from what you chose" over an empty list would be the stranger page. The younger-child path **reuses the companion set unchanged**: a set hand-picked for a young child would be an age-suitability judgement expressed as page order, and this path states twice that it makes no such judgement ([#12](https://github.com/inarush0/spiritual-collective/issues/12)).
 
 ### The low-energy variant
 
