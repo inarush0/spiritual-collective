@@ -2,7 +2,7 @@
 
 The operating procedure that turns the address on `/about/` into a **channel** rather than an address. [`docs/spec/05-governance.md`](../spec/05-governance.md) is authoritative for the rules; this document is how they are carried out, and it holds the drafted wording the procedure needs at the moment it is needed. Tracked in [#39](https://github.com/inarush0/spiritual-collective/issues/39).
 
-> **Status: mailbox provisioned, drill not yet run.** `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) is still `report@example.invalid`, deliberately unroutable. The release gate in [`docs/spec/06-release-criteria.md`](../spec/06-release-criteria.md) holds production until every box in [Before the address ships](#before-the-address-ships) is ticked.
+> **Status: provisioning complete; the replies are out for agreement and the drill has not run.** `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) is still `report@example.invalid`, deliberately unroutable. The release gate in [`docs/spec/06-release-criteria.md`](../spec/06-release-criteria.md) holds production until every box in [Before the address ships](#before-the-address-ships) is ticked. The drill runs in [two sittings](#why-it-runs-in-two-sittings), and the second is blocked on [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33).
 
 **Nothing in this file is an identity.** The editor and the chaplain reviewer are named by role, here as everywhere in this repository ([ADR 0002](../adr/0002-two-person-asymmetric-governance.md)). Nothing from a real report — sender address, message text, or paraphrase — is ever added to this file or any other file in git.
 
@@ -10,13 +10,15 @@ The operating procedure that turns the address on `/about/` into a **channel** r
 
 Owner: **editor**. All of it is human work; none of it is in this repository.
 
-- [ ] **A real mailbox on the resource's own domain.** Not a personal address, not a free-provider address on someone's own name: the address is spoken on `/about/` as the resource's accountability channel, and it must survive one person changing jobs, phones, or providers.
-- [ ] **Owner access confirmed** — the editor can read, reply from the address, and permanently delete.
-- [ ] **Backup access confirmed** — the chaplain reviewer can do the same, tested by actually signing in, not by being handed a credential. A credential nobody has exercised is an unavailable credential, and §6 fails publication on exactly that.
-- [ ] **No forwarding into a personal archive, and no provider-side backup that outlives the 30-day maximum.** Source-email deletion is a promise the about page makes on the resource's behalf; a copy sitting in someone's personal mail history breaks it silently. Disable auto-archive, auto-forward, and any "deleted items keep forever" retention. A short provider restore window is acceptable and must be [written down](#what-deleted-actually-means) rather than assumed away.
-- [ ] **Spam filtering set to quarantine, not silent discard**, and the quarantine checked on the same daily rhythm. A safety report that a filter ate is indistinguishable from a channel that does not exist.
-- [ ] **Outbound mail authenticated**, so the three replies land in an inbox rather than a spam folder. A distress reply nobody sees is the harm this channel exists to prevent, and a young domain's first outbound mail is exactly where it happens.
-- [ ] **Recovery codes and the registrar login in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person.
+- [x] **A real mailbox on the resource's own domain.** Not a personal address, not a free-provider address on someone's own name: the address is spoken on `/about/` as the resource's accountability channel, and it must survive one person changing jobs, phones, or providers.
+- [x] **Owner access confirmed** — the editor can read, reply from the address, and permanently delete.
+- [x] **Backup access confirmed** — the chaplain reviewer can do the same, tested by actually signing in, not by being handed a credential. A credential nobody has exercised is an unavailable credential, and §6 fails publication on exactly that.
+- [x] **No forwarding into a personal archive, and no provider-side backup that outlives the 30-day maximum.** Source-email deletion is a promise the about page makes on the resource's behalf; a copy sitting in someone's personal mail history breaks it silently. Disable auto-archive, auto-forward, and any "deleted items keep forever" retention. A short provider restore window is acceptable and must be [written down](#what-deleted-actually-means) rather than assumed away.
+- [x] **Spam filtering set to quarantine, not silent discard**, and the quarantine checked on the same daily rhythm. A safety report that a filter ate is indistinguishable from a channel that does not exist.
+- [x] **Outbound mail authenticated**, so the three replies land in an inbox rather than a spam folder. A distress reply nobody sees is the harm this channel exists to prevent, and a young domain's first outbound mail is exactly where it happens.
+- [x] **Recovery codes and the registrar login in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person.
+
+Provisioning is **complete**. Backup access was exercised by signing in, not granted on paper; the drill exercises it again against live messages.
 
 ### As provisioned
 
@@ -36,7 +38,9 @@ The address is **`report@spiritual-collective.com`**, hosted at **Fastmail**, wi
 
 ### What "deleted" actually means
 
-**Fastmail keeps a short restore window** — on the order of a week — during which deleted mail can be recovered by the account owner, and it is not a setting that can be turned off. That is well inside the 30-day maximum, so the promise on `/about/` holds. It is written down here rather than glossed because the honest sentence is *deleted, with a provider restore window of about a week*, not *deleted instantly*, and a procedure that overstates its own guarantees is the kind that quietly stops being followed. Confirm the current figure against Fastmail's own documentation before the drill.
+**Fastmail keeps backups of deleted mail for one week**, during which the account owner can restore it, and there is no setting that turns this off. Confirmed against [Fastmail's *How to restore deleted data*](https://www.fastmail.help/hc/en-us/articles/1500000280381-How-to-restore-deleted-data) — "we keep backups of deleted email for one week" — rather than left as an estimate.
+
+One week is well inside the 30-day maximum, so the promise on `/about/` holds. It is written down here rather than glossed because the honest sentence is *deleted, with a provider restore window of one week*, not *deleted instantly*, and a procedure that overstates its own guarantees is the kind that quietly stops being followed. Re-check the figure if the mail host ever changes; it is a property of the provider, not of this procedure.
 
 ## The daily rhythm
 
@@ -107,6 +111,8 @@ Prior chaplain approval **does not count against the report** and never shields 
 
 Drafted here; **agreed by the editor and the chaplain reviewer before the address ships**. They are the resource speaking to a reader in the worst moment it has, and they are edited in this file rather than composed fresh at the keyboard — a reply written under the pressure of an upsetting message is where promises get made.
 
+**This file is authoritative for the wording.** [`accountability-replies-review.md`](accountability-replies-review.md) is the packet the chaplain reads — these sentences plus the follow-up and the availability notice, pinned to a version, with the questions they are being asked. Agreed changes land here first and the packet is regenerated; the packet is never the source.
+
 Send at most one of each per report. No signature, no role title, no name.
 
 ### 1. Acknowledgement
@@ -175,32 +181,75 @@ It is **never** copied into git, into a review record, into an issue, into a com
 
 ## The drill
 
-The release gate in [§6](../spec/06-release-criteria.md) — owner: **editor**, run once against the real mailbox before the address ships. **Publication fails if any step depends on an unavailable person, an inaccessible credential, or an unwritten judgment.**
+The release gate in [§6](../spec/06-release-criteria.md) — owner: **editor**, run against the real mailbox before the address ships. Every test message is sent from an address outside the project, and worked exactly as the procedure says rather than in an abbreviated form arranged to pass. **Publication fails if any step depends on an unavailable person, an inaccessible credential, or an unwritten judgment.**
 
-Send four test messages to the real address from an address outside the project, one per lane, and work them exactly as the procedure says:
+### Why it runs in two sittings
 
-- [ ] **Lane 4 (spam)** — discarded, no incident record created.
-- [ ] **Lane 3 (distress)** — distress reply sent, once; incident record created and closed on the reply.
-- [ ] **Lane 2 (wrong content)** — assessed as an editorial correction or a substantive change; incident record carries the version pointer.
-- [ ] **Lane 1 (safety)** — protective action in the same session: a real **withdrawal or revert performed** against the real site, chaplain notified, record returned to review. Then acknowledgement sent, closing sent, incident record closed, and the content restored through the ordinary gates afterwards.
-- [ ] **Lanes 1 + 3 combined** — a fifth message carrying both a safety claim and distress. Beyond what §6 asks for, and the case the channel most exists for: the protective action happens, the distress reply goes *instead of* the acknowledgement, one incident record carries both lanes, and no follow-up question is sent.
-- [ ] **One-business-day detection demonstrated** — the elapsed time between sending and the protective action is recorded, and it is under one business day. Demonstrated, not asserted.
-- [ ] **Backup access exercised** — the chaplain reviewer signs in and reads the mailbox as part of the drill, not afterwards.
-- [ ] **Replies landed in an inbox, not a spam folder** — checked at the receiving end for every reply sent during the drill, ideally against more than one provider. A reply the reporter never sees fails the channel as completely as never sending one.
-- [ ] **Source-email deletion performed** on all four test messages, trash and quarantine included.
-- [ ] **A sanitized incident record created** for lanes 1–3, and checked against the field list above — nothing extra in it.
+§6 asks for a **withdrawal or revert performed**, and a withdrawal is not something that can be rehearsed on paper. The point of the step is that a one-field edit reaches a reader — in one session, with no code change and no branch operation. That needs a deployed site, and there is not one yet: [#33](https://github.com/inarush0/spiritual-collective/issues/33) stands up the two Cloudflare Pages projects, and it is itself blocked on [#31](https://github.com/inarush0/spiritual-collective/issues/31), which is what makes a withdrawn practice serve a 200 page instead of a dead link.
+
+So the drill splits at the dependency rather than pretending it is not there:
+
+| | What it tests | Runnable |
+| --- | --- | --- |
+| **Sitting 1 — the channel** | that a message arriving at the address is detected, triaged, answered, recorded, and deleted | **now** |
+| **Sitting 2 — the withdrawal** | that a safety report moves published material off the site inside a business day | after [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33) |
+
+**Splitting costs nothing in schedule.** The gate exists to let the address appear *in production*, and there is no production until #33 deploys one. Sitting 2 sits on the critical path already; this defers half a drill behind work the release is waiting on regardless, rather than deferring the release behind the drill.
+
+**The gate stays binary.** Neither sitting passes anything on its own, a box ticked in sitting 1 does not decay into a pass for sitting 2, and `REPORT_ADDRESS` is replaced only after both are complete. Two sittings is a sequence, not a partial credit.
+
+### The site to withdraw from is the beta
+
+Sitting 2 runs against the **deployed beta**, not production, and that is the right target rather than a concession.
+
+Withdrawal is excluded from *both* builds — `publishedIn` in [`src/catalog/release.ts`](../../src/catalog/release.ts) returns false for `withdrawn` before it ever looks at which release it is in — so a withdrawal on the beta exercises the identical code path a production withdrawal would. What the beta does not share with production is the approved-only filter and the domain, and neither of those is what this step tests.
+
+It is also the honest target for a second reason: at the moment the drill runs, the beta **is** the deployed site. A drill against the site that actually exists is the procedure as it will be carried out; a drill against a locally built copy is a demonstration of a mechanism.
+
+**Before sitting 2, rehearse the edit once.** The editor sets `publication: withdrawn` on a record, rebuilds, and sees the practice disappear — on a branch, thrown away afterwards. This is not part of the gate and proves nothing; it exists so the mechanics are not being learned for the first time while holding a real safety report.
+
+### Sitting 1 — the channel
+
+Three test messages, one each for lanes 4, 3, and 2, worked end to end.
+
+- [ ] **Lane 4 (spam)** — discarded. **No incident record created**, and confirm that: the absence is the thing being tested.
+- [ ] **Lane 3 (distress)** — the distress reply sent, once, as written. Incident record created and closed on the reply. **No follow-up question sent**, and no second reply when the drill message is answered.
+- [ ] **Lane 2 (wrong content)** — assessed as an editorial correction or a substantive change. The one follow-up sent, in its drafted wording. Incident record carries the version pointer.
+- [ ] **One-business-day detection demonstrated** — the elapsed time between a message being sent and the editor reading it is recorded, and it is under one business day. Demonstrated, not asserted. The *action* half of the same promise is measured in sitting 2.
+- [ ] **Backup access exercised** — the chaplain reviewer signs in and reads the drill messages during the sitting, not afterwards and not on a screenshot.
+- [ ] **Replies landed in an inbox, not a spam folder** — checked at the receiving end for every reply sent, against more than one provider. A reply the reporter never sees fails the channel as completely as never sending one.
+- [ ] **Source-email deletion performed** on all three, trash and quarantine included, inside the procedure's own timing rather than at the end of the day.
+- [ ] **Sanitized incident records** for lanes 2 and 3, checked against the [field list](#the-incident-register) — nothing extra in them.
+
+Lane 1 is deliberately absent. Its closing reply says the material *has been removed*, which cannot truthfully be sent before it has been; opening a lane-1 record here would leave it hanging until #33 lands, and its source email would hit the 30-day deletion maximum long before the record could close. Lane 1 is worked whole, in sitting 2, on a fresh message.
+
+### Sitting 2 — the withdrawal
+
+Blocked on [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33). Two fresh test messages, each worked end to end in a single session.
+
+- [ ] **Lane 1 (safety)** — protective action in the session the message is read in: `publication: withdrawn` on a real record, on `main`, with the beta rebuilt.
+- [ ] **The withdrawal confirmed as a reader sees it**, not as a build log reports it — the practice gone from every list that offered it, and its URL serving the 200 "not available right now" page rather than a 404, on all three audience paths including the stepped-view URLs.
+- [ ] **Chaplain notified and the record returned to review**, so the removal cannot become permanent by neglect.
+- [ ] Acknowledgement sent, then the closing reply in its **removed** variant. Incident record closed.
+- [ ] **Lanes 1 + 3 combined** — a second message carrying both a safety claim and distress. Beyond what §6 asks for, and the case the channel most exists for: the protective action happens, the distress reply goes *instead of* the acknowledgement, one incident record carries both lanes and closes on the content lane's terms, and **no follow-up question is sent**.
+- [ ] **Receipt to protective action, under one business day**, recorded for both messages. This is the half of the promise sitting 1 cannot measure.
+- [ ] **No code change and no branch operation was required.** If either was, that is a finding against #31 rather than a note in the margin — the whole design of withdrawal is that it is a one-field edit.
+- [ ] **The content restored through the ordinary gates** afterwards, and the restoration confirmed on the beta. Restoration that turns on clinical safety needs a **new** consult; the original does not stretch to cover it.
+- [ ] **Source-email deletion performed** on both, trash and quarantine included.
+- [ ] **Sanitized incident records** checked against the [field list](#the-incident-register), including the combined record's `1 + 3` lane entry.
 
 ## Before the address ships
 
 The last box is the one that touches code, and it is last on purpose.
 
 - [x] The mailbox exists, on the resource's own domain, with MX, SPF, DKIM, and DMARC verified live
-- [ ] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded, recovery in the shared vault
+- [x] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded, recovery in the shared vault
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
-- [ ] [The three replies](#the-three-replies) agreed by editor and chaplain
+- [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
 - [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly
 - [ ] [The incident register](#the-incident-register) exists, empty, outside this repository
-- [ ] [The drill](#the-drill) passed in full
+- [ ] [The drill](#the-drill), **sitting 1** — the channel
+- [ ] [The drill](#the-drill), **sitting 2** — the withdrawal, after [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33)
 - [ ] **Only then**: replace `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) with the real address
 
 An address that merely looked real would take reports into a void, which is the harm this channel exists to prevent. Until the boxes above are ticked, the unroutable placeholder is the honest thing to ship.
