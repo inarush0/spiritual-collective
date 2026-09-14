@@ -8,13 +8,27 @@ Everything the resource sends to a person who wrote to `report@…`, gathered in
 | --- | --- |
 | **Sent to** | chaplain reviewer |
 | **Sent by** | editor |
-| **Version under review** | `<SHA>` — get it with `git log -1 --format=%h -- docs/runbooks/accountability-replies-review.md` |
-| **Date sent** | `<date>` |
+| **Version under review** | filled in on the copy that is sent — see [The version](#the-version) |
+| **Date sent** | filled in on the copy that is sent |
 | **Tracked in** | [#39](https://github.com/inarush0/spiritual-collective/issues/39) |
+
+**This file is a template and stays one.** The two rows above are never filled in here and committed. What the chaplain reviewer receives is a **copy** — an email, a document, whatever suits them — with the version and date written into it. The copy is the artifact under review; this file is what the copy is made from.
+
+That is not tidiness. Writing the version into this file would change this file, which would change its version: a record that invalidates itself the moment it is written. The [Outcome](#outcome) below is the part that *is* committed, and it can be, because by then the version it names is a commit that already exists.
 
 **No identity appears in this packet or in the record of its outcome** — role, date, and version only ([§5](../spec/05-governance.md), [ADR 0002](../adr/0002-two-person-asymmetric-governance.md)).
 
-**The version is a git commit SHA**, for the same reason a review record carries one: it tells you later whether these sentences changed after the chaplain reviewer agreed to them. Use the SHA of the last commit that changed *this file*, not the current HEAD — editing an unrelated file must not look like a new version of the replies. The command in the table above prints it.
+### The version
+
+A git commit SHA, for the same reason a review record carries one: it tells you later whether these sentences changed after the chaplain reviewer agreed to them.
+
+**Pin it to the runbook, not to this packet.** The wording under review lives in [`accountability-mailbox.md`](accountability-mailbox.md); this file only carries a copy of it. An approval goes stale when a *reply* changes, and a reply changing means that file changing.
+
+```
+git log -1 --format=%h -- docs/runbooks/accountability-mailbox.md
+```
+
+This over-triggers — editing the drill section bumps the SHA without touching a single reply, and the wording will look unapproved when it is not. That is the safe direction to be wrong in. It costs one question to the chaplain reviewer and can only ever make you re-check an approval that still held; the opposite error leaves a changed reply wearing an approval that no longer covers it.
 
 ## Why this one is reviewed as a document
 
@@ -113,6 +127,8 @@ And one standing question: **is there a message this mailbox will get that none 
 
 Transcribed by the editor from the chaplain's response, then **sent back to the chaplain for confirmation**. Nothing here until that confirmation arrives.
 
+This section, unlike the template above, **is** filled in and committed. It can be: every SHA it names is a commit that already exists when it is written.
+
 | Reply | Outcome | Date |
 | --- | --- | --- |
 | Acknowledgement | `agreed` / `agreed with changes` / `held` | |
@@ -123,8 +139,10 @@ Transcribed by the editor from the chaplain's response, then **sent back to the 
 | The one follow-up | | |
 | Availability notice | | |
 
+- **Date sent** `<date>` · **version sent** `<SHA of accountability-mailbox.md at that moment>`
 - **Transcription confirmed by the chaplain reviewer on** `<date>`
-- **Version reviewed** `<commit SHA>`
-- **Changes carried back into** [`accountability-mailbox.md`](accountability-mailbox.md) **in** `<commit SHA>`
+- **Agreed changes carried back into** [`accountability-mailbox.md`](accountability-mailbox.md) **in** `<SHA>`
+
+That last line is the one that matters a year from now. It says the approved wording and the shipped wording are the same thing.
 
 Anything **held** is revised and re-sent as a new packet against a new version. A held reply does not go out in the drill, and does not ship.
