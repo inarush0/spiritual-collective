@@ -18,7 +18,7 @@ interface Props {
 }
 
 const { practices, level = 2 } = Astro.props;
-const Heading = `h${level}` as 'h2' | 'h3';
+const Heading = level === 2 ? 'h2' : 'h3';
 
 /**
  * A list of practices as a reader meets it: every set screen, and

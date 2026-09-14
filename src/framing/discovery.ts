@@ -67,12 +67,15 @@ export const TAIL_TITLE = 'Other things people reach for.';
  * which would make the page claim a fit it did not work out.
  *
  * The second line says where they came from instead, so that "not what you
- * chose" does not leave the reader guessing what the page did. Neither line
- * may rank them, count them, or say they are related.
+ * chose" does not leave the reader guessing what the page did. It says the
+ * list is always here, and stops there: explaining that the tail exists so a
+ * screen cannot reveal how much sat behind an answer would raise, in the
+ * reader's mind, the question the tail is here to keep off the page. Neither
+ * line may rank them, count them, or say they are related.
  */
 export const TAIL_LEAD: readonly string[] = [
 	'These are not from what you chose.',
-	'They are on this page whatever you picked, so the page never says how much there was behind an answer.',
+	'They are the next few in the list everything is kept in, and they are here on every screen like this one.',
 ];
 
 /** The heading and lead of `/me/not-sure/`, the door that skips the question. */

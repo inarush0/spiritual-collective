@@ -60,9 +60,12 @@ function practicesOn(html: string): string[] {
 	return [...html.matchAll(/href="\/me\/practice\/([^/"]+)\//g)].map((match) => match[1]);
 }
 
+/** The markup the set tail opens with, named once so the two users agree. */
+const TAIL_MARKUP = '<section class="tail"';
+
 /** Where the quiet divider falls: everything above it, and everything below. */
 function split(html: string): { set: string; tail: string } {
-	const divider = html.indexOf('<section class="tail"');
+	const divider = html.indexOf(TAIL_MARKUP);
 	expect(divider, 'page carries no set tail').toBeGreaterThan(-1);
 	return { set: html.slice(0, divider), tail: html.slice(divider) };
 }
@@ -226,7 +229,7 @@ describe('the set tail', () => {
 	});
 
 	it('is absent from /me/everything/, which has nothing it is not showing', () => {
-		expect(pageAt(production, '/me/everything/')).not.toContain('<section class="tail"');
+		expect(pageAt(production, '/me/everything/')).not.toContain(TAIL_MARKUP);
 	});
 });
 

@@ -69,6 +69,13 @@ const tail = setTail(await loadCatalog(), set);
 		border-top: 1px solid var(--rule);
 	}
 
+	/*
+	 * The title sits below the entries in size on purpose. Above the divider
+	 * the set's lead-in is quiet body text too: the tail is shaped like the
+	 * set, and a louder heading here would make the space below the line read
+	 * as a second, better-stocked offer. The entries themselves are the same
+	 * size as the set's, which is the size rule that matters.
+	 */
 	.tail h2 {
 		font-size: 1rem;
 		margin: 0 0 0.25rem;
@@ -80,6 +87,6 @@ const tail = setTail(await loadCatalog(), set);
 	}
 
 	.lead:last-of-type {
-		margin-bottom: 1.75rem;
+		margin-bottom: 2rem;
 	}
 </style>
