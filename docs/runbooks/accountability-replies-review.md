@@ -8,11 +8,13 @@ Everything the resource sends to a person who wrote to `report@…`, gathered in
 | --- | --- |
 | **Sent to** | chaplain reviewer |
 | **Sent by** | editor |
-| **Version under review** | `<commit SHA at the time of sending>` |
+| **Version under review** | `<SHA>` — get it with `git log -1 --format=%h -- docs/runbooks/accountability-replies-review.md` |
 | **Date sent** | `<date>` |
 | **Tracked in** | [#39](https://github.com/inarush0/spiritual-collective/issues/39) |
 
 **No identity appears in this packet or in the record of its outcome** — role, date, and version only ([§5](../spec/05-governance.md), [ADR 0002](../adr/0002-two-person-asymmetric-governance.md)).
+
+**The version is a git commit SHA**, for the same reason a review record carries one: it tells you later whether these sentences changed after the chaplain reviewer agreed to them. Use the SHA of the last commit that changed *this file*, not the current HEAD — editing an unrelated file must not look like a new version of the replies. The command in the table above prints it.
 
 ## Why this one is reviewed as a document
 
