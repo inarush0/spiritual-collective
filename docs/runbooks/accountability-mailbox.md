@@ -45,10 +45,29 @@ The vault is an **Apple Passwords shared group**, holding the Fastmail password.
 A password is not recovery. Three things are still missing, and each covers a case the password does not:
 
 - **The Fastmail recovery codes.** A password does not get you in when the second factor is gone with the device holding it. This is the likeliest way the mailbox is lost, and the password is no help in it.
-- **The Squarespace Domains login.** Mail depends on DNS. An intact mailbox behind unreachable nameservers receives nothing, and the records are fiddly enough that [this already cost a debugging round](#as-provisioned).
+- **A way for the chaplain reviewer to reach DNS.** Mail depends on it: an intact mailbox behind unreachable nameservers receives nothing, and the records are fiddly enough that [this already cost a debugging round](#as-provisioned). The Squarespace login is **not** the answer — see [the registrar problem](#the-registrar-problem).
 - **The incident register link**, so the register is reachable by the person who did not create it.
 
 One thing to know about the shared group: it depends on both people staying in the Apple ecosystem. That is acceptable and worth writing down rather than discovering — if either person changes phones away from Apple, the vault moves, and the move is the kind of task that gets postponed until it is needed.
+
+### The registrar problem
+
+**The Squarespace account signs in with the editor's personal Google account, and that password is not shared.** That is the correct decision and not a gap to be closed by reversing it: sharing it would hand over the editor's whole mail, files, and identity in order to solve a DNS problem, and Squarespace documents no way to add a second person to a standalone domain.
+
+So the requirement has to be taken apart. Two things were being treated as one:
+
+| | Must be | Why |
+| --- | --- | --- |
+| **Domain registration** — who owns and renews it | the editor alone | it is tied to a personal identity and a payment method, and it should be |
+| **DNS control** — the records mail depends on | reachable by both | this is the emergency the backup exists for, and it is not the same thing as ownership |
+
+**The fix is to move DNS control off the registrar**, leaving registration where it is. Point the nameservers at the Cloudflare account that [#33](https://github.com/inarush0/spiritual-collective/issues/33) creates for the two Pages projects, and add the chaplain reviewer to it as a member. DNS then lives in an account built for two people, and nothing personal is shared.
+
+Do it **as part of #33, not before it.** Re-pointing nameservers is the operation that took the mailbox down once already. MX, SPF, DKIM, and DMARC are recreated at Cloudflare and verified live against the authoritative nameservers *before* the cutover, with the TTL lowered first so a mistake is minutes rather than a day.
+
+**This reduces the risk; it does not remove it.** If the editor becomes unreachable, the domain still lapses at renewal and no amount of DNS access prevents that. That failure is the tolerable one: it is slow, it is announced by weeks of renewal warnings followed by a redemption grace period, and auto-renew is on. The failure the backup must actually cover is the fast one — a record is wrong, or mail stops, and someone has to fix it today.
+
+**Smaller alternative, worth trying first:** if the Squarespace account can be detached from Google sign-in and moved to a project address with its own password, that password goes in the shared group and no DNS move is needed at all. Check this before committing to the nameserver change — it is much less to go wrong.
 
 ### What "deleted" actually means
 
@@ -263,13 +282,13 @@ The last box is the one that touches code, and it is last on purpose.
 - [x] The mailbox exists, on the resource's own domain, with MX, SPF, DKIM, and DMARC verified live
 - [x] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded
 - [x] A shared vault exists — an Apple Passwords shared group, holding the Fastmail password
-- [ ] [The vault holds the rest](#what-the-vault-still-needs) — the Fastmail recovery codes and the Squarespace registrar login
+- [ ] [The vault holds the rest](#what-the-vault-still-needs) — the Fastmail recovery codes and the register's link
+- [ ] [The registrar problem](#the-registrar-problem) resolved — the chaplain reviewer can reach DNS without the editor's personal account
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
 - [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly
 - [x] [The incident register](#the-incident-register) exists, empty, outside this repository
 - [x] The register shared with the chaplain reviewer
-- [ ] The register's link in that vault, beside the recovery codes
 - [ ] [The drill](#the-drill), **sitting 1** — the channel
 - [ ] [The drill](#the-drill), **sitting 2** — the withdrawal, after [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33)
 - [ ] **Only then**: replace `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) with the real address
