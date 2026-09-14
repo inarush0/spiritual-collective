@@ -169,6 +169,10 @@ One record per non-spam report, holding **only** these fields:
 | outcome | `retired` / `revised and re-approved` / `no change, both agreed` |
 | closure date | `2026-__-__` |
 
+**As created**: a private Google Sheet in the editor's Drive, one row per record and one column per field above, shared with the chaplain reviewer and with nobody else. **The link lives in the shared vault, not here** — the mailbox address is public by design and this is not, and a URL in a public repository is an invitation to ask for access to a thing nobody outside the two roles should have.
+
+The column headings *are* the field list, which is the reason for a sheet rather than a document: a field that has no column is a field nobody can add in a hurry. Note the one thing the tool will not enforce — **revision history retains text that was typed and deleted**, so a slip pasted in and removed does not go away. The discipline below is what protects the register, not the software.
+
 **Never** in the register: sender identity, quoted message text, diagnosis, institution, or narrative detail. If a field seems to need a sentence of story to make sense, that is the signal it is being written down at the wrong grain — the version pointer and the outcome carry the meaning.
 
 **A content incident closes only when** the material is retired, or a corrected or restored version has passed every applicable gate. **A distress-only incident closes** after the boundary response is sent. **A combined record closes on the content lane's terms** — the reply has already gone, and the material is what is left open.
@@ -247,7 +251,8 @@ The last box is the one that touches code, and it is last on purpose.
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
 - [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly
-- [ ] [The incident register](#the-incident-register) exists, empty, outside this repository
+- [x] [The incident register](#the-incident-register) exists, empty, outside this repository
+- [ ] The register shared with the chaplain reviewer, and its link in the shared vault
 - [ ] [The drill](#the-drill), **sitting 1** — the channel
 - [ ] [The drill](#the-drill), **sitting 2** — the withdrawal, after [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33)
 - [ ] **Only then**: replace `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) with the real address
