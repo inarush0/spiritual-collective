@@ -78,6 +78,76 @@ export const TAIL_LEAD: readonly string[] = [
 	'They are the next few in the list everything is kept in, and they are here on every screen like this one.',
 ];
 
+/**
+ * The link to the **low-energy variant**, carried by every set screen.
+ *
+ * It says what is on the other side of it rather than who it is for. "If you
+ * have almost nothing to give" would ask the reader to place themselves before
+ * they can follow it, and a reader who does not think of themselves that way
+ * would pass over the one page that fits them; "lying down, with your eyes
+ * closed" is a fact about the practices, which anyone can check against their
+ * own afternoon. It also cannot be read as a smaller or lesser offer, which
+ * "short version" and "easy mode" both would be.
+ *
+ * The link is never conditional (§1). It appears on a set screen whether or
+ * not the chosen tag has anything behind it, because a link that showed up
+ * only where the variant was stocked would tell the reader something about the
+ * answer they picked.
+ */
+export const LOW_ENERGY_LINK = 'Things that work lying down, with your eyes closed.';
+
+/**
+ * The lead over the low-energy variant itself.
+ *
+ * The first line is the promise the page makes, and it is the only claim on
+ * the screen: the `low energy` field on each record is what makes it true. The
+ * second exists because a list offered to someone with almost nothing to give
+ * will otherwise be read as an abridgement — these are whole practices, and
+ * the **smallest version** on each one is where the least a person can do is
+ * already said.
+ */
+export const LOW_ENERGY_LEAD: readonly string[] = [
+	'Everything here works lying down, with your eyes closed.',
+	'They are whole practices, not shortened versions of the others.',
+];
+
+/**
+ * The label where the variant fell back past the chosen tag.
+ *
+ * Framed as the **set tail** is framed, and for the same reason: a list that
+ * arrives under the answer someone chose is read as more of that answer unless
+ * something says otherwise, and this page would then be claiming a fit it did
+ * not work out. So the first line is the tail's own, verbatim.
+ *
+ * The second says where they came from instead and stops there, again like the
+ * tail. Saying that nothing behind the reader's answer works this way would
+ * answer, out loud, the question this whole arrangement exists to keep off the
+ * page.
+ */
+export const LOW_ENERGY_OUTSIDE_LEAD: readonly string[] = [
+	'These are not from what you chose.',
+	'They are the ones that work this way, from the list everything is kept in.',
+];
+
+/**
+ * What the variant says when the whole catalog holds nothing that works this
+ * way.
+ *
+ * Reachable in principle rather than in practice: the fallback covers a tag
+ * with none of its own, and only a build publishing no low-energy practice at
+ * all reaches this. It is written anyway, because the alternative to a
+ * sentence here is a page with a heading and nothing under it, and because the
+ * link that leads here is never hidden — a link the build cannot stock is
+ * still a link a reader will follow.
+ *
+ * Said without apology or reassurance. It is a fact about the list, and the
+ * escapes below it are the way onward.
+ */
+export const LOW_ENERGY_EMPTY = 'There is nothing on the list that works this way right now.';
+
+/** The way back from the variant to the whole set the reader came from. */
+export const LOW_ENERGY_BACK = 'Everything for this answer.';
+
 /** The heading and lead of `/me/not-sure/`, the door that skips the question. */
 export const NOT_SURE_TITLE = 'Not sure is fine.';
 

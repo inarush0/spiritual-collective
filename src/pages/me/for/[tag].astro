@@ -3,6 +3,7 @@ import Page from '../../../layouts/Page.astro';
 import Escapes from '../../../framing/Escapes.astro';
 import PracticeSet from '../../../framing/PracticeSet.astro';
 import SetTail from '../../../framing/SetTail.astro';
+import LowEnergyLink from '../../../framing/LowEnergyLink.astro';
 import { loadCatalog } from '../../../catalog/index.js';
 import { offeredNeedTags, practicesFor } from '../../../catalog/need-tags.js';
 import { SET_LEAD, SET_TITLE } from '../../../framing/discovery.js';
@@ -55,11 +56,13 @@ const { tag, practices } = Astro.props;
 
 	{
 		/*
-		 * The low-energy link goes here, below the tail and present whether or
-		 * not this tag has any low-energy practices behind it
+		 * Below the tail, and present whether or not this tag has any
+		 * low-energy practices behind it — the component holds no condition to
+		 * make it otherwise
 		 * ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
 		 */
 	}
+	<LowEnergyLink tag={tag} />
 
 	<Escapes />
 </Page>
