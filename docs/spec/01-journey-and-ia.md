@@ -93,6 +93,11 @@ Each fixed set is shaped like any other set, tail included. The younger-child pa
 
 `/<path>/for/<tag>/low/` holds the practices carrying that tag whose `low energy` field is true. Where that filter is empty, the page falls back to the low-energy practices from outside the tag, framed as the tail is framed — these aren't from what you chose. **The link is never hidden**, because showing it only where non-empty leaks a verdict about the answer the reader picked.
 
+Two consequences of that, resolved when the variant was built ([#26](https://github.com/inarush0/spiritual-collective/issues/26)):
+
+- **The variant carries no set tail**, which is the one place §3's list does not hold. The tail scans the editorial order, and the order knows nothing about energy, so a tail here would put practices that need getting up on the one page promising the opposite. The fallback does the tail's job on this page — same purpose, same framing, drawn from what can honestly be on it.
+- **The link belongs to a tag's set screen.** The variant varies a need tag, so the doors that skip the question — `/me/not-sure/`, `/*/everything/` — do not carry it: there is no tag to vary, and sending that reader to one would put an answer they never gave at the top of the next screen. This is not the link being hidden where a tag is thin; every tag the question offers has both pages.
+
 ### Adjustments, not questions
 
 Further narrowing is offered on the set screen as adjustments — the eight need-tag strings, and the low-energy link — never as an additional step. Companion set screens use **the same eight first-person strings** under a companion-framed lead-in; there are no companion-worded variants ([#12](https://github.com/inarush0/spiritual-collective/issues/12)).

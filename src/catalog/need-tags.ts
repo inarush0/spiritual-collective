@@ -81,6 +81,19 @@ export function needTagRoute(tag: NeedTag): string {
 }
 
 /**
+ * The route of that set's **low-energy variant**.
+ *
+ * Its own prerendered path under the set's, not a toggle or a query string
+ * (`docs/spec/01-journey-and-ia.md`): the variant is a state of the journey,
+ * and every state of the journey is a real page. Derived from the set route so
+ * the two cannot drift apart, and issued for every tag the question offers
+ * ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
+ */
+export function lowEnergyRoute(tag: NeedTag): string {
+	return `${needTagRoute(tag)}low/`;
+}
+
+/**
  * The suggestion set for one need tag: every practice carrying it, in the
  * fixed editorial order, uncapped.
  *

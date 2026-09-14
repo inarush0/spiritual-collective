@@ -1,0 +1,43 @@
+---
+import { lowEnergyRoute } from '../catalog/need-tags.js';
+import type { NeedTag } from '../catalog/practice-record.js';
+import { LOW_ENERGY_LINK } from './discovery.js';
+
+interface Props {
+	/** The answer whose set this is. The variant lives under its route. */
+	tag: NeedTag;
+}
+
+const { tag } = Astro.props;
+
+/**
+ * The link to the **low-energy variant**, below the **set tail** on every set
+ * screen ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
+ *
+ * There is **no condition in this file**, and that is the whole reason it is a
+ * file. The link is offered whether or not the chosen tag has any low-energy
+ * practice behind it (`docs/spec/01-journey-and-ia.md`): a link rendered only
+ * where the variant was stocked would tell the reader that their answer came
+ * up short, which is precisely the verdict none of these screens may deliver.
+ * A component with nothing to branch on cannot acquire that condition later by
+ * someone adding a helpful `&&` to one page.
+ *
+ * It sits below the tail rather than beside the set, because it is an
+ * adjustment to what is on screen rather than another thing on it, and above
+ * the escapes, because it is still a way further in rather than a way out.
+ */
+---
+
+<p class="low-energy">
+	<a href={lowEnergyRoute(tag)}>{LOW_ENERGY_LINK}</a>
+</p>
+
+<style>
+	/*
+	 * At the size of the page's own text: this is one of the adjustments a set
+	 * screen offers, not a quiet aside for readers who need special handling.
+	 */
+	.low-energy {
+		margin: 2.5rem 0 0;
+	}
+</style>

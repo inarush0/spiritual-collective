@@ -30,9 +30,10 @@ export const EXIT_ROUTE = '/me/after/';
 /**
  * The practice view for one practice.
  *
- * The set routes are not here: `/me/for/<need-tag-slug>/` is derived from the
- * tag string itself in `src/catalog/need-tags.ts`, where the derivation and
- * the tags it reads from sit together.
+ * The set routes are not here: `/me/for/<need-tag-slug>/` and its low-energy
+ * variant are derived from the tag string itself in
+ * `src/catalog/need-tags.ts`, where the derivation and the tags it reads from
+ * sit together.
  */
 export function practiceRoute(slug: string): string {
 	return `/me/practice/${slug}/`;
