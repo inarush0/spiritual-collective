@@ -7,11 +7,16 @@ import {
 	EXIT_TITLE,
 	NOTHING_LINES,
 	NOTHING_TITLE,
-	WAYS_ONWARD,
+	waysOnward,
 } from '../src/framing/exits.js';
-import { EXIT_ROUTE, NOTHING_ROUTE } from '../src/framing/routes.js';
+import { routesFor } from '../src/framing/routes.js';
 import { CHANGE_THIS, LAST_STEP, NEXT, ONWARD, STOP, stepLabel } from '../src/framing/stepped-view.js';
 import { buildBothReleases, hasPageAt, pageAt, plainText } from './support/build.js';
+
+/** The direct user's routes: this suite is about their screens. */
+const { exit: EXIT_ROUTE, nothing: NOTHING_ROUTE } = routesFor('me');
+/** The ways onward the direct user's exit offers. */
+const WAYS_ONWARD = waysOnward('me');
 
 /**
  * The stepped view and the exit, direct user.

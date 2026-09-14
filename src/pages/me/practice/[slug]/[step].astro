@@ -5,7 +5,7 @@ import {
 	PENDING_MARKER,
 	SMALLEST_LEAD,
 } from '../../../../framing/practice-view.js';
-import { EXIT_ROUTE } from '../../../../framing/routes.js';
+import { routesFor } from '../../../../framing/routes.js';
 import {
 	CHANGE_THIS,
 	LAST_STEP,
@@ -45,7 +45,8 @@ const { practice, step, number } = Astro.props;
 const record = practice.data;
 
 const total = record.what_this_involves.length;
-const practiceRoute = `/me/practice/${practice.id}/`;
+const routes = routesFor('me');
+const practiceRoute = routes.practice(practice.id);
 const label = stepLabel(number, total);
 const isLast = number === total;
 ---
@@ -103,7 +104,7 @@ const isLast = number === total;
 			isLast ? (
 				<p class="onward">
 					<span class="last">{LAST_STEP}</span>
-					<a href={EXIT_ROUTE}>{ONWARD}</a>
+					<a href={routes.exit}>{ONWARD}</a>
 				</p>
 			) : (
 				<p class="onward">
@@ -111,7 +112,7 @@ const isLast = number === total;
 				</p>
 			)
 		}
-		<p class="stop"><a href={EXIT_ROUTE}>{STOP}</a></p>
+		<p class="stop"><a href={routes.exit}>{STOP}</a></p>
 	</div>
 </Page>
 

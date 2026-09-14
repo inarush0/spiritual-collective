@@ -1,51 +1,67 @@
 ---
 import Page from '../../../layouts/Page.astro';
+import GuideDoorway from '../../../framing/GuideDoorway.astro';
+import PathBadge from '../../../framing/PathBadge.astro';
 import SafetyNote from '../../../framing/SafetyNote.astro';
 import {
-	ACTION,
 	BELIEF_LINE,
-	PATH_BADGE,
 	PENDING_MARKER,
 	REFUSAL,
 	SMALLEST_LEAD,
 } from '../../../framing/practice-view.js';
 import { loadCatalog, pendingIn, release } from '../../../catalog/index.js';
-import { CATALOG_ROUTE, practiceRoute } from '../../../framing/routes.js';
+import { framingFor } from '../../../framing/audience.js';
+import { AUDIENCE_PATHS } from '../../../framing/routes.js';
 
 /**
- * The practice view, direct-user path.
+ * The practice view, on every audience path: `/<path>/practice/<slug>/`.
  *
- * One page per practice this release publishes, so `/me/practice/<slug>/` is
- * real for everything `/me/everything/` lists and a chaplain can link one
- * directly. The whole record is here, in the fixed shape — what this involves,
- * ways to change it, stop guidance, then the action — and **nothing starts on
- * its own** (`docs/spec/01-journey-and-ia.md`).
+ * One page per practice this release publishes, per path, so **every practice
+ * is reachable on every path** (`docs/spec/01-journey-and-ia.md`) and a
+ * chaplain can link one directly. The whole record is here, in the fixed shape
+ * — what this involves, ways to change it, stop guidance, then the action —
+ * and **nothing starts on its own**.
+ *
+ * What the path changes is the framing: the badge, and the action. What it
+ * does not change is **the record**. The canonical steps are identical on all
+ * three paths, and so is everything that says what the practice asks of the
+ * person doing it — the origin line, the belief line, the smallest version.
+ * Those sentences are addressed to whoever is doing the practice, on a
+ * companion path as much as anywhere else; a companion reads them about the
+ * person they are with rather than about themselves. The notes written for a
+ * companion — `companion note`, `companion cautions`, `child keep`, `child
+ * change` — belong to "Before you offer this"
+ * ([#29](https://github.com/inarush0/spiritual-collective/issues/29)), which is
+ * where a companion meets them before anything is offered.
  *
  * A withdrawn record is published by neither build, so it has no page here yet;
  * its 200 "not available right now" page is its own ticket.
  */
 export async function getStaticPaths() {
 	const practices = await loadCatalog();
-	return practices.map((practice) => ({
-		params: { slug: practice.id },
-		props: { practice },
-	}));
+	return AUDIENCE_PATHS.flatMap((path) =>
+		practices.map((practice) => ({
+			params: { path, slug: practice.id },
+			props: { path, practice },
+		})),
+	);
 }
 
-const { practice } = Astro.props;
+const { path, practice } = Astro.props;
 const record = practice.data;
+const framing = framingFor(path);
+const action = framing.actionRoute(practice.id);
 ---
 
 <Page title={record.name}>
 	{
 		/*
-		 * The badge names the path. "Change who this is for" joins it when
-		 * arrival exists: a link to a page that is not built yet is worse than
-		 * a plain line — someone following a chaplain's link should always meet
-		 * a sentence and a way onward.
+		 * The badge names the path, and "Change who this is for" sits with it:
+		 * this is the screen where being on the wrong one matters most, because
+		 * it is the screen someone acts from.
 		 */
 	}
-	<p class="badge">{PATH_BADGE}</p>
+	<PathBadge path={path} change />
 
 	<h1>{record.name}</h1>
 	<p class="invitation">{record.invitation}</p>
@@ -88,12 +104,18 @@ const record = practice.data;
 			 * step one is reached by clicking this and by nothing else. It is
 			 * deliberately last and deliberately quiet — the record above is
 			 * readable in full first, and nothing here advances by itself.
+			 *
+			 * On the companion paths it is a plain line until "Before you offer
+			 * this" exists (#29). `framingFor` says why the alternatives are
+			 * worse than a sentence.
 			 */
 		}
-		<p class="action"><a href={`${practiceRoute(practice.id)}1/`}>{ACTION}</a></p>
+		<p class="action">{action ? <a href={action}>{framing.action}</a> : framing.action}</p>
 		{/* Refusal is visible, alongside the action rather than beneath it. */}
-		<p class="refusal"><a href={CATALOG_ROUTE}>{REFUSAL}</a></p>
+		<p class="refusal"><a href={framing.routes.everything}>{REFUSAL}</a></p>
 	</div>
+
+	<GuideDoorway path={path} />
 </Page>
 
 <style>

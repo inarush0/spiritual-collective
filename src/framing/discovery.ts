@@ -1,7 +1,11 @@
-import { CATALOG_ROUTE, NOTHING_ROUTE, NOT_SURE_ROUTE } from './routes.js';
-
 /**
  * The discovery question and the wording around every direct-user set screen.
+ *
+ * Some of it is met on every path rather than this one: the **set tail**'s
+ * heading and label, the escapes' words, "Not sure is fine." A companion's
+ * wording for the rest is in `./companion.ts`, and `./audience.ts` is where a
+ * screen asks which of the two it is showing. What stays here is what a
+ * direct user reads.
  *
  * The journey is one gentle question and then a set: no landing page, no
  * "begin" button, no second question (`docs/spec/01-journey-and-ia.md`). The
@@ -177,25 +181,15 @@ export const NOT_SURE_LINES: readonly string[] = [
 	'Not knowing what you want is not a problem to solve before you can be here.',
 ];
 
-/** One way out of the flow: the words, and where they go. */
-export interface Escape {
-	words: string;
-	route: string;
-}
-
 /**
- * The three escapes, on every screen in this flow.
+ * The heading and lead of `/*​/everything/`, the other door that skips the
+ * question.
  *
- * They are ordinary links at the same size as everything else. "I'm not sure"
- * is first because it is the one a reader wants while looking at a question
- * they cannot answer; "Nothing right now" is last, and it is a real page
- * rather than a way of saying goodbye.
- *
- * A screen renders the escape that points at itself as a plain line, so that
- * none of the three is ever a link back to where the reader already is.
+ * The lead says the one thing a whole-catalog screen has to say for itself:
+ * the order it is in is not an order of fit. The catalog is in the fixed
+ * editorial order on every screen that lists it, and a reader meeting all of
+ * it at once is the most likely to read the top of the list as the best of it.
  */
-export const ESCAPES: readonly Escape[] = [
-	{ words: "I'm not sure.", route: NOT_SURE_ROUTE },
-	{ words: 'Show me everything.', route: CATALOG_ROUTE },
-	{ words: 'Nothing right now.', route: NOTHING_ROUTE },
-];
+export const CATALOG_TITLE = 'Everything';
+
+export const CATALOG_LEAD = 'All of it, in one list. Nothing here is ordered by how well it would suit you.';

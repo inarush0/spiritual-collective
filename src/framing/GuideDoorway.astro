@@ -1,0 +1,50 @@
+---
+import { GUIDE_DOORWAY } from './companion.js';
+import { GUIDE_ROUTE, isCompanionPath, type AudiencePath } from './routes.js';
+
+interface Props {
+	path: AudiencePath;
+}
+
+const { path } = Astro.props;
+
+/**
+ * The quiet doorway back to the **standing guide**, on every companion screen.
+ *
+ * How to offer a practice and how to adapt one are written once, on `/child/`,
+ * and a companion who arrived through `/with/` has never seen that page. So it
+ * stays reachable from every screen they meet (`docs/spec/01-journey-and-ia.md`)
+ * rather than only from the screen they landed on.
+ *
+ * **The condition is in this file rather than in the pages.** "Never shown to
+ * the direct user" is a rule about the guide, not a fact about which template
+ * happens to render it: the guide addresses a companion about another person,
+ * and a direct user meeting it would be handed a page about being cared for.
+ * A page asks for the doorway and gets one only if it is on a path that has
+ * one.
+ *
+ * It is a sentence until `/child/` is built
+ * ([#30](https://github.com/inarush0/spiritual-collective/issues/30)) — a dead
+ * link is the one thing a doorway must not be.
+ */
+const showGuide = isCompanionPath(path);
+---
+
+{
+	showGuide && (
+		<p class="doorway">
+			{GUIDE_ROUTE ? <a href={GUIDE_ROUTE}>{GUIDE_DOORWAY}</a> : GUIDE_DOORWAY}
+		</p>
+	)
+}
+
+<style>
+	/*
+	 * Quiet, and below the ways further in: it is the page a companion can go
+	 * back to rather than another thing to choose from here.
+	 */
+	.doorway {
+		margin: 1.5rem 0 0;
+		color: var(--quiet);
+	}
+</style>

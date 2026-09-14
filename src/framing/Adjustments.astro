@@ -1,0 +1,95 @@
+---
+import type { NeedTagOffer } from '../catalog/need-tags.js';
+import { ADJUSTMENTS_LEAD, ADJUSTMENTS_TITLE } from './companion.js';
+import { routesFor, type AudiencePath } from './routes.js';
+
+interface Props {
+	/** The need tags this build offers, from the records. */
+	offered: NeedTagOffer[];
+	path: AudiencePath;
+	/** The tag whose set the reader is already looking at, where there is one. */
+	current?: string;
+}
+
+const { offered, path, current } = Astro.props;
+const routes = routesFor(path);
+---
+
+{
+	/*
+	 * **Adjustments, not questions** (`docs/spec/01-journey-and-ia.md`).
+	 *
+	 * A companion is never asked anything, so this is the only way further in
+	 * they are given — and it is offered as an adjustment to the set already on
+	 * screen rather than as a step to take before the page will help. Following
+	 * none of them is a complete way to use the screen, and nothing here is
+	 * phrased as a question or presented as unfinished business.
+	 *
+	 * **The eight strings are the need tags verbatim, in the first person, with
+	 * no companion-worded variants** ([#12](https://github.com/inarush0/spiritual-collective/issues/12)).
+	 * They are the same words every other reader is offered, which is the
+	 * substance of the promise that no path meets a smaller or different
+	 * catalog than another; the lead-in above them is what turns to the
+	 * companion. An unordered list, at one size, with no tag recommended.
+	 *
+	 * The tag the reader is already on is a plain line rather than a link back
+	 * to this page, the same way an escape pointing at the current screen is.
+	 */
+}
+<section class="adjustments" aria-labelledby="adjustments-title">
+	<h2 id="adjustments-title">{ADJUSTMENTS_TITLE}</h2>
+	{ADJUSTMENTS_LEAD.map((line) => <p class="lead">{line}</p>)}
+	<ul>
+		{
+			offered.map((offer) => (
+				<li>
+					{offer.tag === current ? (
+						<span aria-current="page">{offer.tag}</span>
+					) : (
+						<a href={routes.forTag(offer.tag)}>{offer.tag}</a>
+					)}
+				</li>
+			))
+		}
+	</ul>
+</section>
+
+<style>
+	.adjustments {
+		margin-top: 2.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--rule);
+	}
+
+	/*
+	 * The same quiet heading as the set tail's, for the same reason: what is
+	 * below this line is not a better-stocked offer than what is above it.
+	 */
+	.adjustments h2 {
+		font-size: 1rem;
+		margin: 0 0 0.25rem;
+	}
+
+	.lead {
+		margin: 0 0 0.5rem;
+		color: var(--quiet);
+	}
+
+	.lead:last-of-type {
+		margin-bottom: 1.5rem;
+	}
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	li + li {
+		margin-top: 0.75rem;
+	}
+
+	[aria-current] {
+		color: var(--quiet);
+	}
+</style>

@@ -1,21 +1,25 @@
 ---
 import Page from '../../../../layouts/Page.astro';
 import Escapes from '../../../../framing/Escapes.astro';
+import GuideDoorway from '../../../../framing/GuideDoorway.astro';
+import PathBadge from '../../../../framing/PathBadge.astro';
 import PracticeSet from '../../../../framing/PracticeSet.astro';
 import SetHeading from '../../../../framing/SetHeading.astro';
 import { loadCatalog } from '../../../../catalog/index.js';
 import { lowEnergySet } from '../../../../catalog/low-energy.js';
-import { needTagRoute, offeredNeedTags } from '../../../../catalog/need-tags.js';
+import { offeredNeedTags } from '../../../../catalog/need-tags.js';
+import { framingFor } from '../../../../framing/audience.js';
+import { AUDIENCE_PATHS } from '../../../../framing/routes.js';
 import {
 	LOW_ENERGY_BACK,
 	LOW_ENERGY_EMPTY,
-	LOW_ENERGY_LEAD,
 	LOW_ENERGY_OUTSIDE_LEAD,
 	LOW_ENERGY_TAB,
 } from '../../../../framing/discovery.js';
 
 /**
- * The **low-energy variant**, direct-user path: `/me/for/<need-tag-slug>/low/`.
+ * The **low-energy variant**, on every audience path:
+ * `/<path>/for/<need-tag-slug>/low/`.
  *
  * The reachable-from-anywhere alternative for someone with almost nothing to
  * give — the practices carrying that tag whose `low energy` is true, and where
@@ -28,18 +32,17 @@ import {
  * and there is no client JavaScript to toggle anything with. A reader can also
  * be sent straight here by a chaplain, and reach the same page either way.
  *
- * **One page for every tag the question offers**, built from the same
- * `offeredNeedTags` as the set itself, so the unconditional link in
+ * **One page for every tag the question offers, on every path**, built from the
+ * same `offeredNeedTags` as the set itself, so the unconditional link in
  * `src/framing/LowEnergyLink.astro` is never a dead one.
  *
  * **No set tail here**, which is this page's one departure from the shape §1
  * gives every set screen, recorded there as well. The tail keeps a screen the
- * same shape by
- * filling it out from the editorial order, but the order knows nothing about
- * energy: a tail under this page would put practices that need getting up on
- * the one page promising the opposite. The fallback is this page's version of
- * that mechanism — same job, same framing, drawn from what can honestly be
- * here. Nor does this page carry the link back to itself.
+ * same shape by filling it out from the editorial order, but the order knows
+ * nothing about energy: a tail under this page would put practices that need
+ * getting up on the one page promising the opposite. The fallback is this
+ * page's version of that mechanism — same job, same framing, drawn from what
+ * can honestly be here. Nor does this page carry the link back to itself.
  *
  * Like the set screen, it carries neither the limits line nor the crisis
  * pointer (`docs/spec/03-safety-and-inclusion.md`): someone arriving here has
@@ -48,13 +51,17 @@ import {
  */
 export async function getStaticPaths() {
 	const practices = await loadCatalog();
-	return offeredNeedTags(practices).map((offer) => ({
-		params: { tag: offer.slug },
-		props: { tag: offer.tag, ...lowEnergySet(practices, offer.tag) },
-	}));
+	const offered = offeredNeedTags(practices);
+	return AUDIENCE_PATHS.flatMap((path) =>
+		offered.map((offer) => ({
+			params: { path, tag: offer.slug },
+			props: { path, tag: offer.tag, ...lowEnergySet(practices, offer.tag) },
+		})),
+	);
 }
 
-const { tag, practices, fromOutsideTheTag } = Astro.props;
+const { path, tag, practices, fromOutsideTheTag } = Astro.props;
+const framing = framingFor(path);
 
 /**
  * Emptiness is read before the fallback flag, and it silences the lead as well
@@ -68,6 +75,8 @@ const empty = practices.length === 0;
 ---
 
 <Page title={LOW_ENERGY_TAB(tag)}>
+	{framing.companion && <PathBadge path={path} />}
+
 	{
 		/*
 		 * The same heading as the set this varies, from the same component: the
@@ -75,11 +84,11 @@ const empty = practices.length === 0;
 		 * otherwise.
 		 */
 	}
-	<SetHeading tag={tag} />
+	<SetHeading tag={tag} path={path} />
 
 	<div class="leads">
 		{empty && <p>{LOW_ENERGY_EMPTY}</p>}
-		{!empty && LOW_ENERGY_LEAD.map((line) => <p>{line}</p>)}
+		{!empty && framing.lowEnergyLead.map((line) => <p>{line}</p>)}
 		{
 			/*
 			 * Where the tag had none of its own, the label goes between the
@@ -90,13 +99,15 @@ const empty = practices.length === 0;
 		}
 	</div>
 
-	{!empty && <PracticeSet practices={practices} />}
+	{!empty && <PracticeSet practices={practices} path={path} />}
 
 	<p class="back">
-		<a href={needTagRoute(tag)}>{LOW_ENERGY_BACK}</a>
+		<a href={framing.routes.forTag(tag)}>{LOW_ENERGY_BACK}</a>
 	</p>
 
-	<Escapes />
+	<Escapes path={path} />
+
+	<GuideDoorway path={path} />
 </Page>
 
 <style>

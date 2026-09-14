@@ -11,10 +11,12 @@ import { NEED_TAGS, type NeedTag } from './practice-record.js';
  * `docs/spec/02-content-standard.md` is the expected result of what is written
  * on them, not a second place membership is decided.
  *
- * The one set that is **not** derived is the fixed set behind `/me/not-sure/`,
- * at the foot of this file: "I'm not sure" is an escape from the question, so
- * no tag can answer it, and it is here rather than elsewhere because a reader
- * meeting it meets a set like any other.
+ * The sets that are **not** derived are the fixed ones at the foot of this
+ * file — the door that skips the question, and the door a companion lands on.
+ * Neither can be answered by a tag: one was taken by a reader who could not
+ * answer the question, and the other by a reader who was never asked it. They
+ * are here rather than elsewhere because a reader meeting either meets a set
+ * like any other.
  *
  * Everything here is pure and takes its practices as an argument, so a set can
  * be exercised at sizes the catalog does not currently have. The build-facing
@@ -75,24 +77,6 @@ export function needTagBySlug(slug: string): NeedTag | undefined {
 	return BY_SLUG.get(slug);
 }
 
-/** The route of the suggestion set for a need tag, direct-user path. */
-export function needTagRoute(tag: NeedTag): string {
-	return `/me/for/${needTagSlug(tag)}/`;
-}
-
-/**
- * The route of that set's **low-energy variant**.
- *
- * Its own prerendered path under the set's, not a toggle or a query string
- * (`docs/spec/01-journey-and-ia.md`): the variant is a state of the journey,
- * and every state of the journey is a real page. Derived from the set route so
- * the two cannot drift apart, and issued for every tag the question offers
- * ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
- */
-export function lowEnergyRoute(tag: NeedTag): string {
-	return `${needTagRoute(tag)}low/`;
-}
-
 /**
  * The suggestion set for one need tag: every practice carrying it, in the
  * fixed editorial order, uncapped.
@@ -124,11 +108,17 @@ export function practicesIn<T extends { id: string }>(
 	return sortByEditorialOrder(practices.filter((practice) => slugs.includes(practice.id)));
 }
 
-/** A need tag as it is offered: the string a reader reads, and where it leads. */
+/**
+ * A need tag as it is offered: the string a reader reads, and its URL segment.
+ *
+ * No route, because a tag's set is on three paths and this module knows about
+ * none of them. The route is built from the path the reader is on, in
+ * `src/framing/routes.ts` — which is what keeps every tag's set reachable on
+ * every path rather than on the one a route string happened to name.
+ */
 export interface NeedTagOffer {
 	tag: NeedTag;
 	slug: string;
-	route: string;
 }
 
 /**
@@ -156,7 +146,7 @@ export function offeredNeedTags(practices: readonly TaggedEntry[]): NeedTagOffer
 
 	for (const tag of NEED_TAGS) {
 		if (practices.some((practice) => practice.data.need_tags.includes(tag))) {
-			offered.push({ tag, slug: needTagSlug(tag), route: needTagRoute(tag) });
+			offered.push({ tag, slug: needTagSlug(tag) });
 			continue;
 		}
 		if (warned.has(tag)) continue;
@@ -183,4 +173,26 @@ export const NOT_SURE_SET: readonly string[] = [
 	'noticing-whats-around-you',
 	'rest-without-a-task',
 	'letting-someone-sit-with-you',
+];
+
+/**
+ * The fixed set behind `/with/` and `/child/set/`
+ * (`docs/spec/01-journey-and-ia.md`).
+ *
+ * A companion is never asked a question, so they land on a set immediately and
+ * there is no answer for it to have come from. These three are the practices a
+ * person can be offered rather than sent away to do: sitting with someone,
+ * saying the hard thing, remembering someone.
+ *
+ * **One array, read by both companion paths.** The younger-child path reuses
+ * the companion set unchanged, because a set hand-picked for a young child
+ * would be an age-suitability judgement expressed as page order — the one
+ * judgement this resource refuses to make. A second array here, however
+ * identical today, would be the place that judgement could later be written
+ * without anyone deciding to make it.
+ */
+export const COMPANION_SET: readonly string[] = [
+	'letting-someone-sit-with-you',
+	'saying-the-hard-thing',
+	'remembering-someone',
 ];

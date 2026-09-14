@@ -92,9 +92,13 @@ describe('offeredNeedTags', () => {
 		expect(tags).toEqual(NEED_TAGS.filter((tag) => tags.includes(tag)));
 	});
 
-	it('carries the route the answer option links to', () => {
+	it('carries the URL segment the answer option links to, and no route', () => {
+		// No route, because a tag's set is on all three paths and this module
+		// knows about none of them: the path is what turns a slug into a route,
+		// in `src/framing/routes.ts`.
 		const still = offeredNeedTags(entries).find((offer) => offer.tag === 'I want to be still');
-		expect(still?.route).toBe('/me/for/be-still/');
+		expect(still?.slug).toBe('be-still');
+		expect(still).not.toHaveProperty('route');
 	});
 
 	it('warns loudly about a tag with nothing behind it, once per build', async () => {

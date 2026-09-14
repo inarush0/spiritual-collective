@@ -1,0 +1,61 @@
+---
+import { CHANGE_PATH, framingFor } from './audience.js';
+import { ARRIVAL_ROUTE, type AudiencePath } from './routes.js';
+
+interface Props {
+	path: AudiencePath;
+	/**
+	 * Whether "Change who this is for" sits with the badge. The practice view
+	 * carries it (`docs/spec/01-journey-and-ia.md`); a set screen names the
+	 * path without also offering to leave it, because the escapes below are
+	 * already three ways out and a fourth would make the top of the screen a
+	 * menu.
+	 */
+	change?: boolean;
+}
+
+const { path, change = false } = Astro.props;
+const { badge } = framingFor(path);
+
+/**
+ * The badge naming the current **audience path**, and the way back to arrival.
+ *
+ * The badge is what tells a reader which rendering they are in. It matters
+ * most on the companion paths, where `/with/practice/x/` and
+ * `/child/practice/x/` are the same practice with different notes on it, and a
+ * reader acting on the wrong one is acting on guidance written about someone
+ * else.
+ *
+ * "Change who this is for" is a plain line until arrival is built
+ * ([#28](https://github.com/inarush0/spiritual-collective/issues/28)), for the
+ * reason `./routes.ts` gives: a link to a page that does not exist is worse
+ * than a sentence. It is written now so that landing arrival is one route
+ * rather than an edit on every screen that offers the move.
+ */
+---
+
+<p class="badge">
+	{badge}
+	{
+		change &&
+			(ARRIVAL_ROUTE ? (
+				<a class="change" href={ARRIVAL_ROUTE}>
+					{CHANGE_PATH}
+				</a>
+			) : (
+				<span class="change">{CHANGE_PATH}</span>
+			))
+	}
+</p>
+
+<style>
+	/*
+	 * One line on a wide screen and two on a narrow one, at the same size
+	 * either way: the badge says where you are and the move says how to leave,
+	 * and neither is a heading.
+	 */
+	.change {
+		display: inline-block;
+		margin-left: 0.75rem;
+	}
+</style>

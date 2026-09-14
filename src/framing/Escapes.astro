@@ -1,9 +1,17 @@
 ---
-import { ESCAPES } from './discovery.js';
-import { isHere } from './routes.js';
+import { escapesFor } from './audience.js';
+import { isHere, type AudiencePath } from './routes.js';
+
+interface Props {
+	/** Which flow the reader is in. The escapes lead out of that one. */
+	path: AudiencePath;
+}
+
+const { path } = Astro.props;
+const escapes = escapesFor(path);
 
 /**
- * The three escapes, on every screen in the direct-user flow.
+ * The three escapes, on every screen in every flow.
  *
  * One component rather than a block per template, so that "on every screen" is
  * a thing a page opts into in one line and cannot spell differently
@@ -28,7 +36,7 @@ const pathname = Astro.url.pathname;
 }
 <ul class="escapes">
 	{
-		ESCAPES.map((escape) =>
+		escapes.map((escape) =>
 			isHere(pathname, escape.route) ? (
 				<li aria-current="page">{escape.words}</li>
 			) : (
