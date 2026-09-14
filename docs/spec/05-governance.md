@@ -109,6 +109,8 @@ One plain `mailto:` address, framed narrowly: something here is wrong, unsafe, o
 - If neither person can monitor it for more than one business day, the address stays visible with an accurate temporary availability notice. The resource must never silently accept reports or remove its accountability channel.
 - A real mailbox, working owner and backup access, and this procedure are **production prerequisites**.
 
+The operating procedure that carries this out — provisioning, the daily rhythm, the drafted replies, the incident-register fields, and the drill — is [`docs/runbooks/accountability-mailbox.md`](../runbooks/accountability-mailbox.md) ([#39](https://github.com/inarush0/spiritual-collective/issues/39)).
+
 ### Four intake lanes
 
 1. **Safety or harm** → precautionary action, below.
