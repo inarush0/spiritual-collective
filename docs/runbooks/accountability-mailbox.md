@@ -42,32 +42,54 @@ The address is **`report@spiritual-collective.com`**, hosted at **Fastmail**, wi
 
 The vault is an **Apple Passwords shared group**, holding the Fastmail password. Recorded here for the same reason the DNS is: the next person needs to know where the keys live. Nothing secret is written down — the name of the thing, never its contents.
 
-A password is not recovery. Three things are still missing, and each covers a case the password does not:
+**Only what the chaplain reviewer will actually use belongs in it** — Fastmail and the register, and nothing else. A credential they will never sign in with is not a backup; it is a copy of a secret in one more place. [The registrar stays with the editor](#the-registrar-stays-with-the-editor).
+
+A password is not recovery. Two things are still missing:
 
 - **The Fastmail recovery codes.** A password does not get you in when the second factor is gone with the device holding it. This is the likeliest way the mailbox is lost, and the password is no help in it.
-- **A way for the chaplain reviewer to reach DNS.** Mail depends on it: an intact mailbox behind unreachable nameservers receives nothing, and the records are fiddly enough that [this already cost a debugging round](#as-provisioned). The Squarespace login is **not** the answer — see [the registrar problem](#the-registrar-problem).
 - **The incident register link**, so the register is reachable by the person who did not create it.
 
 One thing to know about the shared group: it depends on both people staying in the Apple ecosystem. That is acceptable and worth writing down rather than discovering — if either person changes phones away from Apple, the vault moves, and the move is the kind of task that gets postponed until it is needed.
 
-### The registrar problem
+### What the chaplain reviewer can and cannot do
 
-**The Squarespace account signs in with the editor's personal Google account, and that password is not shared.** That is the correct decision and not a gap to be closed by reversing it: sharing it would hand over the editor's whole mail, files, and identity in order to solve a DNS problem, and Squarespace documents no way to add a second person to a standalone domain.
+**The chaplain reviewer signs in to Fastmail and to nothing else.** They are not a technical operator, will not hold a registrar, DNS, host, or repository credential, and are not being asked to become one. Writing this down matters because every other line in this runbook has to be true under it.
 
-So the requirement has to be taken apart. Two things were being treated as one:
+[ADR 0002](../adr/0002-two-person-asymmetric-governance.md) is already consistent with this, and the distinction it draws is the one to keep: the asymmetry there is over **authority**, not capability. The chaplain reviewer can *force* the removal of anything shipped. The editor is who *performs* it. Nothing in the ADR ever said otherwise.
 
-| | Must be | Why |
+So the backup is a backup for some things and not others:
+
+| | Backed up by the chaplain reviewer | |
 | --- | --- | --- |
-| **Domain registration** — who owns and renews it | the editor alone | it is tied to a personal identity and a payment method, and it should be |
-| **DNS control** — the records mail depends on | reachable by both | this is the emergency the backup exists for, and it is not the same thing as ownership |
+| Reading the mailbox | **yes** | Fastmail, on a phone |
+| Deciding the lane, including a safety call | **yes** | this is judgment, and it is the half they are better at |
+| Sending any of the three replies | **yes** | it is email |
+| Writing the incident record | **yes** | a shared sheet |
+| Withdrawing a practice | **no** | a file edit and a commit |
+| Fixing DNS, the host, or the build | **no** | credentials they will not hold |
+| Publishing the availability notice | **no** | it is a change to the site |
 
-**The fix is to move DNS control off the registrar**, leaving registration where it is. Point the nameservers at the Cloudflare account that [#33](https://github.com/inarush0/spiritual-collective/issues/33) creates for the two Pages projects, and add the chaplain reviewer to it as a member. DNS then lives in an account built for two people, and nothing personal is shared.
+**The editor is therefore a single point of failure for execution.** That is not a defect introduced here; it is the same shape as ADR 0002's deliberate single point of failure for publishing, on the other side of the split. Two people, one of them an unpaid volunteer with no technical role, cannot produce a second executor. What can be done is to stop the procedure from quietly assuming one.
 
-Do it **as part of #33, not before it.** Re-pointing nameservers is the operation that took the mailbox down once already. MX, SPF, DKIM, and DMARC are recreated at Cloudflare and verified live against the authoritative nameservers *before* the cutover, with the TTL lowered first so a mistake is minutes rather than a day.
+### When the editor cannot act
 
-**This reduces the risk; it does not remove it.** If the editor becomes unreachable, the domain still lapses at renewal and no amount of DNS access prevents that. That failure is the tolerable one: it is slow, it is announced by weeks of renewal warnings followed by a redemption grace period, and auto-renew is on. The failure the backup must actually cover is the fast one — a record is wrong, or mail stops, and someone has to fix it today.
+A case the earlier draft missed, and the realistic one: the chaplain reviewer reads a lane-1 harm report during an editor absence. They can decide it is lane 1. They can send the reply. **They cannot take the material down.**
 
-**Smaller alternative, worth trying first:** if the Squarespace account can be detached from Google sign-in and moved to a project address with its own password, that password goes in the shared group and no DNS move is needed at all. Check this before committing to the nameserver change — it is much less to go wrong.
+- **Planned absence.** Before the editor goes, they decide whether they can still act within one business day. If not, the [availability notice](#the-temporary-availability-notice) goes up *before they leave*, because afterwards nobody can publish it. The handoff to the chaplain reviewer is for monitoring and replies, and it is agreed explicitly that a protective action waits for the editor's return.
+- **Unplanned absence.** The chaplain reviewer sends the reply the message calls for, opens the incident record, and reaches the editor by some route that is not this mailbox. The protective action waits. **There is no mitigation for this beyond the editor being reachable**, and pretending otherwise in a runbook would be worse than naming it.
+
+The incident record carries the real elapsed time in these cases. A protective action that took four days took four days; the register is not where that gets rounded down.
+
+### The registrar stays with the editor
+
+The Squarespace account signs in with the editor's personal Google account, and that password is not shared — correctly. Sharing it would hand over the editor's whole mail, files, and identity to solve a DNS problem, and Squarespace documents no way to add a second person to a standalone domain.
+
+There is no second technical operator to share it *with*, so this is not a gap to close. The Squarespace login and any future host credential live in **the editor's own vault**, not the shared group. They are a continuity concern for whoever maintains this next, not a backup-access concern for the chaplain reviewer.
+
+What follows from that, and should be checked rather than assumed:
+
+- **Auto-renew is on**, and the card behind it is not close to expiring. An unreachable editor plus a lapsed domain is how the mailbox is lost slowly, and it is the one failure here that a calendar prevents.
+- **Renewal and expiry warnings reach an address the editor still reads**, and not only `report@spiritual-collective.com` — a domain expiry notice delivered to a mailbox that the expiry takes down is a loop worth breaking.
 
 ### What "deleted" actually means
 
@@ -81,7 +103,11 @@ One week is well inside the 30-day maximum, so the promise on `/about/` holds. I
 
 Each check is one **mailbox-review session**, and it is the unit that matters: a report that names a specific, plausible harm gets its protective action *during the session it is read in* — before investigation, before any reply — and no later than one business day after receipt under normal coverage.
 
-**Planned absence is an explicit handoff.** The editor tells the chaplain reviewer the dates and confirms they will check; the chaplain confirms back. An assumed handoff is not a handoff. If neither person can monitor the address for more than one business day, publish the [temporary availability notice](#the-temporary-availability-notice) — the address stays visible. The resource must never silently accept reports, and must never remove its accountability channel.
+**Planned absence is an explicit handoff.** The editor tells the chaplain reviewer the dates and confirms they will check; the chaplain confirms back. An assumed handoff is not a handoff. The handoff covers **monitoring and replies only** — [the chaplain reviewer cannot perform a protective action](#what-the-chaplain-reviewer-can-and-cannot-do), and the handoff says so out loud rather than leaving it to be discovered on the day it matters.
+
+Publish the [temporary availability notice](#the-temporary-availability-notice) when **nobody can act within one business day** — which is a wider condition than nobody being able to read. An editor away with the chaplain reviewer watching the mailbox means reports are read and answered but nothing can be taken down, and a reader is owed that fact rather than an unstated wait. The notice is itself a change to the site, so it goes up **before** the absence, never during.
+
+The address stays visible either way. The resource must never silently accept reports, and must never remove its accountability channel.
 
 ## Triage: the four lanes
 
@@ -180,11 +206,25 @@ Never "we have made sure this cannot happen again", never "this was already revi
 
 ## The temporary availability notice
 
-For the case where neither the editor nor the chaplain reviewer can monitor the address for more than one business day. **The address stays visible**; this sentence goes with it, and comes down the day monitoring resumes.
+**The address stays visible**; one of these sentences goes beside it, and comes down the day the thing it describes is no longer true. Published **before** the absence, because it is a change to the site and [the chaplain reviewer cannot make one](#what-the-chaplain-reviewer-can-and-cannot-do).
+
+**Two variants, because there are two different absences**, and the first draft of this runbook had only one. Sending the wrong one is a lie to a reader who has no way to check it.
+
+### Nobody is reading
+
+Neither person can monitor the address for more than one business day.
 
 > This address is not being checked at the moment and will be again from **&lt;date&gt;**. Nothing sent here will be read before then. If you need help right now, start with the people already caring for you — your care team, your nurse, or your chaplain.
 
-Two things it must not do: it must not remove the address, and it must not soften the date into "shortly" or "as soon as possible". An inaccurate notice is worse than none, because a reader will believe it.
+### Read, but nothing can be changed
+
+The more likely one: the chaplain reviewer is watching the mailbox, and the editor — the only person who can take material down — is away. Reports are read and answered. Nothing can be removed.
+
+> Messages sent to this address are being read, but we cannot change anything on this site until **&lt;date&gt;**. If something here is wrong or unsafe, please tell us anyway — it will be seen. If you need help right now, start with the people already caring for you — your care team, your nurse, or your chaplain.
+
+Do not use the first notice for this case. *Nothing sent here will be read* would be false, and it would talk a reader out of reporting something unsafe at the one moment the resource most needs to hear it.
+
+Three things neither notice may do: remove the address, soften the date into "shortly" or "as soon as possible", or promise what will happen when the date arrives. An inaccurate notice is worse than none, because a reader will believe it.
 
 ## The incident register
 
@@ -283,7 +323,7 @@ The last box is the one that touches code, and it is last on purpose.
 - [x] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded
 - [x] A shared vault exists — an Apple Passwords shared group, holding the Fastmail password
 - [ ] [The vault holds the rest](#what-the-vault-still-needs) — the Fastmail recovery codes and the register's link
-- [ ] [The registrar problem](#the-registrar-problem) resolved — the chaplain reviewer can reach DNS without the editor's personal account
+- [ ] Domain auto-renew confirmed on, with renewal warnings reaching an address that a domain expiry would not take down
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
 - [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly

@@ -102,13 +102,21 @@ The only question the editor may ask, at most once, and only about the material.
 
 Never asks for identity, age, diagnosis, institution, or medical history — not to understand the context, not to assess severity. An unanswered follow-up never reverses a protective action: the withdrawal stands.
 
-### The temporary availability notice
+### The temporary availability notices
 
-Published beside the address when neither person can monitor it for more than one business day. The address stays visible.
+Published beside the address during an absence. The address stays visible. **Two variants, because there are two different absences.**
+
+When neither person is reading the mailbox:
 
 > This address is not being checked at the moment and will be again from **&lt;date&gt;**. Nothing sent here will be read before then. If you need help right now, start with the people already caring for you — your care team, your nurse, or your chaplain.
 
-It must not remove the address, and must not soften the date into *shortly* or *as soon as possible*. An inaccurate notice is worse than none, because a reader will believe it.
+When the chaplain reviewer is reading but the editor — the only person who can take material down — is away:
+
+> Messages sent to this address are being read, but we cannot change anything on this site until **&lt;date&gt;**. If something here is wrong or unsafe, please tell us anyway — it will be seen. If you need help right now, start with the people already caring for you — your care team, your nurse, or your chaplain.
+
+Neither may remove the address, soften the date into *shortly*, or promise what happens when the date arrives. An inaccurate notice is worse than none, because a reader will believe it.
+
+**The second one is worth the chaplain reviewer's attention**, because it is the one they will be sitting behind. It has to invite a safety report while admitting nothing can be done about it yet, without sounding like a reason not to bother writing.
 
 ---
 
