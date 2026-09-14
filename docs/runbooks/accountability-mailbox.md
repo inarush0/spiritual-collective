@@ -46,8 +46,12 @@ The vault is an **Apple Passwords shared group**, holding the Fastmail password.
 
 A password is not recovery. Two things are still missing:
 
-- **The Fastmail recovery codes.** A password does not get you in when the second factor is gone with the device holding it. This is the likeliest way the mailbox is lost, and the password is no help in it.
+- **The Fastmail recovery code.** Account recovery runs through the **editor's cellphone number**, which is set up and works — for the editor. It is not a shared recovery method, and the chaplain reviewer cannot use it. Fastmail issues a recovery code for exactly this and [recommends keeping it somewhere safe](https://www.fastmail.help/hc/en-us/articles/360058752374-Using-two-step-verification-2FA); the shared group is that place.
 - **The incident register link**, so the register is reachable by the person who did not create it.
+
+**This gap is currently silent, which is why it is worth closing before the drill.** Fastmail lets a device be marked trusted, and the chaplain reviewer's is, so their sign-in works today and will keep appearing to work. The failure arrives later and all at once: a new phone, a reinstall, or cleared browser data drops the trust, Fastmail asks for a second factor, and the second factor is a text message to the editor's phone. Backup access that depends on the person it is a backup for is the condition §6 fails publication on, and it will pass every check until the day it matters.
+
+Fastmail supports **more than one two-step verification device**. Registering the chaplain reviewer's own is the sturdier fix and does not replace the recovery code — do both if it is easy, the code if only one.
 
 One thing to know about the shared group: it depends on both people staying in the Apple ecosystem. That is acceptable and worth writing down rather than discovering — if either person changes phones away from Apple, the vault moves, and the move is the kind of task that gets postponed until it is needed.
 
@@ -88,8 +92,8 @@ There is no second technical operator to share it *with*, so this is not a gap t
 
 What follows from that, and should be checked rather than assumed:
 
-- **Auto-renew is on**, and the card behind it is not close to expiring. An unreachable editor plus a lapsed domain is how the mailbox is lost slowly, and it is the one failure here that a calendar prevents.
-- **Renewal and expiry warnings reach an address the editor still reads**, and not only `report@spiritual-collective.com` — a domain expiry notice delivered to a mailbox that the expiry takes down is a loop worth breaking.
+- **Auto-renew is on.** Confirmed. An unreachable editor plus a lapsed domain is how the mailbox is lost slowly, and it is the one failure here that a calendar prevents.
+- **Renewal and expiry warnings do not depend on the domain they are about.** They go to the editor's personal account, which a `spiritual-collective.com` expiry cannot take down. That loop — expiry notices delivered to the mailbox the expiry kills — is broken by the same arrangement that makes the registrar login unshareable.
 
 ### What "deleted" actually means
 
@@ -322,8 +326,8 @@ The last box is the one that touches code, and it is last on purpose.
 - [x] The mailbox exists, on the resource's own domain, with MX, SPF, DKIM, and DMARC verified live
 - [x] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded
 - [x] A shared vault exists — an Apple Passwords shared group, holding the Fastmail password
-- [ ] [The vault holds the rest](#what-the-vault-still-needs) — the Fastmail recovery codes and the register's link
-- [ ] Domain auto-renew confirmed on, with renewal warnings reaching an address that a domain expiry would not take down
+- [ ] [The vault holds the rest](#what-the-vault-still-needs) — the Fastmail recovery code and the register's link
+- [x] Domain auto-renew confirmed on, with renewal warnings reaching an address that a domain expiry would not take down
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
 - [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly
