@@ -55,7 +55,7 @@ One thing to know about the shared group: it depends on both people staying in t
 
 **The chaplain reviewer signs in to Fastmail and to nothing else.** They are not a technical operator, will not hold a registrar, DNS, host, or repository credential, and are not being asked to become one. Writing this down matters because every other line in this runbook has to be true under it.
 
-[ADR 0002](../adr/0002-two-person-asymmetric-governance.md) is already consistent with this, and the distinction it draws is the one to keep: the asymmetry there is over **authority**, not capability. The chaplain reviewer can *force* the removal of anything shipped. The editor is who *performs* it. Nothing in the ADR ever said otherwise.
+[ADR 0002](../adr/0002-two-person-asymmetric-governance.md) is already consistent with this, and the distinction it draws is the one to keep: the asymmetry there is over **authority**, not capability. The chaplain reviewer can *force* the removal of anything shipped. The editor is who *performs* it. Nothing in the ADR ever said otherwise, and it now says so explicitly — the editor as single executor is recorded in its consequences rather than living only here.
 
 So the backup is a backup for some things and not others:
 
