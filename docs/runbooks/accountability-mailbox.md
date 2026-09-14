@@ -16,9 +16,11 @@ Owner: **editor**. All of it is human work; none of it is in this repository.
 - [x] **No forwarding into a personal archive, and no provider-side backup that outlives the 30-day maximum.** Source-email deletion is a promise the about page makes on the resource's behalf; a copy sitting in someone's personal mail history breaks it silently. Disable auto-archive, auto-forward, and any "deleted items keep forever" retention. A short provider restore window is acceptable and must be [written down](#what-deleted-actually-means) rather than assumed away.
 - [x] **Spam filtering set to quarantine, not silent discard**, and the quarantine checked on the same daily rhythm. A safety report that a filter ate is indistinguishable from a channel that does not exist.
 - [x] **Outbound mail authenticated**, so the three replies land in an inbox rather than a spam folder. A distress reply nobody sees is the harm this channel exists to prevent, and a young domain's first outbound mail is exactly where it happens.
-- [x] **Recovery codes and the registrar login in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person.
+- [ ] **Recovery codes and the registrar login in a vault both people can reach.** The mailbox surviving one unavailable person is the whole point of a backup, and it is not a backup if recovering it needs the other person.
 
-Provisioning is **complete**. Backup access was exercised by signing in, not granted on paper; the drill exercises it again against live messages.
+Provisioning is complete **except the shared vault, which does not exist yet**. Backup access was exercised by signing in, not granted on paper; the drill exercises it again against live messages.
+
+**What the vault is actually for.** The chaplain reviewer can already sign in, so day-to-day backup access is covered. The open case is *recovery*: the editor is unreachable, or the second factor on the mailbox is lost with the device holding it. Without somewhere both people can reach the Fastmail recovery codes and the Squarespace registrar login, the accountability channel has one point of failure wearing the appearance of two. §6 names that failure by name — publication fails if any step depends on an inaccessible credential — so this box gates the release on its own, independently of the drill.
 
 ### As provisioned
 
@@ -247,13 +249,14 @@ Blocked on [#31](https://github.com/inarush0/spiritual-collective/issues/31) and
 The last box is the one that touches code, and it is last on purpose.
 
 - [x] The mailbox exists, on the resource's own domain, with MX, SPF, DKIM, and DMARC verified live
-- [x] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded, recovery in the shared vault
+- [x] [Provisioning](#provisioning) otherwise complete — confirmed backup access, spam quarantined rather than discarded
+- [ ] A shared vault exists, holding the Fastmail recovery codes and the Squarespace registrar login
 - [ ] The daily check is in place, with the handoff agreed with the chaplain reviewer
 - [ ] [The three replies](#the-three-replies) agreed by editor and chaplain, via [the review packet](accountability-replies-review.md), and the agreed wording carried back into this file
 - [ ] [The temporary availability notice](#the-temporary-availability-notice) agreed, and somewhere it can be published from quickly
 - [x] [The incident register](#the-incident-register) exists, empty, outside this repository
 - [x] The register shared with the chaplain reviewer
-- [ ] The register's link in the shared vault, beside the mailbox recovery codes
+- [ ] The register's link in that vault, beside the recovery codes
 - [ ] [The drill](#the-drill), **sitting 1** — the channel
 - [ ] [The drill](#the-drill), **sitting 2** — the withdrawal, after [#31](https://github.com/inarush0/spiritual-collective/issues/31) and [#33](https://github.com/inarush0/spiritual-collective/issues/33)
 - [ ] **Only then**: replace `REPORT_ADDRESS` in [`src/framing/about.ts`](../../src/framing/about.ts) with the real address
