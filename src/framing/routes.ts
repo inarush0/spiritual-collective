@@ -37,3 +37,16 @@ export const EXIT_ROUTE = '/me/after/';
 export function practiceRoute(slug: string): string {
 	return `/me/practice/${slug}/`;
 }
+
+/**
+ * Whether `route` is the page the reader is already on.
+ *
+ * Every link that appears on many screens needs this — the chrome link on the
+ * about page, each escape on the screen it points at — and each of them says
+ * where the reader is rather than pretending to lead somewhere. Astro's
+ * pathname may or may not carry the trailing slash the route table writes, so
+ * the comparison is normalised here instead of at each call site.
+ */
+export function isHere(pathname: string, route: string): boolean {
+	return `${pathname.replace(/\/$/, '')}/` === route;
+}

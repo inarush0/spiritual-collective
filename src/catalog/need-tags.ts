@@ -2,7 +2,7 @@ import { editorialRank, sortByEditorialOrder } from './editorial-order.js';
 import { NEED_TAGS, type NeedTag } from './practice-record.js';
 
 /**
- * Suggestion-set membership, derived from the records and from nothing else.
+ * Suggestion-set membership.
  *
  * A **suggestion set** is every published practice carrying one **need tag**,
  * in the fixed editorial order, uncapped — no curation layer, no per-tag
@@ -10,6 +10,11 @@ import { NEED_TAGS, type NeedTag } from './practice-record.js';
  * records are the only source of truth: the table in
  * `docs/spec/02-content-standard.md` is the expected result of what is written
  * on them, not a second place membership is decided.
+ *
+ * The one set that is **not** derived is the fixed set behind `/me/not-sure/`,
+ * at the foot of this file: "I'm not sure" is an escape from the question, so
+ * no tag can answer it, and it is here rather than elsewhere because a reader
+ * meeting it meets a set like any other.
  *
  * Everything here is pure and takes its practices as an argument, so a set can
  * be exercised at sizes the catalog does not currently have. The build-facing
@@ -123,21 +128,26 @@ export interface NeedTagOffer {
  * Zero is a **loud build warning and not a build failure**
  * (`docs/spec/07-technical-constraints.md`): a coverage hole is something for
  * the editor to fill, and failing on it would make an urgent withdrawal wait
- * on writing a replacement.
+ * on writing a replacement. The production build is where the rule bites —
+ * beta offers pending records too, so a tag it warns about has nothing behind
+ * it even counting what is still in review.
+ *
+ * Both the question and the set routes ask which tags are offered, so the
+ * warning is said once per tag per build rather than once per caller: a
+ * warning printed twice is a warning read as noise.
  */
+const warned = new Set<NeedTag>();
+
 export function offeredNeedTags(practices: readonly TaggedEntry[]): NeedTagOffer[] {
 	const offered: NeedTagOffer[] = [];
-	const empty: NeedTag[] = [];
 
 	for (const tag of NEED_TAGS) {
 		if (practices.some((practice) => practice.data.need_tags.includes(tag))) {
 			offered.push({ tag, slug: needTagSlug(tag), route: needTagRoute(tag) });
-		} else {
-			empty.push(tag);
+			continue;
 		}
-	}
-
-	for (const tag of empty) {
+		if (warned.has(tag)) continue;
+		warned.add(tag);
 		console.warn(
 			`[need tags] no published practice carries "${tag}", so it is not offered as an ` +
 				'answer to the discovery question. Write a practice that carries it, or accept ' +

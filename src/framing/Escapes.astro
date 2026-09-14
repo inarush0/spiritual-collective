@@ -1,5 +1,6 @@
 ---
 import { ESCAPES } from './discovery.js';
+import { isHere } from './routes.js';
 
 /**
  * The three escapes, on every screen in the direct-user flow.
@@ -14,7 +15,7 @@ import { ESCAPES } from './discovery.js';
  * plain line, marked as the current page for anyone listening to it, rather
  * than as a link back to here.
  */
-const here = `${Astro.url.pathname.replace(/\/$/, '')}/`;
+const pathname = Astro.url.pathname;
 ---
 
 {
@@ -28,7 +29,7 @@ const here = `${Astro.url.pathname.replace(/\/$/, '')}/`;
 <ul class="escapes">
 	{
 		ESCAPES.map((escape) =>
-			escape.route === here ? (
+			isHere(pathname, escape.route) ? (
 				<li aria-current="page">{escape.words}</li>
 			) : (
 				<li>

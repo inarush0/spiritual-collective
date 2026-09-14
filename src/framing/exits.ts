@@ -1,4 +1,4 @@
-import { CATALOG_ROUTE, NOTHING_ROUTE, QUESTION_ROUTE } from './routes.js';
+import { CATALOG_ROUTE, NOTHING_ROUTE } from './routes.js';
 
 /**
  * The exit, and the kind screen it can lead to.
@@ -57,13 +57,13 @@ export interface Exit {
  * following a chaplain's link should always meet a way onward that works. The
  * wording is here now so that arrival landing is one route, not a rewrite.
  *
- * "Choose something else" goes to the discovery question, which is the direct
- * user's way to a set. It is the question again rather than the whole catalog
- * because a reader leaving one practice has not thereby said what they want,
- * and the question is the smaller of the two things to meet on the way out.
+ * "Choose something else" goes to a suggestion set, as the spec says, and the
+ * whole catalog is the set that asks nothing: a reader leaving a practice has
+ * not thereby said what they want, and sending them back to the discovery
+ * question would put a question on the way out of one.
  */
 export const WAYS_ONWARD: readonly Exit[] = [
-	{ words: 'Choose something else.', route: QUESTION_ROUTE },
+	{ words: 'Choose something else.', route: CATALOG_ROUTE },
 	{ words: 'Change who this is for.', route: null },
 	{ words: 'Nothing right now.', route: NOTHING_ROUTE },
 ];

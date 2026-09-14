@@ -97,13 +97,21 @@ describe('offeredNeedTags', () => {
 		expect(still?.route).toBe('/me/for/be-still/');
 	});
 
-	it('warns loudly about a tag with nothing behind it, without failing', () => {
+	it('warns loudly about a tag with nothing behind it, once per build', async () => {
+		// A fresh module, because the warning is said once per build and both
+		// the question and the set routes ask this module the same thing.
+		vi.resetModules();
+		const { offeredNeedTags: freshly } = await import('../src/catalog/need-tags.js');
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		try {
-			offeredNeedTags(entries);
-			const warned = warn.mock.calls.map((call) => String(call[0])).join('\n');
-			expect(warned).toContain('I want some company');
-			expect(warned).toContain('I want to remember someone');
+			expect(freshly(entries)).toHaveLength(4);
+			freshly(entries);
+
+			const said = warn.mock.calls.map((call) => String(call[0]));
+			expect(said.join('\n')).toContain('I want some company');
+			expect(said.join('\n')).toContain('I want to remember someone');
+			// Four tags nothing in the fixture carries, said once each across two calls.
+			expect(said).toHaveLength(4);
 		} finally {
 			warn.mockRestore();
 		}
