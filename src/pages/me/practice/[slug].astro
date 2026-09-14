@@ -10,6 +10,7 @@ import {
 	SMALLEST_LEAD,
 } from '../../../framing/practice-view.js';
 import { loadCatalog, pendingIn, release } from '../../../catalog/index.js';
+import { CATALOG_ROUTE, practiceRoute } from '../../../framing/routes.js';
 
 /**
  * The practice view, direct-user path.
@@ -89,9 +90,9 @@ const record = practice.data;
 			 * readable in full first, and nothing here advances by itself.
 			 */
 		}
-		<p class="action"><a href={`/me/practice/${practice.id}/1/`}>{ACTION}</a></p>
+		<p class="action"><a href={`${practiceRoute(practice.id)}1/`}>{ACTION}</a></p>
 		{/* Refusal is visible, alongside the action rather than beneath it. */}
-		<p class="refusal"><a href="/me/everything/">{REFUSAL}</a></p>
+		<p class="refusal"><a href={CATALOG_ROUTE}>{REFUSAL}</a></p>
 	</div>
 </Page>
 

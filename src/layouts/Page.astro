@@ -1,6 +1,7 @@
 ---
 import { release } from '../catalog/index.js';
 import { ABOUT_ROUTE, CHROME_LINK } from '../framing/about.js';
+import { isHere } from '../framing/routes.js';
 
 interface Props {
 	title: string;
@@ -13,7 +14,7 @@ const { title } = Astro.props;
  * "every page" needs no exception a later page could forget. On the about page
  * it says where the reader already is rather than pretending to lead somewhere.
  */
-const onAbout = `${Astro.url.pathname.replace(/\/$/, '')}/` === ABOUT_ROUTE;
+const onAbout = isHere(Astro.url.pathname, ABOUT_ROUTE);
 ---
 
 <!doctype html>

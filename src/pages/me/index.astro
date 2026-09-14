@@ -1,0 +1,68 @@
+---
+import Page from '../../layouts/Page.astro';
+import Escapes from '../../framing/Escapes.astro';
+import { loadCatalog } from '../../catalog/index.js';
+import { offeredNeedTags } from '../../catalog/need-tags.js';
+import { ORIENTATION_LINES, QUESTION } from '../../framing/discovery.js';
+
+/**
+ * The discovery question, direct-user path: `/me/`.
+ *
+ * One gentle question and then a set. No landing page, no "begin" button, no
+ * second question (`docs/spec/01-journey-and-ia.md`) — this screen is the
+ * whole of the direct user's asking.
+ *
+ * The answers are the eight **need tags**, verbatim from the records, with no
+ * separate label layer: what the reader clicks is the string the practices
+ * carry. A tag is offered whenever at least one published practice carries it
+ * and drops out only at zero, so the question never opens a door onto an empty
+ * room — and never hides one because it is sparsely stocked.
+ */
+const offered = offeredNeedTags(await loadCatalog());
+---
+
+<Page title={QUESTION}>
+	<h1>{QUESTION}</h1>
+	{ORIENTATION_LINES.map((line) => <p class="lead">{line}</p>)}
+
+	{
+		/*
+		 * Ordinary links, one string each, at one size: nothing here is the
+		 * recommended answer, and no answer is presented as more likely to be
+		 * right than another. An unordered list, because the eight are in the
+		 * order they are written in, not in an order of merit.
+		 */
+	}
+	<ul class="answers">
+		{
+			offered.map((offer) => (
+				<li>
+					<a href={offer.route}>{offer.tag}</a>
+				</li>
+			))
+		}
+	</ul>
+
+	<Escapes />
+</Page>
+
+<style>
+	.lead {
+		margin: 0 0 0.5rem;
+		color: var(--quiet);
+	}
+
+	.answers {
+		list-style: none;
+		margin: 2rem 0 0;
+		padding: 0;
+	}
+
+	.answers li + li {
+		margin-top: 1rem;
+	}
+
+	.answers a {
+		font-size: 1.125rem;
+	}
+</style>

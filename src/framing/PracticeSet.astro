@@ -1,0 +1,72 @@
+---
+import type { Practice } from '../catalog/index.js';
+import { pendingIn, release } from '../catalog/index.js';
+import { PENDING_MARKER } from './practice-view.js';
+import { practiceRoute } from './routes.js';
+
+interface Props {
+	practices: Practice[];
+}
+
+const { practices } = Astro.props;
+
+/**
+ * A list of practices as a reader meets it: every set screen, and
+ * `/me/everything/`.
+ *
+ * One component because the rules about how a set is *presented* are rules
+ * about every set (`docs/spec/01-journey-and-ia.md`), and a second template
+ * spelling them again is a second place for one of them to go missing:
+ *
+ * - **Unranked.** An unordered list, never a numbered one, and nothing here
+ *   says or implies a position. The order is the fixed editorial order, which
+ *   the caller has already applied; it is not an order of fit.
+ * - **Every entry is the same size**, so a set of one and a set of four look
+ *   like the same kind of screen.
+ * - The beta marker on a pending record, said the same way everywhere.
+ */
+---
+
+<ul class="set">
+	{
+		practices.map((practice) => (
+			<li>
+				{/* Everything this build publishes has a page, so no entry is a dead link. */}
+				<h2>
+					<a href={practiceRoute(practice.id)}>{practice.data.name}</a>
+				</h2>
+				<p>{practice.data.invitation}</p>
+				{pendingIn(release, practice.data.publication) && <p class="pending">{PENDING_MARKER}</p>}
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	.set {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.set > li + li {
+		margin-top: 1.75rem;
+		padding-top: 1.75rem;
+		border-top: 1px solid var(--rule);
+	}
+
+	.set h2 {
+		font-size: 1.125rem;
+		margin: 0 0 0.25rem;
+	}
+
+	.set p {
+		margin: 0;
+	}
+
+	.pending {
+		margin-top: 0.5rem;
+		color: var(--quiet);
+		font-size: 0.875rem;
+	}
+</style>

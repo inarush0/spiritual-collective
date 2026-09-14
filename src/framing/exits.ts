@@ -1,3 +1,5 @@
+import { CATALOG_ROUTE, NOTHING_ROUTE } from './routes.js';
+
 /**
  * The exit, and the kind screen it can lead to.
  *
@@ -23,15 +25,6 @@
  * **Tier-2 framing surfaces** (`docs/spec/05-governance.md`): placeholder
  * drafting until the chaplain reviewer has read them.
  */
-
-/** The direct user's exit. Every stop control and every last step lands here. */
-export const EXIT_ROUTE = '/me/after/';
-
-/** The kind screen: a real resting state, not a dead end. */
-export const NOTHING_ROUTE = '/me/nothing-right-now/';
-
-/** The direct user's set screen, until the suggestion sets land (#24). */
-const CATALOG_ROUTE = '/me/everything/';
 
 export const EXIT_TITLE = 'That is as far as this goes.';
 
@@ -64,10 +57,10 @@ export interface Exit {
  * following a chaplain's link should always meet a way onward that works. The
  * wording is here now so that arrival landing is one route, not a rewrite.
  *
- * "Choose something else" points at the whole catalog until the discovery
- * question and the suggestion sets land
- * ([#24](https://github.com/inarush0/spiritual-collective/issues/24)); that is
- * the direct user's set screen today.
+ * "Choose something else" goes to a suggestion set, as the spec says, and the
+ * whole catalog is the set that asks nothing: a reader leaving a practice has
+ * not thereby said what they want, and sending them back to the discovery
+ * question would put a question on the way out of one.
  */
 export const WAYS_ONWARD: readonly Exit[] = [
 	{ words: 'Choose something else.', route: CATALOG_ROUTE },

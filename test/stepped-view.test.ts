@@ -4,13 +4,12 @@ import { ACTION, PENDING_MARKER } from '../src/framing/practice-view.js';
 import { CHROME_LINK } from '../src/framing/about.js';
 import {
 	EXIT_LINES,
-	EXIT_ROUTE,
 	EXIT_TITLE,
 	NOTHING_LINES,
-	NOTHING_ROUTE,
 	NOTHING_TITLE,
 	WAYS_ONWARD,
 } from '../src/framing/exits.js';
+import { EXIT_ROUTE, NOTHING_ROUTE } from '../src/framing/routes.js';
 import { CHANGE_THIS, LAST_STEP, NEXT, ONWARD, STOP, stepLabel } from '../src/framing/stepped-view.js';
 import { buildBothReleases, hasPageAt, pageAt, plainText } from './support/build.js';
 

@@ -40,6 +40,8 @@ export const NEED_TAGS = [
 	'I want to do something for someone',
 ] as const;
 
+export type NeedTag = (typeof NEED_TAGS)[number];
+
 export const PUBLICATION_STATES = ['in-review', 'approved', 'withdrawn'] as const;
 export type Publication = (typeof PUBLICATION_STATES)[number];
 

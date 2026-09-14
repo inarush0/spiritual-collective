@@ -1,10 +1,17 @@
 ---
 import Page from '../../layouts/Page.astro';
-import { loadCatalog, pendingIn, release } from '../../catalog/index.js';
-import { PENDING_MARKER } from '../../framing/practice-view.js';
+import Escapes from '../../framing/Escapes.astro';
+import PracticeSet from '../../framing/PracticeSet.astro';
+import { loadCatalog } from '../../catalog/index.js';
 
-// The whole catalog, in the fixed editorial order. `loadCatalog` applies the
-// build's publication filter and the order; this page picks neither.
+/**
+ * The whole catalog, in the fixed editorial order: `/me/everything/`.
+ *
+ * The other door that skips the question, and one of the three escapes, so it
+ * is shaped like any other set and carries the escapes itself
+ * (`docs/spec/01-journey-and-ia.md`). `loadCatalog` applies the build's
+ * publication filter and the order; this page picks neither.
+ */
 const practices = await loadCatalog();
 ---
 
@@ -14,57 +21,14 @@ const practices = await loadCatalog();
 		All of it, in one list. Nothing here is ordered by how well it would suit you.
 	</p>
 
-	<ul class="catalog">
-		{
-			practices.map((practice) => (
-				<li>
-					{/*
-					 * Every practice this build publishes has a page, so nothing
-					 * listed here is a dead link.
-					 */}
-					<h2>
-						<a href={`/me/practice/${practice.id}/`}>{practice.data.name}</a>
-					</h2>
-					<p>{practice.data.invitation}</p>
-					{pendingIn(release, practice.data.publication) && (
-						<p class="pending">{PENDING_MARKER}</p>
-					)}
-				</li>
-			))
-		}
-	</ul>
+	<PracticeSet practices={practices} />
+
+	<Escapes />
 </Page>
 
 <style>
 	.lead {
 		color: var(--quiet);
 		margin: 0 0 2rem;
-	}
-
-	.catalog {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	.catalog > li + li {
-		margin-top: 1.75rem;
-		padding-top: 1.75rem;
-		border-top: 1px solid var(--rule);
-	}
-
-	.catalog h2 {
-		font-size: 1.125rem;
-		margin: 0 0 0.25rem;
-	}
-
-	.catalog p {
-		margin: 0;
-	}
-
-	.pending {
-		margin-top: 0.5rem;
-		color: var(--quiet);
-		font-size: 0.875rem;
 	}
 </style>
