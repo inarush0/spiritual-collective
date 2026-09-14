@@ -2,6 +2,7 @@
 import Page from '../../layouts/Page.astro';
 import Escapes from '../../framing/Escapes.astro';
 import PracticeSet from '../../framing/PracticeSet.astro';
+import SetTail from '../../framing/SetTail.astro';
 import { loadCatalog } from '../../catalog/index.js';
 import { NOT_SURE_SET, practicesIn } from '../../catalog/need-tags.js';
 import { NOT_SURE_LINES, NOT_SURE_TITLE, SET_LEAD } from '../../framing/discovery.js';
@@ -29,7 +30,15 @@ const practices = practicesIn(await loadCatalog(), NOT_SURE_SET);
 
 	<PracticeSet practices={practices} />
 
-	{/* The set tail and the low-energy link slot in here, as on every set. */}
+	{
+		/*
+		 * Shaped like any other set, tail included
+		 * (`docs/spec/01-journey-and-ia.md`): the door that skips the question
+		 * must not be the one screen where the space below the divider is
+		 * missing. The low-energy link slots in below it, as on every set.
+		 */
+	}
+	<SetTail set={practices} />
 
 	<Escapes />
 </Page>

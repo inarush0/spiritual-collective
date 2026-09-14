@@ -48,6 +48,33 @@ export const SET_LEAD: readonly string[] = [
 /** The heading over a set, above the answer that opened it. */
 export const SET_TITLE = 'You said:';
 
+/**
+ * The heading over the **set tail**, below the quiet divider.
+ *
+ * "Other things people reach for" echoes the set's own lead-in on purpose: the
+ * tail is made of the same kind of thing as the set, offered in the same voice
+ * and at the same size. What separates them is the sentence below, not a
+ * smaller typeface or a hedge.
+ */
+export const TAIL_TITLE = 'Other things people reach for.';
+
+/**
+ * The label on the tail: it is not what the reader chose.
+ *
+ * This has to be said outright. The tail is the mechanism that keeps a set
+ * screen the same shape whether one practice or four sit above it, and a list
+ * arriving unlabelled under a set would be read as more of the same answer —
+ * which would make the page claim a fit it did not work out.
+ *
+ * The second line says where they came from instead, so that "not what you
+ * chose" does not leave the reader guessing what the page did. Neither line
+ * may rank them, count them, or say they are related.
+ */
+export const TAIL_LEAD: readonly string[] = [
+	'These are not from what you chose.',
+	'They are on this page whatever you picked, so the page never says how much there was behind an answer.',
+];
+
 /** The heading and lead of `/me/not-sure/`, the door that skips the question. */
 export const NOT_SURE_TITLE = 'Not sure is fine.';
 

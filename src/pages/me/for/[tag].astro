@@ -2,6 +2,7 @@
 import Page from '../../../layouts/Page.astro';
 import Escapes from '../../../framing/Escapes.astro';
 import PracticeSet from '../../../framing/PracticeSet.astro';
+import SetTail from '../../../framing/SetTail.astro';
 import { loadCatalog } from '../../../catalog/index.js';
 import { offeredNeedTags, practicesFor } from '../../../catalog/need-tags.js';
 import { SET_LEAD, SET_TITLE } from '../../../framing/discovery.js';
@@ -50,16 +51,13 @@ const { tag, practices } = Astro.props;
 
 	<PracticeSet practices={practices} />
 
+	<SetTail set={practices} />
+
 	{
 		/*
-		 * The set tail goes here, below a quiet divider and labelled as not
-		 * matching what was chosen, along with the low-energy link
-		 * ([#25](https://github.com/inarush0/spiritual-collective/issues/25),
-		 * [#26](https://github.com/inarush0/spiritual-collective/issues/26)).
-		 * Nothing is drawn for them yet: an empty divider would be a promise
-		 * the page cannot keep, and the layout rule they exist to serve — that
-		 * a screen never reveals how well-stocked an answer was — only starts
-		 * holding when there is something below the line on every set.
+		 * The low-energy link goes here, below the tail and present whether or
+		 * not this tag has any low-energy practices behind it
+		 * ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
 		 */
 	}
 
