@@ -44,6 +44,10 @@ _Avoid_: Duration, minimum time, quick option
 The user-advanced, one-step-at-a-time rendering of a practice entered after someone chooses to try or offer it; on a companion path, its framing addresses the companion while each canonical step remains addressed to the person doing the practice.
 _Avoid_: Guided session, player, completion flow
 
+**Screen-interrupting step**:
+A practice instruction that makes seeing, holding, operating, or comfortably returning to the device unavailable or meaningfully harder. It says everything a direct user needs to complete or safely stop what it asks without returning, and if anything follows, says plainly that returning is optional.
+_Avoid_: Eyes-closed step, final step, and definitions based on particular wording rather than the instruction's effect
+
 **Direct user**:
 An adolescent receiving pediatric hospice or palliative care, or an adult family member, who explores the resource independently or alongside a chaplain.
 _Avoid_: Patient, when the intended group also includes family members
