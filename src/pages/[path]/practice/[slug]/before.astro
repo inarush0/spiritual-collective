@@ -1,6 +1,6 @@
 ---
 import type { Practice } from '../../../../catalog/index.js';
-import { loadCatalog, pendingIn, release } from '../../../../catalog/index.js';
+import { loadPracticeRoutes, pendingIn, release } from '../../../../catalog/index.js';
 import GuideDoorway from '../../../../framing/GuideDoorway.astro';
 import FlowChoices from '../../../../framing/FlowChoices.astro';
 import PathBadge from '../../../../framing/PathBadge.astro';
@@ -14,6 +14,7 @@ import {
 	LEAVE_HERE,
 } from '../../../../framing/stepped-view.js';
 import Page from '../../../../layouts/Page.astro';
+import UnavailablePractice from '../../../../framing/UnavailablePractice.astro';
 
 interface Props {
 	path: CompanionPath;
@@ -21,7 +22,7 @@ interface Props {
 }
 
 export async function getStaticPaths() {
-	const practices = await loadCatalog();
+	const practices = await loadPracticeRoutes();
 	return COMPANION_PATHS.flatMap((path) =>
 		practices.map((practice) => ({
 			params: { path, slug: practice.id },
@@ -37,7 +38,12 @@ const practiceRoute = routes.practice(practice.id);
 const directPracticeRoute = routesFor('me').practice(practice.id);
 ---
 
-<Page title={`${record.name} — ${BEFORE_TITLE}`}>
+
+{
+	record.publication === 'withdrawn' ? (
+		<UnavailablePractice path={path} />
+	) : (
+		<Page title={`${record.name} — ${BEFORE_TITLE}`}>
 	<PathBadge path={path} />
 	<p class="from"><a href={practiceRoute}>{record.name}</a></p>
 	<h1>{BEFORE_TITLE}</h1>
@@ -77,8 +83,10 @@ const directPracticeRoute = routesFor('me').practice(practice.id);
 		}
 	</FlowChoices>
 
-	<GuideDoorway path={path} />
-</Page>
+			<GuideDoorway path={path} />
+		</Page>
+	)
+}
 
 <style>
 	.from,
