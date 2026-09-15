@@ -89,14 +89,14 @@ export function routesFor(path: AudiencePath): PathRoutes {
  * doorway back to
  * ([#30](https://github.com/inarush0/spiritual-collective/issues/30)).
  *
- * Both are `null` until the page exists, and the screens that offer them
- * render a sentence rather than a link while it does not. **A link to a page
- * that is not there is worse than a sentence**: someone following a chaplain's
- * link should always meet a way onward that works, which is the same rule that
- * keeps a withdrawn practice's URL serving a 200 (§1). Landing either page is
- * then one line here rather than an edit on every screen that names it.
+ * A route stays `null` until its page exists, and screens that offer it render
+ * a sentence rather than a link in the meantime. **A link to a page that is
+ * not there is worse than a sentence**: someone following a chaplain's link
+ * should always meet a way onward that works, which is the same rule that
+ * keeps a withdrawn practice's URL serving a 200 (§1). Landing a page is then
+ * one line here rather than an edit on every screen that names it.
  */
-export const ARRIVAL_ROUTE: string | null = null;
+export const ARRIVAL_ROUTE = '/';
 
 export const GUIDE_ROUTE: string | null = null;
 

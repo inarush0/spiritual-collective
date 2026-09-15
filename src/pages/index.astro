@@ -1,0 +1,53 @@
+---
+import { ARRIVAL_ANSWERS, ARRIVAL_PRIVACY, ARRIVAL_QUESTION } from '../framing/arrival.js';
+import Escapes from '../framing/Escapes.astro';
+import Page from '../layouts/Page.astro';
+
+const availableAnswers = ARRIVAL_ANSWERS.filter(
+	(answer): answer is typeof answer & { route: string } => answer.route !== null,
+);
+---
+
+<Page title={ARRIVAL_QUESTION}>
+	<h1>{ARRIVAL_QUESTION}</h1>
+	<p class="lead">{ARRIVAL_PRIVACY}</p>
+	{
+		/*
+		 * Ordinary links, because the chosen audience path lives in the next
+		 * page's URL and nowhere else. A governed door without a route is absent:
+		 * the younger-child path must never continue without its standing guide.
+		 */
+	}
+	<ul class="answers">
+		{
+			availableAnswers.map((answer) => (
+				<li>
+					<a href={answer.route}>{answer.words}</a>
+				</li>
+			))
+		}
+	</ul>
+
+	<Escapes path="me" />
+</Page>
+
+<style>
+	.lead {
+		margin: 0;
+		color: var(--quiet);
+	}
+
+	.answers {
+		list-style: none;
+		margin: 2rem 0 0;
+		padding: 0;
+	}
+
+	.answers li + li {
+		margin-top: 1rem;
+	}
+
+	.answers a {
+		font-size: 1.125rem;
+	}
+</style>
