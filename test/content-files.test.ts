@@ -85,10 +85,14 @@ describe('the guide record on disk', () => {
 		expect(prose).toMatch(/cannot say which practice suits which age/i);
 	});
 
-	it('is published, so both builds offer the younger-child path', () => {
-		// The placeholder convention of `content/README.md`: these are field
-		// shapes rather than approvals, and the gate has to be exercised by
-		// something. The closed gate is exercised in `test/guide.test.ts`.
-		expect(guideRecordSchema.parse(front).publication).toBe('approved');
+	it('is held in review, so no placeholder approval opens an audience path', () => {
+		// Unlike the placeholder practices, this record carries no invented
+		// approval: the one it would need is what offers the younger-child path
+		// to everyone. Beta publishes it and production does not, which is the
+		// gate open and the gate closed on one commit (`test/guide.test.ts`).
+		const parsed = guideRecordSchema.parse(front);
+		expect(parsed.publication).toBe('in-review');
+		expect(parsed.review_record.chaplain_attested).toBeNull();
+		expect(parsed.review_record.approved_version).toBeNull();
 	});
 });

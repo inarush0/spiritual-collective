@@ -1,17 +1,17 @@
 ---
 name: Before you offer anything
-publication: approved
+publication: in-review
 review_record:
-  approved_version: '0000000000000000000000000000000000000000'
-  chaplain_attested: yes
-  chaplain_attested_date: '2026-01-01'
-  reply_kept: none — placeholder record, no reply exists
+  approved_version: null
+  chaplain_attested: null
+  chaplain_attested_date: null
+  reply_kept: null
 ---
 
 **Example, not for publication.** These words are placeholder drafting for the
-build. No chaplain review stands behind them. The review record above is a field
-shape, not an approval: its `approved_version` is a zero SHA and no reply is
-held anywhere.
+build, and no chaplain review stands behind them. The record is held in review,
+so only the beta build shows this page: the production build offers no
+younger-child path at all until a chaplain has read a real guide.
 
 ## How to offer one of these
 

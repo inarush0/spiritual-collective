@@ -47,11 +47,17 @@ tells that they are fiction: `approved_version` is a zero SHA, `reply_kept`
 says no reply exists, and the body says so in full. **Every one of these
 records is replaced before anything ships.**
 
-The guide record's body is rendered on `/child/` as it is written, so its
-placeholder line is on the page rather than only in the file. That is the
-honest rendering: a reader of a build carrying this record is reading
-unreviewed words about offering something to a dying child, and the page says
-so.
+**The guide record is the exception, and carries no invented approval.** A
+practice's placeholder approval only puts that practice on a page; the guide's
+would offer an entire audience path, because its `publication` is what gates the
+third arrival option. So it is held `in-review`: beta publishes it, production
+does not, and the two builds are the gate open and the gate closed on the same
+commit.
+
+Its body is rendered on `/child/` as it is written, so its placeholder line is
+on the page rather than only in the file. That is the honest rendering: a reader
+of a build carrying this record is reading unreviewed words about offering
+something to a dying child, and the page says so.
 
 Practice copy from the `prototype/*` branches is placeholder drafting too, and
 is not to be lifted in.

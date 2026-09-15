@@ -1,18 +1,9 @@
-import { readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { rmSync } from 'node:fs';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { GUIDE_DOORWAY, GUIDE_ONWARD, GUIDE_UNAVAILABLE } from '../src/framing/companion.js';
 import { GUIDE_ROUTE, routesFor } from '../src/framing/routes.js';
 import { GUIDE_PARTS } from '../src/guide/guide-record.js';
-import {
-	buildBothReleases,
-	buildInto,
-	hasPageAt,
-	pageAt,
-	plainText,
-	ROOT,
-	routesIn,
-} from './support/build.js';
+import { buildInto, hasPageAt, pageAt, plainText, routesIn } from './support/build.js';
 
 /**
  * The **standing guide** at `/child/`, and the arrival option it gates
@@ -25,12 +16,12 @@ import {
  * user. Closed: the third arrival answer is gone, the build says so, and
  * nothing anywhere links to a page with no guide on it.
  *
- * The closed state is built against a temporarily unpublished
- * `content/guide.md`, restored in `finally` and again in `afterAll`. A gate
- * that has never been seen closed is a gate nobody knows the wiring of.
+ * **The two builds are the two states**, with nothing rewritten to produce
+ * them. `content/guide.md` is placeholder drafting held in review, so beta
+ * publishes it and production does not — which is the gate open and the gate
+ * closed, on the same commit, exactly as an editor would meet them.
  */
 
-const GUIDE_FILE = join(ROOT, 'content', 'guide.md');
 const CHILD = routesFor('child');
 const THIRD_ANSWER = 'A younger child I am caring for';
 
@@ -53,51 +44,53 @@ function deadLinks(dir: string): string[] {
 		.map(([target, from]) => `${target} ← ${from.join(', ')}`);
 }
 
+/** Beta publishes the in-review guide; production does not. */
+let beta: string;
+let production: string;
+let productionOutput: string;
+
+beforeAll(() => {
+	({ dir: beta } = buildInto('beta'));
+	({ dir: production, output: productionOutput } = buildInto(undefined));
+});
+
+afterAll(() => {
+	for (const dir of [beta, production]) {
+		if (dir) rmSync(dir, { recursive: true, force: true });
+	}
+});
+
 describe('the standing guide, published', () => {
-	let production: string;
-	let beta: string;
-	let cleanUp: () => void;
-
-	beforeAll(() => {
-		({
-			builds: { production, beta },
-			cleanUp,
-		} = buildBothReleases());
-	});
-
-	afterAll(() => cleanUp?.());
 
 	it('is the first screen of the younger-child path, at /child/ itself', () => {
-		for (const build of [production, beta]) {
-			expect(hasPageAt(build, GUIDE_ROUTE)).toBe(true);
-		}
+		expect(hasPageAt(beta, GUIDE_ROUTE)).toBe(true);
 		expect(GUIDE_ROUTE).toBe('/child/');
 		expect(CHILD.door).toBe('/child/set/');
 	});
 
 	it('holds all four parts', () => {
-		const words = plainText(pageAt(production, GUIDE_ROUTE));
+		const words = plainText(pageAt(beta, GUIDE_ROUTE));
 		for (const part of GUIDE_PARTS) {
 			expect(words, part.name).toContain(part.heading);
 		}
 	});
 
 	it('states the no-suitability claim in the first of the two places it binds', () => {
-		const guide = plainText(pageAt(production, GUIDE_ROUTE));
-		const set = plainText(pageAt(production, CHILD.door));
+		const guide = plainText(pageAt(beta, GUIDE_ROUTE));
+		const set = plainText(pageAt(beta, CHILD.door));
 
 		expect(guide).toMatch(/never met your child/i);
 		expect(set).toMatch(/never met your child/i);
 	});
 
 	it('is met before the catalog, and leads on to it', () => {
-		const html = pageAt(production, GUIDE_ROUTE);
+		const html = pageAt(beta, GUIDE_ROUTE);
 		expect(plainText(html)).toContain(GUIDE_ONWARD);
 		expect(html).toContain(`href="${CHILD.door}"`);
 	});
 
 	it('is the arrival screen third answer, and its door', () => {
-		const html = pageAt(production, '/');
+		const html = pageAt(beta, '/');
 		expect(plainText(html)).toContain(THIRD_ANSWER);
 		expect(html).toContain(`href="${GUIDE_ROUTE}"`);
 	});
@@ -118,7 +111,7 @@ describe('the standing guide, published', () => {
 				`${routes.practice('rest-without-a-task')}1/`,
 			];
 			for (const route of screens) {
-				const html = pageAt(production, route);
+				const html = pageAt(beta, route);
 				expect(plainText(html), route).toContain(GUIDE_DOORWAY);
 				expect(html, route).toContain(`href="${GUIDE_ROUTE}"`);
 			}
@@ -126,12 +119,12 @@ describe('the standing guide, published', () => {
 	});
 
 	it('does not offer a doorway to itself', () => {
-		expect(plainText(pageAt(production, GUIDE_ROUTE))).not.toContain(GUIDE_DOORWAY);
+		expect(plainText(pageAt(beta, GUIDE_ROUTE))).not.toContain(GUIDE_DOORWAY);
 	});
 
 	it('is never shown to the direct user', () => {
-		for (const route of routesIn(production).filter((route) => route.startsWith('/me/'))) {
-			const html = pageAt(production, route);
+		for (const route of routesIn(beta).filter((route) => route.startsWith('/me/'))) {
+			const html = pageAt(beta, route);
 			expect(html, route).not.toContain(`href="${GUIDE_ROUTE}"`);
 			expect(plainText(html), route).not.toContain(GUIDE_DOORWAY);
 			for (const part of GUIDE_PARTS) {
@@ -144,7 +137,7 @@ describe('the standing guide, published', () => {
 		// The record's own name, read off the page it is rendered on rather
 		// than written here: placeholder copy is replaced before anything ships.
 		const name = plainText(
-			/<h1[^>]*>([\s\S]*?)<\/h1>/.exec(pageAt(production, GUIDE_ROUTE))![1]!,
+			/<h1[^>]*>([\s\S]*?)<\/h1>/.exec(pageAt(beta, GUIDE_ROUTE))![1]!,
 		);
 
 		const listings = [
@@ -159,7 +152,7 @@ describe('the standing guide, published', () => {
 			'/me/for/be-still/low/',
 		];
 		for (const route of listings) {
-			const html = pageAt(production, route);
+			const html = pageAt(beta, route);
 			// A listing links every practice it holds; the guide is not a
 			// practice and has no practice URL to be linked by.
 			expect(html, route).not.toContain('practice/guide');
@@ -171,44 +164,19 @@ describe('the standing guide, published', () => {
 	});
 
 	it('has no practice routes of its own on any path', () => {
-		for (const route of routesIn(production)) {
+		for (const route of routesIn(beta)) {
 			expect(route, route).not.toMatch(/practice\/guide/);
 		}
 	});
 
 	it('leaves no dead link anywhere in the build', () => {
-		expect(deadLinks(production)).toEqual([]);
 		expect(deadLinks(beta)).toEqual([]);
 	});
 });
 
 describe('the standing guide, unpublished', () => {
-	/**
-	 * The real record, briefly unapproved, and restored whatever happens. It is
-	 * governed content: nothing here may be able to lose it, so the original
-	 * bytes are held and written back in `finally` and again after the suite.
-	 */
-	const original = readFileSync(GUIDE_FILE, 'utf8');
-	let dir: string | undefined;
-	let output = '';
-
-	beforeAll(() => {
-		expect(original).toContain('publication: approved');
-		writeFileSync(GUIDE_FILE, original.replace('publication: approved', 'publication: in-review'));
-		try {
-			({ dir, output } = buildInto(undefined));
-		} finally {
-			writeFileSync(GUIDE_FILE, original);
-		}
-	});
-
-	afterAll(() => {
-		writeFileSync(GUIDE_FILE, original);
-		if (dir) rmSync(dir, { recursive: true, force: true });
-	});
-
 	it('drops the third arrival option rather than showing it as a dead link', () => {
-		const html = pageAt(dir!, '/');
+		const html = pageAt(production, '/');
 		const words = plainText(html);
 
 		expect(words).not.toContain(THIRD_ANSWER);
@@ -220,26 +188,26 @@ describe('the standing guide, unpublished', () => {
 	});
 
 	it('emits a loud build warning saying which option went and why', () => {
-		expect(output).toContain('[the standing guide]');
-		expect(output).toContain('in-review');
-		expect(output).toContain(THIRD_ANSWER);
+		expect(productionOutput).toContain('[the standing guide]');
+		expect(productionOutput).toContain('in-review');
+		expect(productionOutput).toContain(THIRD_ANSWER);
 	});
 
 	it('links to the guide from nowhere at all', () => {
-		for (const route of routesIn(dir!)) {
-			expect(pageAt(dir!, route), route).not.toContain(`href="${GUIDE_ROUTE}"`);
+		for (const route of routesIn(production)) {
+			expect(pageAt(production, route), route).not.toContain(`href="${GUIDE_ROUTE}"`);
 		}
 	});
 
 	it('keeps the doorway wording on companion screens, as a sentence', () => {
-		const html = pageAt(dir!, '/with/');
+		const html = pageAt(production, '/with/');
 		expect(plainText(html)).toContain(GUIDE_DOORWAY);
 		expect(html).not.toContain(`href="${GUIDE_ROUTE}"`);
 	});
 
 	it('still serves /child/ rather than a 404, and does not continue guide-less', () => {
-		expect(hasPageAt(dir!, GUIDE_ROUTE)).toBe(true);
-		const html = pageAt(dir!, GUIDE_ROUTE);
+		expect(hasPageAt(production, GUIDE_ROUTE)).toBe(true);
+		const html = pageAt(production, GUIDE_ROUTE);
 		const words = plainText(html);
 
 		expect(words).toContain(GUIDE_UNAVAILABLE.heading);
@@ -251,6 +219,6 @@ describe('the standing guide, unpublished', () => {
 	});
 
 	it('leaves no dead link behind', () => {
-		expect(deadLinks(dir!)).toEqual([]);
+		expect(deadLinks(production)).toEqual([]);
 	});
 });
