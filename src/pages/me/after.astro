@@ -36,14 +36,15 @@ const onward = waysOnward('me');
 	{
 		/*
 		 * The three ways onward, as ordinary links and at one size: none of
-		 * them is the recommended one. "Change who this is for" is a plain line
-		 * until arrival exists — a dead link would be the worse half-measure.
+		 * them is the recommended one.
 		 */
 	}
 	<ul class="exits">
 		{
 			onward.map((way) => (
-				<li>{way.route ? <a href={way.route}>{way.words}</a> : way.words}</li>
+				<li>
+					<a href={way.route}>{way.words}</a>
+				</li>
 			))
 		}
 	</ul>

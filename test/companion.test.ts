@@ -324,7 +324,7 @@ describe('the doorway to the standing guide', () => {
 	});
 });
 
-describe('a companion path never leads out of itself', () => {
+describe('a companion path only leaves itself through shared doors', () => {
 	it('keeps the escapes within the path', () => {
 		for (const path of COMPANIONS) {
 			const routes = routesFor(path);
@@ -340,13 +340,13 @@ describe('a companion path never leads out of itself', () => {
 		}
 	});
 
-	it('links nowhere that was not built, and nowhere on another path', () => {
+	it('links nowhere that was not built, and nowhere on another audience path', () => {
 		for (const path of COMPANIONS) {
 			for (const route of routeSet(production, path)) {
 				const html = pageAt(production, route);
 				for (const [, href] of html.matchAll(/href="(\/[^"]*)"/g)) {
 					expect(hasPageAt(production, href), `${route} → ${href}`).toBe(true);
-					const onPath = href.startsWith(`/${path}/`) || href === '/about/';
+					const onPath = href.startsWith(`/${path}/`) || href === '/about/' || href === '/';
 					expect(onPath, `${route} leaves ${path} for ${href}`).toBe(true);
 				}
 			}

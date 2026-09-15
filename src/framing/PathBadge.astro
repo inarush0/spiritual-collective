@@ -26,25 +26,18 @@ const { badge } = framingFor(path);
  * reader acting on the wrong one is acting on guidance written about someone
  * else.
  *
- * "Change who this is for" is a plain line until arrival is built
- * ([#28](https://github.com/inarush0/spiritual-collective/issues/28)), for the
- * reason `./routes.ts` gives: a link to a page that does not exist is worse
- * than a sentence. It is written now so that landing arrival is one route
- * rather than an edit on every screen that offers the move.
+ * "Change who this is for" leads back to arrival.
  */
 ---
 
 <p class="badge">
 	{badge}
 	{
-		change &&
-			(ARRIVAL_ROUTE ? (
-				<a class="change" href={ARRIVAL_ROUTE}>
-					{CHANGE_PATH}
-				</a>
-			) : (
-				<span class="change">{CHANGE_PATH}</span>
-			))
+		change && (
+			<a class="change" href={ARRIVAL_ROUTE}>
+				{CHANGE_PATH}
+			</a>
+		)
 	}
 </p>
 
