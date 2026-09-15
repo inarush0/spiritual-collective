@@ -23,6 +23,11 @@ export const AUDIENCE_PATHS = ['me', 'with', 'child'] as const;
 
 export type AudiencePath = (typeof AUDIENCE_PATHS)[number];
 
+/** The two audience paths held by a companion. */
+export const COMPANION_PATHS = ['with', 'child'] as const satisfies readonly AudiencePath[];
+
+export type CompanionPath = (typeof COMPANION_PATHS)[number];
+
 /**
  * The two paths held by someone acting alongside another person.
  *
@@ -30,7 +35,7 @@ export type AudiencePath = (typeof AUDIENCE_PATHS)[number];
  * because "is this a companion?" is the same question in every place it is
  * asked, and a flag can be set wrong once per path.
  */
-export function isCompanionPath(path: AudiencePath): boolean {
+export function isCompanionPath(path: AudiencePath): path is CompanionPath {
 	return path !== 'me';
 }
 

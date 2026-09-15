@@ -12,8 +12,9 @@
  * drafting until the chaplain reviewer has read it, like everything in
  * `content/`.
  *
- * The companion paths' wrapper — "Before you offer this", "Being alongside",
- * "Leave this here" — belongs to the companion route trees, not here.
+ * Companion wording lives beside the direct-user wording because the route
+ * trees share one rendering of the canonical step. A path selects its wrapper;
+ * it never selects or transforms the instruction itself.
  */
 
 /**
@@ -51,6 +52,34 @@ export const ONWARD = 'Go on from here.';
 
 /** The stop control, on every step screen. Direct users keep "Stop". */
 export const STOP = 'Stop.';
+
+/** The screen a companion reads before anyone is offered the first step. */
+export const BEFORE_TITLE = 'Before you offer this';
+
+/** The adaptation doorway kept reachable throughout a companion practice. */
+export const BEING_ALONGSIDE = 'Being alongside';
+
+/** Makes the addressee of the unchanged canonical instruction explicit. */
+export const PERSON_STEP_LEAD = 'For the person doing the practice:';
+
+/** The companion stop control ends the resource's guidance, not the practice. */
+export const LEAVE_HERE = 'Leave this here.';
+
+/** The `/with/` handoff into the same canonical step on the direct-user path. */
+export const CONTINUE_ALONE = 'Let them continue on their own.';
+
+/**
+ * Progress belongs to the person doing the practice.
+ *
+ * These lines appear in full before the first step. During the steps the first
+ * line is enough to keep the companion's next action clear without turning the
+ * wrapper into another sequence alongside the canonical one.
+ */
+export const COMPANION_PROGRESS: readonly string[] = [
+	'Offer one step and leave it there.',
+	'Go on only when they ask or clearly choose to continue.',
+	'If they do not respond, fall asleep, turn away, or seem unsure, leave the practice there instead of prompting for an answer.',
+];
 
 /**
  * "Change this", on every step screen.

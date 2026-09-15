@@ -390,8 +390,9 @@ describe('the framing a path chooses', () => {
 			expect(framing.companion, path).toBe(true);
 			expect(framing.action, path).toBe(COMPANION_ACTION);
 			expect(framing.setLead[0], path).toBe(COMPANION_OFFER);
-			// Unbuilt until #29, and a sentence rather than a link until then.
-			expect(framing.actionRoute('rest-without-a-task'), path).toBeNull();
+			expect(framing.actionRoute('rest-without-a-task'), path).toBe(
+				`/${path}/practice/rest-without-a-task/before/`,
+			);
 		}
 		expect(framingFor('me').actionRoute('rest-without-a-task')).toBe(
 			'/me/practice/rest-without-a-task/1/',

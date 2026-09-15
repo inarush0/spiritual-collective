@@ -89,19 +89,18 @@ export interface PathFraming {
 	/** The practice view's action. */
 	action: string;
 	/**
-	 * Where that action leads, or `null` while the screen behind it is unbuilt.
+	 * Where the action leads.
 	 *
 	 * The direct user's is step one. A companion's is
 	 * `/<path>/practice/<slug>/before/` — "Before you offer this", which holds
 	 * the `companion note` and `companion cautions` a companion reads before
 	 * anything is offered to anyone (§1). That screen and the companion
-	 * stepped view behind it are
-	 * [#29](https://github.com/inarush0/spiritual-collective/issues/29), so the
-	 * action is words rather than a link until it lands: a companion path must
-	 * not reach a set of steps that skips the cautions, and it must not hand a
-	 * companion the direct user's rendering, which addresses the wrong person.
+	 * stepped view behind it are [#29](https://github.com/inarush0/spiritual-collective/issues/29).
+	 * A companion path must not reach a set of steps that skips the cautions,
+	 * and it must not hand a companion the direct user's rendering, which
+	 * addresses the wrong person.
 	 */
-	actionRoute(slug: string): string | null;
+	actionRoute(slug: string): string;
 	/** The line under "Not sure is fine." */
 	notSureLines: readonly string[];
 	/** The lead over the whole catalog. */
@@ -130,7 +129,7 @@ export function framingFor(path: AudiencePath): PathFraming {
 		// then a thing that can be read at a glance and counted, and a sentence
 		// cannot be given to the wrong reader by a condition written backwards.
 		...(companion ? COMPANION_WORDS : DIRECT_WORDS),
-		actionRoute: (slug) => (companion ? null : `${routes.practice(slug)}1/`),
+		actionRoute: (slug) => `${routes.practice(slug)}${companion ? 'before/' : '1/'}`,
 	};
 }
 
