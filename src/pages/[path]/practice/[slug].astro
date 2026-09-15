@@ -3,7 +3,7 @@ import Page from '../../../layouts/Page.astro';
 import GuideDoorway from '../../../framing/GuideDoorway.astro';
 import PathBadge from '../../../framing/PathBadge.astro';
 import SafetyNote from '../../../framing/SafetyNote.astro';
-import UnavailablePractice from '../../../framing/UnavailablePractice.astro';
+import PracticeRoute from '../../../framing/PracticeRoute.astro';
 import {
 	BELIEF_LINE,
 	PENDING_MARKER,
@@ -53,12 +53,8 @@ const framing = framingFor(path);
 const action = framing.actionRoute(practice.id);
 ---
 
-
-{
-	record.publication === 'withdrawn' ? (
-		<UnavailablePractice path={path} />
-	) : (
-		<Page title={record.name}>
+<PracticeRoute path={path} publication={record.publication}>
+	<Page title={record.name}>
 	{
 		/*
 		 * The badge names the path, and "Change who this is for" sits with it:
@@ -119,10 +115,9 @@ const action = framing.actionRoute(practice.id);
 		<p class="refusal"><a href={framing.routes.everything}>{REFUSAL}</a></p>
 	</div>
 
-			<GuideDoorway path={path} />
-		</Page>
-	)
-}
+	<GuideDoorway path={path} />
+	</Page>
+</PracticeRoute>
 
 <style>
 	.invitation {

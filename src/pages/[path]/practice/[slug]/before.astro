@@ -14,7 +14,7 @@ import {
 	LEAVE_HERE,
 } from '../../../../framing/stepped-view.js';
 import Page from '../../../../layouts/Page.astro';
-import UnavailablePractice from '../../../../framing/UnavailablePractice.astro';
+import PracticeRoute from '../../../../framing/PracticeRoute.astro';
 
 interface Props {
 	path: CompanionPath;
@@ -38,12 +38,8 @@ const practiceRoute = routes.practice(practice.id);
 const directPracticeRoute = routesFor('me').practice(practice.id);
 ---
 
-
-{
-	record.publication === 'withdrawn' ? (
-		<UnavailablePractice path={path} />
-	) : (
-		<Page title={`${record.name} — ${BEFORE_TITLE}`}>
+<PracticeRoute path={path} publication={record.publication}>
+	<Page title={`${record.name} — ${BEFORE_TITLE}`}>
 	<PathBadge path={path} />
 	<p class="from"><a href={practiceRoute}>{record.name}</a></p>
 	<h1>{BEFORE_TITLE}</h1>
@@ -83,10 +79,9 @@ const directPracticeRoute = routesFor('me').practice(practice.id);
 		}
 	</FlowChoices>
 
-			<GuideDoorway path={path} />
-		</Page>
-	)
-}
+	<GuideDoorway path={path} />
+	</Page>
+</PracticeRoute>
 
 <style>
 	.from,

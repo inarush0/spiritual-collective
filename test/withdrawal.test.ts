@@ -1,14 +1,7 @@
 import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import {
-	buildInto,
-	hasPageAt,
-	pageAt,
-	plainText,
-	ROOT,
-	routesIn,
-} from './support/build.js';
+import { buildInto, hasPageAt, pageAt, plainText, ROOT, routesIn } from './support/build.js';
 
 /**
  * Withdrawal is exercised through the same public operation an editor uses:
@@ -16,16 +9,19 @@ import {
  * real production site builds. The source is restored as soon as Astro has
  * read it, so the repository is unchanged even while these assertions run.
  */
-const record = join(ROOT, 'content', 'practices', 'a-small-kindness.md');
+const recordPath = join(ROOT, 'content', 'practices', 'a-small-kindness.md');
 const slug = 'a-small-kindness';
 const steps = [1, 2, 3];
 const unavailable = "This practice isn't available right now.";
 
-let production: string;
+let productionDir: string;
 let output: string;
-let emptyProduction: string;
+let allWithdrawnProductionDir: string;
 
-function buildWithWithdrawals(files: readonly string[]): { dir: string; output: string } {
+function buildWithWithdrawals(files: readonly string[]): {
+	dir: string;
+	output: string;
+} {
 	const originals = files.map((file) => [file, readFileSync(file, 'utf8')] as const);
 	for (const [file, source] of originals) {
 		const withdrawn = source.replace(
@@ -43,18 +39,18 @@ function buildWithWithdrawals(files: readonly string[]): { dir: string; output: 
 }
 
 beforeAll(() => {
-	({ dir: production, output } = buildWithWithdrawals([record]));
+	({ dir: productionDir, output } = buildWithWithdrawals([recordPath]));
 	const everyRecord = [
 		'a-small-kindness',
 		'noticing-whats-around-you',
 		'rest-without-a-task',
 		'saying-the-hard-thing',
 	].map((name) => join(ROOT, 'content', 'practices', `${name}.md`));
-	({ dir: emptyProduction } = buildWithWithdrawals(everyRecord));
+	({ dir: allWithdrawnProductionDir } = buildWithWithdrawals(everyRecord));
 });
 
 afterAll(() => {
-	for (const dir of [production, emptyProduction]) {
+	for (const dir of [productionDir, allWithdrawnProductionDir]) {
 		if (dir) rmSync(dir, { recursive: true, force: true });
 	}
 });
@@ -79,14 +75,14 @@ describe('a withdrawn practice', () => {
 			if (path !== 'me') routes.push(`${practice}before/`);
 
 			for (const route of routes) {
-				expect(hasPageAt(production, route), route).toBe(true);
-				expect(plainText(pageAt(production, route)), route).toContain(unavailable);
+				expect(hasPageAt(productionDir, route), route).toBe(true);
+				expect(plainText(pageAt(productionDir, route)), route).toContain(unavailable);
 			}
 		}
 	});
 
 	it('drops its last need tags from discovery and emits a loud build warning', () => {
-		const discovery = plainText(pageAt(production, '/me/'));
+		const discovery = plainText(pageAt(productionDir, '/me/'));
 		for (const tag of [
 			'I want to make or do something',
 			'I want my faith or my tradition',
@@ -99,18 +95,18 @@ describe('a withdrawn practice', () => {
 	});
 
 	it('leaves no link to the withdrawn practice and no dead internal link', () => {
-		for (const route of routesIn(production)) {
-			expect(pageAt(production, route), route).not.toContain(`href="/me/practice/${slug}/"`);
-			expect(pageAt(production, route), route).not.toContain(`href="/with/practice/${slug}/"`);
-			expect(pageAt(production, route), route).not.toContain(`href="/child/practice/${slug}/"`);
+		for (const route of routesIn(productionDir)) {
+			expect(pageAt(productionDir, route), route).not.toContain(`href="/me/practice/${slug}/"`);
+			expect(pageAt(productionDir, route), route).not.toContain(`href="/with/practice/${slug}/"`);
+			expect(pageAt(productionDir, route), route).not.toContain(`href="/child/practice/${slug}/"`);
 		}
-		expect(deadLinks(production)).toEqual([]);
+		expect(deadLinks(productionDir)).toEqual([]);
 	});
 
 	it('still completes a production build when every written practice is withdrawn', () => {
-		expect(hasPageAt(emptyProduction, '/me/')).toBe(true);
-		expect(hasPageAt(emptyProduction, `/me/practice/${slug}/`)).toBe(true);
-		expect(deadLinks(emptyProduction)).toEqual([]);
+		expect(hasPageAt(allWithdrawnProductionDir, '/me/')).toBe(true);
+		expect(hasPageAt(allWithdrawnProductionDir, `/me/practice/${slug}/`)).toBe(true);
+		expect(deadLinks(allWithdrawnProductionDir)).toEqual([]);
 	});
 
 	it('completes a production build for every combination of written records withdrawn', () => {
