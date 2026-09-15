@@ -242,7 +242,8 @@ describe('the standing guide, unpublished', () => {
 		const html = pageAt(dir!, GUIDE_ROUTE);
 		const words = plainText(html);
 
-		for (const line of GUIDE_UNAVAILABLE) expect(words).toContain(line);
+		expect(words).toContain(GUIDE_UNAVAILABLE.heading);
+		for (const line of GUIDE_UNAVAILABLE.lines) expect(words).toContain(line);
 		// The way onward is out of the path, not further into it.
 		expect(html).toContain('href="/"');
 		expect(html).not.toContain(`href="${CHILD.door}"`);

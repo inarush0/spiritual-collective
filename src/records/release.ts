@@ -39,6 +39,16 @@ export function resolveRelease(env: Record<string, string | undefined>): Release
 }
 
 /**
+ * Which build this is, read once.
+ *
+ * Here rather than in `../catalog/index.ts`, because both governed record
+ * kinds ask it and the guide must not have to reach through the catalog to
+ * find out which build it is in. `../catalog/index.ts` re-exports it, so a
+ * page still asks the catalog what the catalog knows.
+ */
+export const release: Release = resolveRelease(process.env);
+
+/**
  * Whether a record in this publication state is offered by this build.
  *
  * Beta adds pending records to production's approved ones, because half the

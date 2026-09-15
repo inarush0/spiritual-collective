@@ -190,8 +190,10 @@ export const GUIDE_ONWARD = 'When you are ready, a few things you could offer.';
  * exists to prevent; the lines say plainly that this is a choice rather than a
  * page that failed to load.
  */
-export const GUIDE_UNAVAILABLE: readonly string[] = [
-	'This part of the resource is not available right now.',
-	'It holds how to offer one of these to a younger child, and how to adapt it.',
-	'We would rather not hand you the practices without it.',
-];
+export const GUIDE_UNAVAILABLE: { heading: string; lines: readonly string[] } = {
+	heading: 'This part of the resource is not available right now.',
+	lines: [
+		'It holds how to offer one of these to a younger child, and how to adapt it.',
+		'We would rather not hand you the practices without it.',
+	],
+};

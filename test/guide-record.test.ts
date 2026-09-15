@@ -136,3 +136,14 @@ describe('the four parts of the standing guide', () => {
 		expect(names).toContain('the no-suitability statement');
 	});
 });
+
+describe('the schema refuses a facet rather than ignoring it', () => {
+	it.each(['need_tags', 'risk_class', 'smallest_version', 'low_energy'])(
+		'fails a %s written into the guide record',
+		(facet) => {
+			// Strict, so this is an `astro build` failure where the editor is
+			// working rather than only a `npm run gates` line later.
+			expect(guideRecordSchema.safeParse(record({ [facet]: 'anything' })).success).toBe(false);
+		},
+	);
+});

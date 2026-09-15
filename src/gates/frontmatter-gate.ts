@@ -13,15 +13,19 @@ import type { Gate, GateFailure } from './failure.ts';
  */
 export type RecordKind = 'practice' | 'guide';
 
-const SCHEMAS = {
-	practice: practiceRecordSchema,
-	guide: guideRecordSchema,
+const KINDS = {
+	practice: {
+		schema: practiceRecordSchema,
+		/** How a failure line refers to the kind, and where its fields are declared. */
+		name: 'the practice record',
+		file: 'src/catalog/practice-record.ts',
+	},
+	guide: {
+		schema: guideRecordSchema,
+		name: 'the guide record',
+		file: 'src/guide/guide-record.ts',
+	},
 } as const;
-
-const KIND_NAMES: Record<RecordKind, string> = {
-	practice: 'the practice record',
-	guide: 'the guide record',
-};
 
 /** A record file as read off disk, with its frontmatter parsed but unvalidated. */
 export interface RecordFile {
@@ -53,7 +57,7 @@ export function checkFrontmatter(records: readonly RecordFile[]): GateFailure[] 
 }
 
 function schemaFailures({ path, kind, frontmatter }: RecordFile): GateFailure[] {
-	const result = SCHEMAS[kind].safeParse(frontmatter);
+	const result = KINDS[kind].schema.safeParse(frontmatter);
 	if (result.success) return [];
 
 	return result.error.issues.map((issue) => ({
@@ -82,21 +86,17 @@ function fieldName(path: readonly PropertyKey[]): string {
  * and is one edit from offering the standing guide as something to do.
  */
 function unknownFieldFailures({ path, kind, frontmatter }: RecordFile): GateFailure[] {
-	return [...unknownKeys(frontmatter, SCHEMAS[kind].shape, [])].map((key) => ({
+	const { schema, name, file } = KINDS[kind];
+	return [...unknownKeys(frontmatter, schema.shape, [])].map((key) => ({
 		gate: GATE,
 		where: path,
 		message:
-			`${key}: not a field of ${KIND_NAMES[kind]}. ` +
+			`${key}: not a field of ${name}. ` +
 			(looksLikeDuration(key)
 				? '`smallest_version` is the only field that may carry anything resembling a duration.'
-				: `Add it to the schema in ${SCHEMA_FILES[kind]}, or remove it.`),
+				: `Add it to the schema in ${file}, or remove it.`),
 	}));
 }
-
-const SCHEMA_FILES: Record<RecordKind, string> = {
-	practice: 'src/catalog/practice-record.ts',
-	guide: 'src/guide/guide-record.ts',
-};
 
 /**
  * Keys the schema does not name, at every depth, as dotted paths.

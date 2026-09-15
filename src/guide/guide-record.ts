@@ -18,11 +18,11 @@ import {
  * apparatus a practice carries (`docs/spec/05-governance.md`).
  *
  * **It carries no practice facets.** No `risk class`, no `need tags`, no
- * `smallest version` — and the schema's silence is not what enforces that, since
- * Zod strips what it does not name. The frontmatter gate reads the keys actually
- * written and fails on any this schema does not name
- * (`src/gates/frontmatter-gate.ts`), so a `need_tags:` added here is a failed
- * build rather than a field that quietly does nothing. That matters because the
+ * `smallest version`, and the schema refuses them rather than ignoring them: it
+ * is strict, so a facet written into `content/guide.md` fails `astro build`
+ * where the editor is working, not only `npm run gates`. (The gate's unknown-key
+ * check reads the keys actually written and says the same thing again, which is
+ * the rule it enforces on the practice record too.) It matters because the
  * facets are what a set is built from: a guide record carrying one is a guide
  * one edit away from being offered as something to do.
  *
@@ -77,7 +77,7 @@ export function missingGuideParts(body: string): GuidePart[] {
 }
 
 export const guideRecordSchema = z
-	.object({
+	.strictObject({
 		name: prose,
 		publication: z.enum(PUBLICATION_STATES),
 		/**

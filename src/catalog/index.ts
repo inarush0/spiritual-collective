@@ -1,13 +1,15 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { selectCatalog } from './select.js';
-import { resolveRelease, type Release } from '../records/release.js';
+import { release } from '../records/release.js';
 
 export type Practice = CollectionEntry<'practices'>;
 
-export { pendingIn, type Release } from '../records/release.js';
-
-/** Which build this is. Read once here so no page reaches for the variable itself. */
-export const release: Release = resolveRelease(process.env);
+/**
+ * Which build this is, and what it marks — re-exported so no page reaches for
+ * the variable itself, and none has to know that the answer is a fact about a
+ * release rather than about the catalog (`src/records/release.ts`).
+ */
+export { pendingIn, release, type Release } from '../records/release.js';
 
 /**
  * The practices this build publishes, in the fixed editorial order.

@@ -121,20 +121,23 @@ describe('the frontmatter schema gate', () => {
 	it('fails a practice facet written into the guide record', () => {
 		// The point of the check: Zod strips these, so a guide record carrying
 		// need tags would parse clean and be one edit from a suggestion set.
+		// Twice over: the schema is strict, so the facet fails the build where
+		// an editor works, and the gate reads the written keys and says so too.
 		for (const facet of [{ need_tags: ['I want to be still'] }, { risk_class: 'low' }]) {
+			const field = Object.keys(facet)[0]!;
 			const failures = checkFrontmatter(guideAt(guide(facet)));
 
-			expect(failures, Object.keys(facet)[0]).toHaveLength(1);
-			expect(failures[0]!.message).toContain(Object.keys(facet)[0]!);
-			expect(failures[0]!.message).toContain('the guide record');
+			expect(failures.length, field).toBeGreaterThan(0);
+			for (const failure of failures) expect(failure.message, field).toContain(field);
+			expect(failures.map((failure) => failure.message).join(' ')).toContain('the guide record');
 		}
 	});
 
 	it('fails a smallest version written into the guide record', () => {
 		const failures = checkFrontmatter(guideAt(guide({ smallest_version: 'One sentence of it.' })));
 
-		expect(failures).toHaveLength(1);
-		expect(failures[0]!.message).toContain('smallest_version');
+		expect(failures.length).toBeGreaterThan(0);
+		for (const failure of failures) expect(failure.message).toContain('smallest_version');
 	});
 
 	it('fails an approved guide record with nothing attesting it', () => {

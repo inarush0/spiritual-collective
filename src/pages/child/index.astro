@@ -41,7 +41,7 @@ import { loadGuide } from '../../guide/index.js';
  */
 const guide = await loadGuide();
 const Content = guide ? (await render(guide)).Content : null;
-const title = guide ? guide.data.name : GUIDE_UNAVAILABLE[0]!;
+const title = guide ? guide.data.name : GUIDE_UNAVAILABLE.heading;
 ---
 
 <Page title={title}>
@@ -70,8 +70,8 @@ const title = guide ? guide.data.name : GUIDE_UNAVAILABLE[0]!;
 			</>
 		) : (
 			<>
-				<h1>{GUIDE_UNAVAILABLE[0]}</h1>
-				{GUIDE_UNAVAILABLE.slice(1).map((line) => (
+				<h1>{GUIDE_UNAVAILABLE.heading}</h1>
+				{GUIDE_UNAVAILABLE.lines.map((line) => (
 					<p class="lead">{line}</p>
 				))}
 				{

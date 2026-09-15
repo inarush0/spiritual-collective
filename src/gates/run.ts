@@ -7,7 +7,7 @@ import { readBuiltOutput } from './built-output.ts';
 import type { GateFailure } from './failure.ts';
 import { checkFrontmatter } from './frontmatter-gate.ts';
 import { checkNetwork } from './network-gate.ts';
-import { readRecordFile, readRecordFiles } from './record-files.ts';
+import { readRecordFileIfWritten, readRecordFiles } from './record-files.ts';
 import { checkWeight } from './weight-gate.ts';
 
 /**
@@ -40,9 +40,7 @@ export function runGates(root: string, log: Log = () => {}): GateFailure[] {
 	// schemas: the twelve practices, and the one guide record beside them.
 	const records = [
 		...readRecordFiles(join(root, 'content', 'practices'), root, 'practice'),
-		...[readRecordFile(join(root, 'content', 'guide.md'), root, 'guide')].filter(
-			(record) => record !== null,
-		),
+		...readRecordFileIfWritten(join(root, 'content', 'guide.md'), root, 'guide'),
 	];
 	const recordFailures = checkFrontmatter(records);
 	log(`  ${count(records.length, 'record')}`);

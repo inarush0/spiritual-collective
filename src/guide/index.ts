@@ -1,6 +1,5 @@
 import { getEntry, type CollectionEntry } from 'astro:content';
-import { publishedIn, type Release } from '../records/release.js';
-import { release } from '../catalog/index.js';
+import { publishedIn, release, type Release } from '../records/release.js';
 import { missingGuideParts } from './guide-record.js';
 
 /**
