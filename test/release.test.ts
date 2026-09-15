@@ -4,7 +4,7 @@ import {
 	pendingIn,
 	publishedIn,
 	resolveRelease,
-} from '../src/catalog/release.js';
+} from '../src/records/release.js';
 
 describe('resolveRelease', () => {
 	it('reads the release from one environment variable', () => {

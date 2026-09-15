@@ -8,7 +8,7 @@ Three of the six checks the spec lists are here:
 
 | # | Check | Module |
 | --- | --- | --- |
-| 1 | Frontmatter schema | `frontmatter-gate.ts` |
+| 1 | Frontmatter schema | `frontmatter-gate.ts` — both record kinds |
 | 5 | Network assertion | `network-gate.ts` |
 | 6 | Weight budget | `weight-gate.ts` |
 

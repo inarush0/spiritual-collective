@@ -1,10 +1,10 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { selectCatalog } from './select.js';
-import { resolveRelease, type Release } from './release.js';
+import { resolveRelease, type Release } from '../records/release.js';
 
 export type Practice = CollectionEntry<'practices'>;
 
-export { pendingIn, type Release } from './release.js';
+export { pendingIn, type Release } from '../records/release.js';
 
 /** Which build this is. Read once here so no page reaches for the variable itself. */
 export const release: Release = resolveRelease(process.env);

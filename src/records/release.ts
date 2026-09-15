@@ -1,9 +1,15 @@
-import type { Publication } from './practice-record.js';
+import type { Publication } from './governed.js';
 
 /**
  * One branch, two builds. Both Cloudflare Pages projects deploy the same commit
  * and differ only by this variable; the gate is the record's `publication`
  * field, never the deploy. See `docs/spec/07-technical-constraints.md`.
+ *
+ * Beside `./governed.ts` rather than in `../catalog/`, because the question
+ * "does this build offer a record in this state?" is asked of both governed
+ * record kinds. The **guide record** is published by the same field as a
+ * practice, and it is the one that decides whether a whole audience path is
+ * offered at all (§1).
  */
 export const RELEASE_ENV_VAR = 'SITE_BUILD';
 

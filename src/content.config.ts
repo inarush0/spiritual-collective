@@ -1,5 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { guideRecordSchema } from './guide/guide-record.js';
 import { practiceRecordSchema } from './catalog/practice-record.js';
 
 // Content lives in git at the repo root, one file per record, structured
@@ -12,4 +13,19 @@ const practices = defineCollection({
 	schema: practiceRecordSchema,
 });
 
-export const collections = { practices };
+/**
+ * The **guide record**, in its own collection of exactly one.
+ *
+ * Separate from `practices` because it is a separate governed kind, and
+ * because separateness is what keeps §1's promise mechanical: every page that
+ * lists something reads the practices collection, so the guide cannot appear
+ * in the catalog, in a suggestion set, in a **set tail**, or in `/everything/`
+ * — not by a rule each of those pages remembers to apply, but because it is
+ * not in the list they read. Its prose lives in the body, as a practice's does.
+ */
+const guide = defineCollection({
+	loader: glob({ pattern: 'guide.md', base: './content' }),
+	schema: guideRecordSchema,
+});
+
+export const collections = { practices, guide };

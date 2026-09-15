@@ -1,7 +1,7 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative, sep, posix } from 'node:path';
 import yaml from 'js-yaml';
-import type { RecordFile } from './frontmatter-gate.ts';
+import type { RecordFile, RecordKind } from './frontmatter-gate.ts';
 
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---/;
 
@@ -14,15 +14,32 @@ const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---/;
  * badly enough fails the build, and "the build crashed" is a worse answer than
  * a list of fields and the files they are in.
  */
-export function readRecordFiles(dir: string, root: string): RecordFile[] {
+export function readRecordFiles(dir: string, root: string, kind: RecordKind): RecordFile[] {
 	return readdirSync(dir, { recursive: true, withFileTypes: true })
 		.filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
 		.map((entry) => join(entry.parentPath, entry.name))
 		.sort()
-		.map((file) => ({
-			path: relative(root, file).split(sep).join(posix.sep),
-			frontmatter: parseFrontmatter(readFileSync(file, 'utf8'), file),
-		}));
+		.map((file) => readRecordFile(file, root, kind))
+		.filter((record) => record !== null);
+}
+
+/**
+ * One record file, or `null` if it is not there.
+ *
+ * The **guide record** is a single file rather than a directory, and a
+ * repository without one is a real state: the gate has nothing to say about a
+ * record that has not been written, and the build is what warns that the
+ * younger-child path is not being offered (`src/guide/index.ts`). A missing
+ * file failing here would make "write the guide" a prerequisite for merging
+ * anything at all.
+ */
+export function readRecordFile(file: string, root: string, kind: RecordKind): RecordFile | null {
+	if (!existsSync(file)) return null;
+	return {
+		path: relative(root, file).split(sep).join(posix.sep),
+		kind,
+		frontmatter: parseFrontmatter(readFileSync(file, 'utf8'), file),
+	};
 }
 
 /**
