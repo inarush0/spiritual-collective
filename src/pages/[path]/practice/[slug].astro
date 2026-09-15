@@ -109,7 +109,7 @@ const action = framing.actionRoute(practice.id);
 			 * guidance and cautions are met before the first canonical step.
 			 */
 		}
-		<p class="action">{action ? <a href={action}>{framing.action}</a> : framing.action}</p>
+		<p class="action"><a href={action}>{framing.action}</a></p>
 		{/* Refusal is visible, alongside the action rather than beneath it. */}
 		<p class="refusal"><a href={framing.routes.everything}>{REFUSAL}</a></p>
 	</div>

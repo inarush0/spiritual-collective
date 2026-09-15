@@ -2,6 +2,7 @@
 import type { Practice } from '../catalog/index.js';
 import { pendingIn, release } from '../catalog/index.js';
 import Page from '../layouts/Page.astro';
+import FlowChoices from './FlowChoices.astro';
 import GuideDoorway from './GuideDoorway.astro';
 import PathBadge from './PathBadge.astro';
 import { PENDING_MARKER, SMALLEST_LEAD } from './practice-view.js';
@@ -43,6 +44,7 @@ const total = record.what_this_involves.length;
 const label = stepLabel(number, total);
 const isLast = number === total;
 const beforeRoute = `${practiceRoute}before/`;
+const directPracticeRoute = routesFor('me').practice(practice.id);
 ---
 
 <Page title={`${record.name} — ${label}`}>
@@ -78,7 +80,7 @@ const beforeRoute = `${practiceRoute}before/`;
 		}
 	</details>
 
-	<div class="choices">
+	<FlowChoices>
 		{
 			isLast ? (
 				<p class="onward">
@@ -93,11 +95,11 @@ const beforeRoute = `${practiceRoute}before/`;
 		{
 			path === 'with' && (
 				<p class="handoff">
-					<a href={`/me/practice/${practice.id}/${number}/`}>{CONTINUE_ALONE}</a>
+					<a href={`${directPracticeRoute}${number}/`}>{CONTINUE_ALONE}</a>
 				</p>
 			)
 		}
-	</div>
+	</FlowChoices>
 
 	<GuideDoorway path={path} />
 </Page>
@@ -162,25 +164,8 @@ const beforeRoute = `${practiceRoute}before/`;
 		color: var(--quiet);
 	}
 
-	.choices {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem 2rem;
-		margin: 2.5rem 0 0;
-		padding-top: 1.5rem;
-		border-top: 1px solid var(--rule);
-	}
-
-	.choices p {
-		margin: 0;
-	}
-
 	.last {
 		display: block;
 		color: var(--quiet);
-	}
-
-	.handoff {
-		flex-basis: 100%;
 	}
 </style>
