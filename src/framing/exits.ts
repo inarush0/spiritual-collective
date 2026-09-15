@@ -47,20 +47,16 @@ export const EXIT_LINES: readonly string[] = [
 	'You stopped, or the steps ran out. Either one is the same to this page, and nothing here kept a record of which.',
 ];
 
-/** One way onward from the exit. `route` is null while its page is unbuilt. */
+/** One way onward from the exit. */
 export interface Exit {
 	words: string;
-	route: string | null;
+	route: string;
 }
 
 /**
  * The three ways onward, in order.
  *
- * "Change who this is for" carries no route yet: arrival is its own ticket
- * ([#28](https://github.com/inarush0/spiritual-collective/issues/28)), and a
- * link to a page that does not exist is worse than a sentence — someone
- * following a chaplain's link should always meet a way onward that works. The
- * wording is here now so that arrival landing is one route, not a rewrite.
+ * "Change who this is for" returns to arrival.
  *
  * "Choose something else" goes to a suggestion set, as the spec says. For the
  * direct user that is the whole catalog, the set that asks nothing: they have
