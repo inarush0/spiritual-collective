@@ -5,6 +5,7 @@ import Page from '../layouts/Page.astro';
 import FlowChoices from './FlowChoices.astro';
 import GuideDoorway from './GuideDoorway.astro';
 import PathBadge from './PathBadge.astro';
+import PracticeRoute from './PracticeRoute.astro';
 import { PENDING_MARKER, SMALLEST_LEAD } from './practice-view.js';
 import { isCompanionPath, routesFor, type AudiencePath } from './routes.js';
 import {
@@ -47,7 +48,8 @@ const beforeRoute = `${practiceRoute}before/`;
 const directPracticeRoute = routesFor('me').practice(practice.id);
 ---
 
-<Page title={`${record.name} — ${label}`}>
+<PracticeRoute path={path} publication={record.publication}>
+	<Page title={`${record.name} — ${label}`}>
 	<PathBadge path={path} />
 
 	<p class="from"><a href={practiceRoute}>{record.name}</a></p>
@@ -102,7 +104,8 @@ const directPracticeRoute = routesFor('me').practice(practice.id);
 	</FlowChoices>
 
 	<GuideDoorway path={path} />
-</Page>
+	</Page>
+</PracticeRoute>
 
 <style>
 	.from,

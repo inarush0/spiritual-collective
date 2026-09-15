@@ -3,13 +3,14 @@ import Page from '../../../layouts/Page.astro';
 import GuideDoorway from '../../../framing/GuideDoorway.astro';
 import PathBadge from '../../../framing/PathBadge.astro';
 import SafetyNote from '../../../framing/SafetyNote.astro';
+import PracticeRoute from '../../../framing/PracticeRoute.astro';
 import {
 	BELIEF_LINE,
 	PENDING_MARKER,
 	REFUSAL,
 	SMALLEST_LEAD,
 } from '../../../framing/practice-view.js';
-import { loadCatalog, pendingIn, release } from '../../../catalog/index.js';
+import { loadPracticeRoutes, pendingIn, release } from '../../../catalog/index.js';
 import { framingFor } from '../../../framing/audience.js';
 import { AUDIENCE_PATHS } from '../../../framing/routes.js';
 
@@ -34,11 +35,10 @@ import { AUDIENCE_PATHS } from '../../../framing/routes.js';
  * ([#29](https://github.com/inarush0/spiritual-collective/issues/29)), which is
  * where a companion meets them before anything is offered.
  *
- * A withdrawn record is published by neither build, so it has no page here yet;
- * its 200 "not available right now" page is its own ticket.
+ * Withdrawn records keep this route but render only the unavailable page.
  */
 export async function getStaticPaths() {
-	const practices = await loadCatalog();
+	const practices = await loadPracticeRoutes();
 	return AUDIENCE_PATHS.flatMap((path) =>
 		practices.map((practice) => ({
 			params: { path, slug: practice.id },
@@ -53,7 +53,8 @@ const framing = framingFor(path);
 const action = framing.actionRoute(practice.id);
 ---
 
-<Page title={record.name}>
+<PracticeRoute path={path} publication={record.publication}>
+	<Page title={record.name}>
 	{
 		/*
 		 * The badge names the path, and "Change who this is for" sits with it:
@@ -115,7 +116,8 @@ const action = framing.actionRoute(practice.id);
 	</div>
 
 	<GuideDoorway path={path} />
-</Page>
+	</Page>
+</PracticeRoute>
 
 <style>
 	.invitation {

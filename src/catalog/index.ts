@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { selectCatalog } from './select.js';
+import { selectCatalog, selectPracticeRoutes } from './select.js';
 import { release } from '../records/release.js';
 
 export type Practice = CollectionEntry<'practices'>;
@@ -19,4 +19,13 @@ export { pendingIn, release, type Release } from '../records/release.js';
  */
 export async function loadCatalog(): Promise<Practice[]> {
 	return selectCatalog(await getCollection('practices'), release);
+}
+
+/**
+ * Practices that need a stable route in this build, including withdrawals.
+ * Listing pages deliberately use `loadCatalog`; only practice-route templates
+ * use this wider view.
+ */
+export async function loadPracticeRoutes(): Promise<Practice[]> {
+	return selectPracticeRoutes(await getCollection('practices'), release);
 }

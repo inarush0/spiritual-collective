@@ -22,3 +22,23 @@ export function selectCatalog<T extends CatalogEntry>(
 		entries.filter((entry) => publishedIn(release, entry.data.publication)),
 	);
 }
+
+/**
+ * The records whose stable practice URLs this build must serve.
+ *
+ * A withdrawn record is absent from every catalog and set, but its old links
+ * remain real pages. Pending records keep the ordinary release distinction:
+ * beta serves them and production does not.
+ */
+export function selectPracticeRoutes<T extends CatalogEntry>(
+	entries: readonly T[],
+	release: Release,
+): T[] {
+	return sortByEditorialOrder(
+		entries.filter(
+			(entry) =>
+				entry.data.publication === 'withdrawn' ||
+				publishedIn(release, entry.data.publication),
+		),
+	);
+}

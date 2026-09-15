@@ -1,11 +1,11 @@
 ---
 import SteppedView from '../../../../framing/SteppedView.astro';
-import { loadCatalog } from '../../../../catalog/index.js';
+import { loadPracticeRoutes } from '../../../../catalog/index.js';
 import { COMPANION_PATHS } from '../../../../framing/routes.js';
 
 /** Companion stepped views; the direct-user route delegates to the same component. */
 export async function getStaticPaths() {
-	const practices = await loadCatalog();
+	const practices = await loadPracticeRoutes();
 	return COMPANION_PATHS.flatMap((path) =>
 		practices.flatMap((practice) =>
 			practice.data.what_this_involves.map((step, index) => ({

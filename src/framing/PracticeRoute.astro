@@ -1,0 +1,29 @@
+---
+import type { Publication } from '../records/governed.js';
+import Page from '../layouts/Page.astro';
+import Escapes from './Escapes.astro';
+import GuideDoorway from './GuideDoorway.astro';
+import PathBadge from './PathBadge.astro';
+import { PRACTICE_UNAVAILABLE } from './practice-view.js';
+import type { AudiencePath } from './routes.js';
+
+interface Props {
+	path: AudiencePath;
+	publication: Publication;
+}
+
+const { path, publication } = Astro.props;
+---
+
+{
+	publication === 'withdrawn' ? (
+		<Page title={PRACTICE_UNAVAILABLE}>
+			<PathBadge path={path} change />
+			<h1>{PRACTICE_UNAVAILABLE}</h1>
+			<Escapes path={path} />
+			<GuideDoorway path={path} />
+		</Page>
+	) : (
+		<slot />
+	)
+}

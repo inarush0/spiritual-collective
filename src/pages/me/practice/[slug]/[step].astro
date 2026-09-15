@@ -1,6 +1,6 @@
 ---
 import SteppedView from '../../../../framing/SteppedView.astro';
-import { loadCatalog } from '../../../../catalog/index.js';
+import { loadPracticeRoutes } from '../../../../catalog/index.js';
 
 /**
  * The stepped view, direct-user path: `/me/practice/<slug>/1..n/`.
@@ -18,7 +18,7 @@ import { loadCatalog } from '../../../../catalog/index.js';
  * for nothing beyond the last: `n + 1` is the exit, not a step.
  */
 export async function getStaticPaths() {
-	const practices = await loadCatalog();
+	const practices = await loadPracticeRoutes();
 	return practices.flatMap((practice) =>
 		practice.data.what_this_involves.map((step, index) => ({
 			params: { slug: practice.id, step: String(index + 1) },

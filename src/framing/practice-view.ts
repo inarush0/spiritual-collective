@@ -47,6 +47,9 @@ export const PATH_BADGE = 'You are reading this for yourself.';
  */
 export const PENDING_MARKER = 'in review — not approved yet';
 
+/** The whole message served at every URL belonging to a withdrawn practice. */
+export const PRACTICE_UNAVAILABLE = "This practice isn't available right now.";
+
 /**
  * What `belief requirement` means to a reader.
  *
