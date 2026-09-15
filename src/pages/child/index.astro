@@ -1,0 +1,126 @@
+---
+import { render } from 'astro:content';
+import Page from '../../layouts/Page.astro';
+import { CHANGE_PATH } from '../../framing/audience.js';
+import { GUIDE_ONWARD, GUIDE_UNAVAILABLE } from '../../framing/companion.js';
+import { ARRIVAL_ROUTE, routesFor } from '../../framing/routes.js';
+import { loadGuide } from '../../guide/index.js';
+
+/**
+ * `/child/`: the **standing guide**, and the first screen of the younger-child
+ * path (`docs/spec/01-journey-and-ia.md`).
+ *
+ * Met **before the catalog**, addressed to a companion rather than to the
+ * person doing a practice. It is the root of the path rather than a page
+ * inside it, so that being sent to this path and reading the guide are the
+ * same act: the set is at `/child/set/`, one link further on.
+ *
+ * The words are the **guide record**'s, rendered from its body — this template
+ * holds none of them and cannot hold any, which is what makes "the guide is
+ * governed at the same strength as a practice" true rather than intended. A
+ * sentence written here would be user-facing wording with no review record
+ * behind it.
+ *
+ * **Never shown to the direct user.** There is no `/me/` rendering of this
+ * page to be shown: it is one page on one path, and the doorway that leads
+ * back to it is on companion screens only
+ * (`src/framing/GuideDoorway.astro`).
+ *
+ * **No path badge and no escapes**, which every screen inside a path carries.
+ * Both companion paths return here through the doorway, and with no state
+ * anywhere the page cannot know which one sent this reader: a badge would tell
+ * half of them they are somewhere they are not, and the escapes would move a
+ * `/with/` reader into `/child/`'s flow for reading a page. What it carries
+ * instead is the two moves that are true whoever is reading — on into the
+ * catalog, and back to arrival — with the browser's own back the way a reader
+ * returns to the screen they stepped aside from.
+ *
+ * When this build does not publish the guide, the page says so and offers
+ * arrival. It does not offer `/child/set/`, because a reader who reached this
+ * URL without a guide is exactly the reader the gate exists for.
+ */
+const guide = await loadGuide();
+const Content = guide ? (await render(guide)).Content : null;
+const title = guide ? guide.data.name : GUIDE_UNAVAILABLE[0]!;
+---
+
+<Page title={title}>
+	{
+		guide && Content ? (
+			<>
+				<h1>{guide.data.name}</h1>
+
+				{/* The four parts, as the record writes them. */}
+				<div class="guide">
+					<Content />
+				</div>
+
+				{
+					/*
+					 * The way on, below the guide rather than beside it: the
+					 * catalog is what this screen leads to, and it leads there
+					 * once the reader is ready rather than as an alternative to
+					 * reading.
+					 */
+				}
+				<p class="onward">
+					<a href={routesFor('child').door}>{GUIDE_ONWARD}</a>
+				</p>
+				<p class="change"><a href={ARRIVAL_ROUTE}>{CHANGE_PATH}</a></p>
+			</>
+		) : (
+			<>
+				<h1>{GUIDE_UNAVAILABLE[0]}</h1>
+				{GUIDE_UNAVAILABLE.slice(1).map((line) => (
+					<p class="lead">{line}</p>
+				))}
+				{
+					/*
+					 * One way onward, and it is out of this path. Nothing here
+					 * leads further into `/child/`: that is the path continuing
+					 * guide-less, which is what the gate exists to prevent.
+					 */
+				}
+				<p class="onward">
+					<a href={ARRIVAL_ROUTE}>{CHANGE_PATH}</a>
+				</p>
+			</>
+		)
+	}
+</Page>
+
+<style>
+	.lead {
+		margin: 0 0 0.5rem;
+		color: var(--quiet);
+	}
+
+	/*
+	 * The guide is read, not scanned: its sections are set apart from each
+	 * other rather than crowded, and nothing in it is styled as a control.
+	 */
+	.guide :global(h2) {
+		font-size: 1.125rem;
+		margin: 2rem 0 0.5rem;
+	}
+
+	.guide :global(p) {
+		margin: 0 0 0.75rem;
+	}
+
+	/*
+	 * Below the guide and above the way out of the path, both quiet: neither
+	 * is a control this page is waiting on, and the guide is what the reader
+	 * came here for.
+	 */
+	.onward {
+		margin: 2.5rem 0 0;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--rule);
+	}
+
+	.change {
+		margin: 0.75rem 0 0;
+		color: var(--quiet);
+	}
+</style>

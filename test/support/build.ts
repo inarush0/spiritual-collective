@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
@@ -17,17 +17,38 @@ export const ROOT = join(import.meta.dirname, '..', '..');
 
 /** Builds and returns the output directory. `undefined` is the unset case. */
 export function build(release: string | undefined): string {
-	const outDir = mkdtempSync(join(tmpdir(), `catalog-${release ?? 'default'}-`));
-	execFileSync('node', ['node_modules/astro/bin/astro.mjs', 'build', '--outDir', outDir], {
-		cwd: ROOT,
-		env: {
-			...process.env,
-			ASTRO_TELEMETRY_DISABLED: '1',
-			...(release ? { SITE_BUILD: release } : { SITE_BUILD: '' }),
+	return buildInto(release).dir;
+}
+
+/**
+ * The same build, with everything it said while running.
+ *
+ * Some of what the spec asks for is a **build warning** rather than a page —
+ * a need tag at zero, an unpublished guide record closing the younger-child
+ * path (`docs/spec/07-technical-constraints.md`). A warning nobody can assert
+ * on is a warning that can quietly stop being printed, so the output is
+ * captured rather than discarded.
+ */
+export function buildInto(release: string | undefined): { dir: string; output: string } {
+	const dir = mkdtempSync(join(tmpdir(), `catalog-${release ?? 'default'}-`));
+	const result = spawnSync(
+		'node',
+		['node_modules/astro/bin/astro.mjs', 'build', '--outDir', dir],
+		{
+			cwd: ROOT,
+			env: {
+				...process.env,
+				ASTRO_TELEMETRY_DISABLED: '1',
+				...(release ? { SITE_BUILD: release } : { SITE_BUILD: '' }),
+			},
+			encoding: 'utf8',
 		},
-		stdio: 'pipe',
-	});
-	return outDir;
+	);
+	const output = `${result.stdout ?? ''}${result.stderr ?? ''}`;
+	if (result.status !== 0) {
+		throw new Error(`astro build failed (${release ?? 'production'}):\n${output}`);
+	}
+	return { dir, output };
 }
 
 /** Both releases, and the cleanup that removes them. */

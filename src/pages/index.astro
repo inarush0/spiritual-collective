@@ -1,9 +1,18 @@
 ---
-import { ARRIVAL_ANSWERS, ARRIVAL_PRIVACY, ARRIVAL_QUESTION } from '../framing/arrival.js';
+import { arrivalAnswers, ARRIVAL_PRIVACY, ARRIVAL_QUESTION } from '../framing/arrival.js';
 import Escapes from '../framing/Escapes.astro';
 import Page from '../layouts/Page.astro';
+import { loadGuide } from '../guide/index.js';
 
-const availableAnswers = ARRIVAL_ANSWERS.filter(
+/**
+ * The younger-child answer is offered only when this build publishes the
+ * **standing guide**, which is the door behind it. `loadGuide` is where that
+ * question is asked and where the build warning comes from; this page only
+ * renders what it is given.
+ */
+const guide = await loadGuide();
+
+const availableAnswers = arrivalAnswers(guide !== null).filter(
 	(answer): answer is typeof answer & { route: string } => answer.route !== null,
 );
 ---

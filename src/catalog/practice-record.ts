@@ -6,7 +6,7 @@ import {
 	prose,
 	PUBLICATION_STATES,
 	type Publication,
-} from '../records/governed.js';
+} from '../records/governed.ts';
 
 /**
  * The practice record schema — the single enforcement point for field

@@ -1,6 +1,7 @@
 ---
 import { GUIDE_DOORWAY } from './companion.js';
-import { GUIDE_ROUTE, isCompanionPath, type AudiencePath } from './routes.js';
+import { GUIDE_ROUTE, isCompanionPath, isHere, type AudiencePath } from './routes.js';
+import { loadGuide } from '../guide/index.js';
 
 interface Props {
 	path: AudiencePath;
@@ -23,17 +24,22 @@ const { path } = Astro.props;
  * A page asks for the doorway and gets one only if it is on a path that has
  * one.
  *
- * It is a sentence until `/child/` is built
- * ([#30](https://github.com/inarush0/spiritual-collective/issues/30)) — a dead
- * link is the one thing a doorway must not be.
+ * **It is a sentence when the guide record is not published**, rather than a
+ * link — a dead link is the one thing a doorway must not be. The words are
+ * still worth having there: they say where how-to-offer and how-to-adapt would
+ * be, which is a truer page than one that quietly loses the line.
+ *
+ * On the guide itself the doorway is nothing at all: a companion reading the
+ * guide is not offered a way to the guide.
  */
-const showGuide = isCompanionPath(path);
+const guide = await loadGuide();
+const showGuide = isCompanionPath(path) && !isHere(Astro.url.pathname, GUIDE_ROUTE);
 ---
 
 {
 	showGuide && (
 		<p class="doorway">
-			{GUIDE_ROUTE ? <a href={GUIDE_ROUTE}>{GUIDE_DOORWAY}</a> : GUIDE_DOORWAY}
+			{guide ? <a href={GUIDE_ROUTE}>{GUIDE_DOORWAY}</a> : GUIDE_DOORWAY}
 		</p>
 	)
 }

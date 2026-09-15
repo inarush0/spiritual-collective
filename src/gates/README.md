@@ -29,3 +29,9 @@ The rest of `src/` uses `.js` specifiers, which is what Astro and Vite want.
 node's type stripping resolves the specifier as written — `./failure.js` is a
 file that does not exist. `allowImportingTsExtensions` is already on in
 `tsconfig.json`, so both spellings typecheck.
+
+This reaches one step past `src/gates/`: the two record schemas the gate parses
+against — `src/catalog/practice-record.ts` and `src/guide/guide-record.ts` —
+import `src/records/governed.ts` by its `.ts` name for the same reason. Vite
+resolves an explicit `.ts` specifier, and node does not resolve a `.js` one to
+a file that is not there.

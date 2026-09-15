@@ -4,7 +4,7 @@ import {
 	promotionIssues,
 	prose,
 	PUBLICATION_STATES,
-} from '../records/governed.js';
+} from '../records/governed.ts';
 
 /**
  * The **guide record**: the reviewable, promotable unit holding the **standing

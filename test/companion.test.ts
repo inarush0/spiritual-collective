@@ -14,7 +14,12 @@ import {
 } from '../src/framing/companion.js';
 import { LOW_ENERGY_LINK, SET_LEAD, TAIL_LEAD, TAIL_TITLE } from '../src/framing/discovery.js';
 import { ACTION, PATH_BADGE } from '../src/framing/practice-view.js';
-import { AUDIENCE_PATHS, routesFor, type AudiencePath } from '../src/framing/routes.js';
+import {
+	AUDIENCE_PATHS,
+	GUIDE_ROUTE,
+	routesFor,
+	type AudiencePath,
+} from '../src/framing/routes.js';
 import { buildBothReleases, hasPageAt, pageAt, plainText } from './support/build.js';
 
 /**
@@ -346,7 +351,15 @@ describe('a companion path only leaves itself through shared doors', () => {
 				const html = pageAt(production, route);
 				for (const [, href] of html.matchAll(/href="(\/[^"]*)"/g)) {
 					expect(hasPageAt(production, href), `${route} → ${href}`).toBe(true);
-					const onPath = href.startsWith(`/${path}/`) || href === '/about/' || href === '/';
+					// The **standing guide** is the fourth shared door, beside the
+					// about page and arrival: one page at one URL that both
+					// companion paths keep a doorway back to, rather than a
+					// `/child/` screen a `/with/` reader has been moved onto.
+					const onPath =
+						href.startsWith(`/${path}/`) ||
+						href === '/about/' ||
+						href === '/' ||
+						href === GUIDE_ROUTE;
 					expect(onPath, `${route} leaves ${path} for ${href}`).toBe(true);
 				}
 			}
