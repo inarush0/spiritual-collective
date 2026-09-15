@@ -1,0 +1,42 @@
+---
+import Page from '../../layouts/Page.astro';
+import GuideDoorway from '../../framing/GuideDoorway.astro';
+import { EXIT_TITLE, exitLines, waysOnward } from '../../framing/exits.js';
+import { COMPANION_PATHS, type CompanionPath } from '../../framing/routes.js';
+
+export function getStaticPaths() {
+	return COMPANION_PATHS.map((path) => ({ params: { path }, props: { path } }));
+}
+
+const { path } = Astro.props as { path: CompanionPath };
+const onward = waysOnward(path);
+---
+
+<Page title={EXIT_TITLE}>
+	<h1>{EXIT_TITLE}</h1>
+	{exitLines(path).map((line) => <p class="lead">{line}</p>)}
+
+	<ul class="exits">
+		{onward.map((way) => <li><a href={way.route}>{way.words}</a></li>)}
+	</ul>
+
+	<GuideDoorway path={path} />
+</Page>
+
+<style>
+	.lead {
+		margin: 0 0 1rem;
+		color: var(--quiet);
+	}
+
+	.exits {
+		list-style: none;
+		margin: 2.5rem 0 0;
+		padding: 1.5rem 0 0;
+		border-top: 1px solid var(--rule);
+	}
+
+	.exits li + li {
+		margin-top: 0.75rem;
+	}
+</style>

@@ -47,6 +47,15 @@ export const EXIT_LINES: readonly string[] = [
 	'You stopped, or the steps ran out. Either one is the same to this page, and nothing here kept a record of which.',
 ];
 
+/** The one extra reassurance on both companion exits. */
+export const COMPANION_EXIT_LINE =
+	'You do not need to ask whether the practice helped or ask them to explain what happened.';
+
+/** The exit copy for one path, still unconditional about how it was reached. */
+export function exitLines(path: AudiencePath): readonly string[] {
+	return isCompanionPath(path) ? [...EXIT_LINES, COMPANION_EXIT_LINE] : EXIT_LINES;
+}
+
 /** One way onward from the exit. */
 export interface Exit {
 	words: string;

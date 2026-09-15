@@ -105,12 +105,11 @@ const action = framing.actionRoute(practice.id);
 			 * deliberately last and deliberately quiet — the record above is
 			 * readable in full first, and nothing here advances by itself.
 			 *
-			 * On the companion paths it is a plain line until "Before you offer
-			 * this" exists (#29). `framingFor` says why the alternatives are
-			 * worse than a sentence.
+			 * On companion paths it enters "Before you offer this" so adaptation
+			 * guidance and cautions are met before the first canonical step.
 			 */
 		}
-		<p class="action">{action ? <a href={action}>{framing.action}</a> : framing.action}</p>
+		<p class="action"><a href={action}>{framing.action}</a></p>
 		{/* Refusal is visible, alongside the action rather than beneath it. */}
 		<p class="refusal"><a href={framing.routes.everything}>{REFUSAL}</a></p>
 	</div>

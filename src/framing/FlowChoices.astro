@@ -1,0 +1,29 @@
+---
+/**
+ * The equal-weight ways onward and out at the end of a flow screen.
+ *
+ * Callers supply the links because their meaning differs; this component owns
+ * only the shared layout that keeps them peers and lets a handoff take a row.
+ */
+---
+
+<div class="choices"><slot /></div>
+
+<style>
+	.choices {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 2rem;
+		margin: 2.5rem 0 0;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--rule);
+	}
+
+	.choices :global(p) {
+		margin: 0;
+	}
+
+	.choices :global(.handoff) {
+		flex-basis: 100%;
+	}
+</style>
