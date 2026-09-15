@@ -1,4 +1,12 @@
 import { z } from 'zod';
+import {
+	attested,
+	chaplainReview,
+	promotionIssues,
+	prose,
+	PUBLICATION_STATES,
+	type Publication,
+} from '../records/governed.ts';
 
 /**
  * The practice record schema — the single enforcement point for field
@@ -14,13 +22,13 @@ import { z } from 'zod';
  * - **Nothing may be empty.** Prose is trimmed and must have content, so a
  *   present-but-blank field cannot pass for a written one.
  *
- * Fields nullable below are the review record's: an unapproved record carries
- * an explicit `null`, which is presence, not absence. `.nullable()` without
- * `.optional()` keeps the key mandatory.
+ * What this record kind shares with the **guide record** — the publication
+ * states, the chaplain's half of the review record, and the rule that nothing
+ * auto-promotes — is in `src/records/governed.ts`. Everything below is a facet
+ * of a practice, which is precisely what the guide record does not carry.
  */
 
-/** Prose that must actually say something. */
-const prose = z.string().trim().min(1);
+export { PUBLICATION_STATES, type Publication };
 
 /**
  * The eight need tags, verbatim.
@@ -42,34 +50,15 @@ export const NEED_TAGS = [
 
 export type NeedTag = (typeof NEED_TAGS)[number];
 
-export const PUBLICATION_STATES = ['in-review', 'approved', 'withdrawn'] as const;
-export type Publication = (typeof PUBLICATION_STATES)[number];
-
 /**
- * YAML parsers disagree about bare `yes` / `no`: 1.1 reads booleans, 1.2 reads
- * strings. The review record is written by hand, so accept both spellings and
- * normalise to the one the spec writes.
- */
-const attested = <T extends readonly [string, ...string[]]>(states: T) =>
-	z.preprocess((value) => {
-		if (value === true) return 'yes';
-		if (value === false) return 'no';
-		return value;
-	}, z.enum(states));
-
-/**
- * Role, date, and record version — never an identity. This repository is
- * public and content records live in it, so a reviewer's name here would be
- * published whether or not any page renders it. See `docs/spec/05-governance.md`.
+ * The chaplain's half, plus the one attestation only a practice can need: the
+ * **safety consult**, asked once about a practice carrying clinical risk. The
+ * guide record has no `risk class` and so has nothing to ask a clinician
+ * about, which is why this field sits here rather than in the shared shape.
  */
 const reviewRecordSchema = z.object({
-	/** Commit SHA of this file at approval; the drift check re-hashes against it. */
-	approved_version: prose.nullable(),
-	chaplain_attested: attested(['yes', 'no']).nullable(),
-	chaplain_attested_date: prose.nullable(),
+	...chaplainReview,
 	clinician_attested: attested(['yes', 'pending', 'not-required']),
-	/** Pointer to where the signed reply is held, outside the repository. */
-	reply_kept: prose.nullable(),
 });
 
 export const practiceRecordSchema = z.object({
@@ -105,29 +94,16 @@ export const practiceRecordSchema = z.object({
 	publication: z.enum(PUBLICATION_STATES),
 	review_record: reviewRecordSchema,
 }).check((ctx) => {
-	// Nothing ever auto-promotes. `publication: approved` is the one-field edit
-	// that publishes a record, so it may not stand without the attestation and
-	// the version it was given against — an approved record with an empty
-	// review record is unapproved content wearing a signature.
+	// Nothing ever auto-promotes: an approved record carries the chaplain's
+	// attestation and the version it was given against, or it is not approved.
+	// The rule is both record kinds', so it is asked rather than restated.
+	for (const issue of promotionIssues(ctx.value)) {
+		ctx.issues.push({ code: 'custom', ...issue });
+	}
+
 	const { publication, review_record: review } = ctx.value;
 	if (publication !== 'approved') return;
 
-	if (review.chaplain_attested !== 'yes') {
-		ctx.issues.push({
-			code: 'custom',
-			input: review.chaplain_attested,
-			path: ['review_record', 'chaplain_attested'],
-			message: 'an approved record needs the chaplain reviewer\'s attestation',
-		});
-	}
-	if (review.approved_version === null) {
-		ctx.issues.push({
-			code: 'custom',
-			input: review.approved_version,
-			path: ['review_record', 'approved_version'],
-			message: 'an approved record needs the version the approval was given against',
-		});
-	}
 	if (review.clinician_attested === 'pending') {
 		ctx.issues.push({
 			code: 'custom',

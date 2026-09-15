@@ -2,12 +2,12 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import type { Release } from '../catalog/release.ts';
+import type { Release } from '../records/release.ts';
 import { readBuiltOutput } from './built-output.ts';
 import type { GateFailure } from './failure.ts';
 import { checkFrontmatter } from './frontmatter-gate.ts';
 import { checkNetwork } from './network-gate.ts';
-import { readRecordFiles } from './record-files.ts';
+import { readRecordFileIfWritten, readRecordFiles } from './record-files.ts';
 import { checkWeight } from './weight-gate.ts';
 
 /**
@@ -16,7 +16,7 @@ import { checkWeight } from './weight-gate.ts';
  * Beta carries production's data posture, and it is the build a chaplain
  * reviews on their own phone between shifts, so a third-party request or a
  * heavy page there is the same failure. The releases themselves are named in
- * `src/catalog/release.ts`; this list is only which of them a gate run builds.
+ * `src/records/release.ts`; this list is only which of them a gate run builds.
  */
 export const GATED_RELEASES: readonly Release[] = ['production', 'beta'];
 
@@ -36,7 +36,12 @@ export type Log = (line: string) => void;
  */
 export function runGates(root: string, log: Log = () => {}): GateFailure[] {
 	log('frontmatter schema…');
-	const records = readRecordFiles(join(root, 'content', 'practices'), root);
+	// Both governed record kinds, checked by the same command against their own
+	// schemas: the twelve practices, and the one guide record beside them.
+	const records = [
+		...readRecordFiles(join(root, 'content', 'practices'), root, 'practice'),
+		...readRecordFileIfWritten(join(root, 'content', 'guide.md'), root, 'guide'),
+	];
 	const recordFailures = checkFrontmatter(records);
 	log(`  ${count(records.length, 'record')}`);
 
@@ -74,7 +79,7 @@ function build(root: string, release: Release, outDir: string): void {
 			...process.env,
 			ASTRO_TELEMETRY_DISABLED: '1',
 			// Production is the unset case; naming it here would be a second
-			// spelling of the rule in src/catalog/release.ts.
+			// spelling of the rule in src/records/release.ts.
 			SITE_BUILD: release === 'production' ? '' : release,
 		},
 		stdio: 'pipe',

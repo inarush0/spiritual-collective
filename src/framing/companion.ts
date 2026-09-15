@@ -162,3 +162,38 @@ export const COMPANION_ACTION = 'Offer this.';
  * met it.
  */
 export const GUIDE_DOORWAY = 'How to offer one of these, and how to adapt it.';
+
+/**
+ * The way on from the **standing guide** into the catalog.
+ *
+ * The guide is met before anything is offered, so it is the one screen whose
+ * job is finished when the reader leaves it. "When you are ready" is the whole
+ * of the pacing this page does: nothing here counts as having read it, and
+ * nobody is asked to confirm that they have.
+ *
+ * It echoes the set screen's own first line, because that is the screen it
+ * opens, and a reader should recognise where they have arrived.
+ */
+export const GUIDE_ONWARD = 'When you are ready, a few things you could offer.';
+
+/**
+ * What `/child/` says when this build does not publish the guide record.
+ *
+ * The third arrival option is absent in that build, so nobody is sent here —
+ * but a link from a chaplain, a bookmark, or a browser's history can still
+ * land on this URL, and those are the readers the never-a-404 rule is for
+ * (`docs/spec/01-journey-and-ia.md`). They meet a sentence and the way back to
+ * arrival.
+ *
+ * **It does not offer the catalog.** Sending this reader on to `/child/set/`
+ * would be the path continuing guide-less, which is the outcome the gate
+ * exists to prevent; the lines say plainly that this is a choice rather than a
+ * page that failed to load.
+ */
+export const GUIDE_UNAVAILABLE: { heading: string; lines: readonly string[] } = {
+	heading: 'This part of the resource is not available right now.',
+	lines: [
+		'It holds how to offer one of these to a younger child, and how to adapt it.',
+		'We would rather not hand you the practices without it.',
+	],
+};

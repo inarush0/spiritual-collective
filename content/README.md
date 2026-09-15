@@ -8,9 +8,10 @@ for why they live here rather than in a CMS.
 
 ```
 practices/<slug>.md   one file per practice record
+guide.md              the guide record
 ```
 
-The filename slug must name a slot in the fixed editorial order
+The filename slug of a practice must name a slot in the fixed editorial order
 (`src/catalog/editorial-order.ts`). A record the order does not name fails the
 build, because it would have no defined position on any page that lists it.
 
@@ -18,6 +19,19 @@ The schema in `src/catalog/practice-record.ts` is the single enforcement point
 for field completeness. **Every field is required** — where a practice has
 nothing distinct to say, the field says so in plain words. A record missing any
 field fails the build.
+
+## The guide record
+
+`guide.md` is the **guide record**: its own governed kind, holding the standing
+guide that `/child/` renders. Its schema is `src/guide/guide-record.ts`, and it
+carries **no practice facets** — no `risk class`, no `need tags`, no `smallest
+version`. Its frontmatter is `name`, `publication`, and a review record; its
+body is the four parts §1 lists, each under its own heading, and a published
+guide missing one of them fails the build.
+
+Its `publication` gates the third arrival option. An unpublished guide means the
+younger-child path is not offered at all, and the build says so loudly rather
+than linking somewhere there is nothing to read.
 
 ## Everything here is placeholder
 
@@ -32,6 +46,18 @@ review record to be internally consistent, so those fields are filled in. The
 tells that they are fiction: `approved_version` is a zero SHA, `reply_kept`
 says no reply exists, and the body says so in full. **Every one of these
 records is replaced before anything ships.**
+
+**The guide record is the exception, and carries no invented approval.** A
+practice's placeholder approval only puts that practice on a page; the guide's
+would offer an entire audience path, because its `publication` is what gates the
+third arrival option. So it is held `in-review`: beta publishes it, production
+does not, and the two builds are the gate open and the gate closed on the same
+commit.
+
+Its body is rendered on `/child/` as it is written, so its placeholder line is
+on the page rather than only in the file. That is the honest rendering: a reader
+of a build carrying this record is reading unreviewed words about offering
+something to a dying child, and the page says so.
 
 Practice copy from the `prototype/*` branches is placeholder drafting too, and
 is not to be lifted in.

@@ -1,6 +1,6 @@
 import { sortByEditorialOrder } from './editorial-order.js';
 import type { Publication } from './practice-record.js';
-import { publishedIn, type Release } from './release.js';
+import { publishedIn, type Release } from '../records/release.js';
 
 /** The shape both `getCollection` entries and test fixtures satisfy. */
 export interface CatalogEntry {

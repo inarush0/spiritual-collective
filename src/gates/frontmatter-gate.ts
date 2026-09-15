@@ -1,10 +1,37 @@
 import { practiceRecordSchema } from '../catalog/practice-record.ts';
+import { guideRecordSchema } from '../guide/guide-record.ts';
 import type { Gate, GateFailure } from './failure.ts';
+
+/**
+ * The two **governed record kinds**, and what each is checked against.
+ *
+ * Both are checked here, by the same command, because both are governed at the
+ * same strength (`docs/spec/05-governance.md`) — and because the rule this gate
+ * carries beyond the schemas is the one the **guide record** most needs: it
+ * carries **no practice facets**, and a `need_tags:` or `risk_class:` written
+ * into `content/guide.md` is a key Zod would strip in silence.
+ */
+export type RecordKind = 'practice' | 'guide';
+
+const KINDS = {
+	practice: {
+		schema: practiceRecordSchema,
+		/** How a failure line refers to the kind, and where its fields are declared. */
+		name: 'the practice record',
+		file: 'src/catalog/practice-record.ts',
+	},
+	guide: {
+		schema: guideRecordSchema,
+		name: 'the guide record',
+		file: 'src/guide/guide-record.ts',
+	},
+} as const;
 
 /** A record file as read off disk, with its frontmatter parsed but unvalidated. */
 export interface RecordFile {
 	/** Repo-relative, so a failure line can be pasted into an editor. */
 	path: string;
+	kind: RecordKind;
 	frontmatter: unknown;
 }
 
@@ -29,8 +56,8 @@ export function checkFrontmatter(records: readonly RecordFile[]): GateFailure[] 
 	]);
 }
 
-function schemaFailures({ path, frontmatter }: RecordFile): GateFailure[] {
-	const result = practiceRecordSchema.safeParse(frontmatter);
+function schemaFailures({ path, kind, frontmatter }: RecordFile): GateFailure[] {
+	const result = KINDS[kind].schema.safeParse(frontmatter);
 	if (result.success) return [];
 
 	return result.error.issues.map((issue) => ({
@@ -53,16 +80,21 @@ function fieldName(path: readonly PropertyKey[]): string {
  * shape it would arrive in is a well-meant extra field. Every other unknown key
  * is worth failing on for the same reason: a field nothing reads is a field
  * nobody reviewed.
+ *
+ * On the guide record it carries a second rule: **no practice facets**. A
+ * `risk class`, `need tags`, or `smallest version` there would be inert today
+ * and is one edit from offering the standing guide as something to do.
  */
-function unknownFieldFailures({ path, frontmatter }: RecordFile): GateFailure[] {
-	return [...unknownKeys(frontmatter, practiceRecordSchema.shape, [])].map((key) => ({
+function unknownFieldFailures({ path, kind, frontmatter }: RecordFile): GateFailure[] {
+	const { schema, name, file } = KINDS[kind];
+	return [...unknownKeys(frontmatter, schema.shape, [])].map((key) => ({
 		gate: GATE,
 		where: path,
 		message:
-			`${key}: not a field of the practice record. ` +
+			`${key}: not a field of ${name}. ` +
 			(looksLikeDuration(key)
 				? '`smallest_version` is the only field that may carry anything resembling a duration.'
-				: 'Add it to the schema in src/catalog/practice-record.ts, or remove it.'),
+				: `Add it to the schema in ${file}, or remove it.`),
 	}));
 }
 

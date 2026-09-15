@@ -30,10 +30,13 @@ describe('arrival', () => {
 		expect(html).toContain('href="/me/"');
 		expect(words).toContain('Someone I am with');
 		expect(html).toContain('href="/with/"');
-		// The standing guide is #30. Until its governed record is published,
-		// its answer is absent rather than becoming a dead link.
+		// The third answer's door is the **standing guide**, and it is offered
+		// only while the guide record is published. The record on disk is held
+		// in review, so beta offers the answer and production does not; both
+		// states of the gate are `test/guide.test.ts`.
 		expect(words).not.toContain('A younger child I am caring for');
 		expect(html).not.toContain('href="/child/"');
+		expect(plainText(pageAt(beta, '/'))).toContain('A younger child I am caring for');
 	});
 
 	it('carries the three escapes, with uncertainty resolving to the direct-user path', () => {

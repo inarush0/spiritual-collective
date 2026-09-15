@@ -87,23 +87,22 @@ export function routesFor(path: AudiencePath): PathRoutes {
 }
 
 /**
- * Two screens this route tree points at and does not build: arrival, where
- * "Change who this is for" leads
- * ([#28](https://github.com/inarush0/spiritual-collective/issues/28)), and the
- * **standing guide** at `/child/`, which every companion screen keeps a quiet
- * doorway back to
- * ([#30](https://github.com/inarush0/spiritual-collective/issues/30)).
+ * The two screens outside the three path trees: arrival, where "Change who
+ * this is for" leads, and the **standing guide** at `/child/`, which every
+ * companion screen keeps a quiet doorway back to.
  *
- * A route stays `null` until its page exists, and screens that offer it render
- * a sentence rather than a link in the meantime. **A link to a page that is
- * not there is worse than a sentence**: someone following a chaplain's link
- * should always meet a way onward that works, which is the same rule that
- * keeps a withdrawn practice's URL serving a 200 (§1). Landing a page is then
- * one line here rather than an edit on every screen that names it.
+ * The guide is the root of the younger-child path rather than a page within
+ * it, because it is met **before** the catalog: `/child/` is the guide and
+ * `/child/set/` is what a reader goes on to. Whether it is linked at all is
+ * not a question this file can answer — the guide is a governed record, and an
+ * unpublished one is not linked from anywhere (`src/guide/index.ts`). **A link
+ * to a page that is not there is worse than a sentence**: someone following a
+ * chaplain's link should always meet a way onward that works, which is the
+ * same rule that keeps a withdrawn practice's URL serving a 200 (§1).
  */
 export const ARRIVAL_ROUTE = '/';
 
-export const GUIDE_ROUTE: string | null = null;
+export const GUIDE_ROUTE = '/child/';
 
 /**
  * Whether `route` is the page the reader is already on.
