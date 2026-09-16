@@ -26,6 +26,13 @@ The checked-in `.node-version` selects the same Node major used by CI. Preview
 branches are disabled because review happens on the beta project's `main`
 deployment, not on a third release surface.
 
+For both projects, confirm that no optional request-log product (Logpush, Log
+Explorer, or equivalent) is enabled. If the account or attached own-domain zone
+exposes HTTP Logpull retention, leave it disabled or turn it off. Record the
+effective setting, role, and date in the
+[data-flow audit](../data-flow-audit.md); project setup is incomplete while its
+live verification row is pending.
+
 ## Production project
 
 Do not define `SITE_BUILD`. Unset is deliberately the production-safe default:
@@ -50,9 +57,11 @@ npm run verify:deployment -- https://<production-project>.pages.dev https://<ung
 ```
 
 The command fails unless the origins are distinct HTTPS sites, only beta shows
-the review bar, Cloudflare serves beta's `noindex` response header, and beta's
-`robots.txt` disallows the whole site. Record the two stable project URLs
-outside git; do not add a public link to the beta.
+the review bar and pending records, production excludes pending records, both
+sites preserve the zero-script/zero-third-party posture, Cloudflare serves
+beta's `noindex` response header across multiple routes, and beta's `robots.txt`
+disallows the whole site. Record the two stable project URLs outside git; do
+not add a public link to the beta.
 
 ## Promotion and withdrawal check
 

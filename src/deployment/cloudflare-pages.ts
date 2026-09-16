@@ -1,6 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import type { AstroIntegration } from 'astro';
 import { resolveRelease } from '../records/release.js';
+import { BETA_HEADERS, BETA_ROBOTS } from './cloudflare-policy.js';
 
 /**
  * Cloudflare Pages reads these files from the completed static output. They
@@ -8,9 +9,6 @@ import { resolveRelease } from '../records/release.js';
  * is unlisted and uncrawlable without putting a password between the chaplain
  * reviewer and the experience under review.
  */
-export const BETA_HEADERS = '/*\n  X-Robots-Tag: noindex\n';
-export const BETA_ROBOTS = 'User-agent: *\nDisallow: /\n';
-
 /**
  * Emit host configuration from the same release variable that filters the
  * records. Keeping this inside the build makes a beta artifact self-contained:

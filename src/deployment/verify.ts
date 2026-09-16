@@ -1,6 +1,8 @@
+import { responseDisablesIndexing, robotsDisallowAll } from './cloudflare-policy.js';
+import { elementsIn, isAbsolute, referencesIn } from '../gates/built-output.js';
+import { PENDING_MARKER } from '../framing/practice-view.js';
+
 const REVIEW_BAR = 'beta — for review';
-const NOINDEX = /(?:^|,)\s*noindex(?:\s|,|$)/i;
-const DISALLOW_ALL = /(?:^|\n)User-agent:\s*\*\s*\nDisallow:\s*\/\s*(?:\n|$)/im;
 
 /**
  * Verify the behavior Cloudflare actually serves, after both Pages projects
@@ -23,33 +25,70 @@ export async function verifyDeployments(
 	}
 	if (failures.length > 0) return failures;
 
-	const [productionPage, betaPage, betaRobots] = await Promise.all([
+	const [productionPage, productionCatalog, betaPage, betaCatalog, betaRobots] = await Promise.all([
 		fetcher(new URL('/', production)),
+		fetcher(new URL('/me/everything/', production)),
 		fetcher(new URL('/', beta)),
+		fetcher(new URL('/me/everything/', beta)),
 		fetcher(new URL('/robots.txt', beta)),
 	]);
-	const [productionHtml, betaHtml, robots] = await Promise.all([
+	const [productionHtml, productionCatalogHtml, betaHtml, betaCatalogHtml, robots] =
+		await Promise.all([
 		productionPage.text(),
+		productionCatalog.text(),
 		betaPage.text(),
+		betaCatalog.text(),
 		betaRobots.text(),
-	]);
+		]);
 
 	if (!productionPage.ok) failures.push(`production returned HTTP ${productionPage.status}`);
+	if (!productionCatalog.ok) {
+		failures.push(`production catalog returned HTTP ${productionCatalog.status}`);
+	}
 	if (!betaPage.ok) failures.push(`beta returned HTTP ${betaPage.status}`);
+	if (!betaCatalog.ok) failures.push(`beta catalog returned HTTP ${betaCatalog.status}`);
 	if (!betaRobots.ok) failures.push(`beta robots.txt returned HTTP ${betaRobots.status}`);
 	if (productionHtml.includes(REVIEW_BAR)) {
 		failures.push('production must not show the beta review bar');
 	}
-	if (NOINDEX.test(productionPage.headers.get('x-robots-tag') ?? '')) {
+	if (
+		[productionPage, productionCatalog].some((response) =>
+			responseDisablesIndexing(response.headers.get('x-robots-tag')),
+		)
+	) {
 		failures.push('production must not send X-Robots-Tag: noindex');
 	}
+	if (productionCatalogHtml.includes(PENDING_MARKER)) {
+		failures.push('production must not serve pending records');
+	}
+	if (violatesDataPosture([productionHtml, productionCatalogHtml])) {
+		failures.push('production must not serve client scripts or third-party references');
+	}
 	if (!betaHtml.includes(REVIEW_BAR)) failures.push('beta must show the review bar');
-	if (!NOINDEX.test(betaPage.headers.get('x-robots-tag') ?? '')) {
+	if (
+		[betaPage, betaCatalog].some(
+			(response) => !responseDisablesIndexing(response.headers.get('x-robots-tag')),
+		)
+	) {
 		failures.push('beta must send X-Robots-Tag: noindex');
 	}
-	if (!DISALLOW_ALL.test(robots)) {
+	if (!betaCatalogHtml.includes(PENDING_MARKER)) {
+		failures.push('beta must serve and mark pending records');
+	}
+	if (violatesDataPosture([betaHtml, betaCatalogHtml])) {
+		failures.push('beta must not serve client scripts or third-party references');
+	}
+	if (!robotsDisallowAll(robots)) {
 		failures.push('beta robots.txt must disallow the whole site');
 	}
 
 	return failures;
+}
+
+function violatesDataPosture(pages: string[]): boolean {
+	return pages.some(
+		(html) =>
+			[...elementsIn(html)].some(({ tag }) => tag === 'script') ||
+			referencesIn(html).some(({ url }) => isAbsolute(url)),
+	);
 }

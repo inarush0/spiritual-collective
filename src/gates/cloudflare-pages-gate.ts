@@ -1,4 +1,8 @@
 import type { Release } from '../records/release.ts';
+import {
+	headersFileDisablesIndexing,
+	robotsDisallowAll,
+} from '../deployment/cloudflare-policy.ts';
 import type { GateFailure } from './failure.ts';
 
 export interface CloudflarePagesFiles {
@@ -6,21 +10,19 @@ export interface CloudflarePagesFiles {
 	robots?: string;
 }
 
-const WILDCARD_NOINDEX = /(?:^|\n)\/\*\s*\n(?:[ \t]+[^\n]*\n)*?[ \t]+X-Robots-Tag:\s*[^\n]*\bnoindex\b/im;
-const DISALLOW_ALL = /(?:^|\n)User-agent:\s*\*\s*\nDisallow:\s*\/\s*(?:\n|$)/im;
-
 /**
  * The beta is unlisted, not private: Cloudflare must add a `noindex` response
  * header to every static asset and `robots.txt` must disallow every crawler.
  * Production must carry neither beta control, because it is the public copy.
+ * `docs/spec/07-technical-constraints.md`, “Beta is unlisted, not private”.
  */
 export function checkCloudflarePages(
 	release: Release,
 	files: CloudflarePagesFiles,
 ): GateFailure[] {
 	const failures: GateFailure[] = [];
-	const hasNoindex = WILDCARD_NOINDEX.test(files.headers ?? '');
-	const disallowsAll = DISALLOW_ALL.test(files.robots ?? '');
+	const hasNoindex = headersFileDisablesIndexing(files.headers);
+	const disallowsAll = robotsDisallowAll(files.robots);
 
 	if (release === 'beta' && !hasNoindex) {
 		failures.push({
