@@ -47,7 +47,6 @@ describe('one environment variable selects the build', () => {
 	it('excludes every record that is not approved from production', () => {
 		expect(names(productionHtml)).toEqual([
 			"Noticing what's around you",
-			'Rest, without a task',
 			'A small kindness, from where you are',
 		]);
 		// No review bar and no pending markers: production is not a review surface.

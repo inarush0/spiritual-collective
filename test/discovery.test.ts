@@ -32,7 +32,7 @@ const ESCAPES = escapesFor('me');
  */
 
 const QUESTION_PAGE = '/me/';
-/** A tag two published practices carry. */
+/** A tag one approved and one pending practice carry. */
 const STILL = '/me/for/be-still/';
 /** A tag nothing published carries. */
 const COMPANY = '/me/for/some-company/';
@@ -99,18 +99,22 @@ describe('the discovery question', () => {
 	});
 
 	it('offers the need tags verbatim, with no label layer', () => {
-		for (const tag of ['I want to be still', 'I want as little as possible asked of me']) {
-			expect(question).toContain(tag);
-		}
+		expect(question).toContain('I want to be still');
+		expect(plainText(pageAt(beta, QUESTION_PAGE))).toContain(
+			'I want as little as possible asked of me',
+		);
 	});
 
 	it('offers an answer as an ordinary link to its set', () => {
 		expect(pageAt(production, QUESTION_PAGE)).toContain(`href="${needTagRoute('I want to be still')}"`);
 	});
 
-	it('offers a tag one published practice carries', () => {
-		expect(question).toContain('I want as little as possible asked of me');
-		expect(hasPageAt(production, '/me/for/as-little-as-possible-asked-of-me/')).toBe(true);
+	it('offers a tag one pending practice carries on beta', () => {
+		expect(plainText(pageAt(beta, QUESTION_PAGE))).toContain(
+			'I want as little as possible asked of me',
+		);
+		expect(hasPageAt(beta, '/me/for/as-little-as-possible-asked-of-me/')).toBe(true);
+		expect(hasPageAt(production, '/me/for/as-little-as-possible-asked-of-me/')).toBe(false);
 	});
 
 	it('drops a tag at zero, on that build only', () => {
@@ -134,6 +138,9 @@ describe('the discovery question', () => {
 describe('a suggestion set', () => {
 	it('holds every published practice carrying the tag, in the fixed editorial order', () => {
 		expect(practicesOn(split(pageAt(production, STILL)).set)).toEqual([
+			'noticing-whats-around-you',
+		]);
+		expect(practicesOn(split(pageAt(beta, STILL)).set)).toEqual([
 			'noticing-whats-around-you',
 			'rest-without-a-task',
 		]);
@@ -186,12 +193,12 @@ describe('the set tail', () => {
 	 * It is what stops a one-practice screen reading as a verdict, so these are
 	 * assertions about the *shape* of the page rather than about its contents.
 	 */
-	const sets = [STILL, '/me/for/as-little-as-possible-asked-of-me/', NOT_SURE];
+	const productionSets = [STILL, NOT_SURE];
+	const betaSets = [STILL, '/me/for/as-little-as-possible-asked-of-me/', NOT_SURE];
 
 	it('carries the practices not on screen, scanning on from the set and wrapping', () => {
-		// Production publishes three: noticing, rest, a small kindness. The set
-		// behind "I want to be still" is the first two, so the tail is the one
-		// left — and it comes after them in the editorial order.
+		// Production publishes noticing and a small kindness. The set behind
+		// "I want to be still" contains noticing, so the tail is the one left.
 		expect(practicesOn(split(pageAt(production, STILL)).tail)).toEqual(['a-small-kindness']);
 
 		// Beta publishes one more, late in the order, so its tail wraps past
@@ -203,8 +210,11 @@ describe('the set tail', () => {
 	});
 
 	it('never repeats a practice the reader is already looking at', () => {
-		for (const route of sets) {
-			for (const build of [production, beta]) {
+		for (const [build, routes] of [
+			[production, productionSets],
+			[beta, betaSets],
+		] as const) {
+			for (const route of routes) {
 				const { set, tail } = split(pageAt(build, route));
 				const onScreen = practicesOn(set);
 				expect(onScreen.length, route).toBeGreaterThan(0);
@@ -216,10 +226,15 @@ describe('the set tail', () => {
 	});
 
 	it('says, on every set screen, that it is not what was chosen', () => {
-		for (const route of sets) {
-			const below = plainText(split(pageAt(production, route)).tail);
-			expect(below, route).toContain(TAIL_TITLE);
-			for (const line of TAIL_LEAD) expect(below, route).toContain(line);
+		for (const [build, routes] of [
+			[production, productionSets],
+			[beta, betaSets],
+		] as const) {
+			for (const route of routes) {
+				const below = plainText(split(pageAt(build, route)).tail);
+				expect(below, route).toContain(TAIL_TITLE);
+				for (const line of TAIL_LEAD) expect(below, route).toContain(line);
+			}
 		}
 	});
 
@@ -235,7 +250,9 @@ describe('the set tail', () => {
 		const structure = (route: string) =>
 			(split(pageAt(beta, route)).tail.match(/<(section|hr|h2|ul)\b/g) ?? []).join(' ');
 
-		for (const route of sets) expect(structure(route), route).toBe(structure(sets[0]!));
+		for (const route of betaSets) {
+			expect(structure(route), route).toBe(structure(betaSets[0]!));
+		}
 	});
 
 	it('is absent from /me/everything/, which has nothing it is not showing', () => {
@@ -247,7 +264,7 @@ describe('the set tail', () => {
  * The **low-energy variant**: the alternative for someone with almost nothing
  * to give ([#26](https://github.com/inarush0/spiritual-collective/issues/26)).
  *
- * Production publishes one low-energy practice, rest without a task, which
+ * Beta publishes one low-energy practice, rest without a task, which
  * carries two of the eight tags — so the built site holds both cases the page
  * has to read well in: a tag with one of its own, and a tag with none. The
  * third case, a catalog with no low-energy practice anywhere, is not buildable
@@ -261,22 +278,22 @@ describe('the low-energy variant', () => {
 	const MAKING_LOW = '/me/for/make-or-do-something/low/';
 
 	it('holds the practices carrying the tag whose low energy is true', () => {
-		expect(practicesOn(pageAt(production, STILL_LOW))).toEqual(['rest-without-a-task']);
+		expect(practicesOn(pageAt(beta, STILL_LOW))).toEqual(['rest-without-a-task']);
 	});
 
 	it('leaves out a practice carrying the tag that does not work lying down', () => {
 		// Noticing what's around you is on the set above; its `low energy` is
 		// false, and this page is the one place that field decides anything.
-		expect(practicesOn(pageAt(production, STILL))).toContain('noticing-whats-around-you');
-		expect(practicesOn(pageAt(production, STILL_LOW))).not.toContain('noticing-whats-around-you');
+		expect(practicesOn(pageAt(beta, STILL))).toContain('noticing-whats-around-you');
+		expect(practicesOn(pageAt(beta, STILL_LOW))).not.toContain('noticing-whats-around-you');
 	});
 
 	it('is offered on every set screen, stocked or not', () => {
 		for (const tag of NEED_TAGS) {
 			const route = `/me/for/${needTagSlug(tag)}/`;
-			if (!hasPageAt(production, route)) continue;
-			expect(pageAt(production, route), route).toContain(`href="${route}low/"`);
-			expect(plainText(pageAt(production, route)), route).toContain(LOW_ENERGY_LINK);
+			if (!hasPageAt(beta, route)) continue;
+			expect(pageAt(beta, route), route).toContain(`href="${route}low/"`);
+			expect(plainText(pageAt(beta, route)), route).toContain(LOW_ENERGY_LINK);
 		}
 	});
 
@@ -284,7 +301,7 @@ describe('the low-energy variant', () => {
 		// The link is the thing that must not vary: identical markup on the set
 		// whose tag has a low-energy practice and on the set whose tag has none,
 		// so that following it — or not — tells the reader nothing.
-		const linkOn = (route: string) => pageAt(production, route).match(/<p class="low-energy"[\s\S]*?<\/p>/)?.[0];
+		const linkOn = (route: string) => pageAt(beta, route).match(/<p class="low-energy"[\s\S]*?<\/p>/)?.[0];
 		expect(linkOn('/me/for/make-or-do-something/')).toBeDefined();
 		expect(linkOn(STILL)?.replace('be-still', 'TAG')).toBe(
 			linkOn('/me/for/make-or-do-something/')?.replace('make-or-do-something', 'TAG'),
@@ -294,32 +311,32 @@ describe('the low-energy variant', () => {
 	it('builds a variant for every tag the question offers, and none it does not', () => {
 		for (const tag of NEED_TAGS) {
 			const route = `/me/for/${needTagSlug(tag)}/`;
-			expect(hasPageAt(production, `${route}low/`), route).toBe(hasPageAt(production, route));
+			expect(hasPageAt(beta, `${route}low/`), route).toBe(hasPageAt(beta, route));
 		}
 	});
 
 	it('falls back past an empty tag, framed as the tail is framed', () => {
-		const page = plainText(pageAt(production, MAKING_LOW));
-		expect(practicesOn(pageAt(production, MAKING_LOW))).toEqual(['rest-without-a-task']);
+		const page = plainText(pageAt(beta, MAKING_LOW));
+		expect(practicesOn(pageAt(beta, MAKING_LOW))).toEqual(['rest-without-a-task']);
 		for (const line of LOW_ENERGY_OUTSIDE_LEAD) expect(page).toContain(line);
 		// The tail's own sentence, so the two places say it the same way.
 		expect(LOW_ENERGY_OUTSIDE_LEAD[0]).toBe(TAIL_LEAD[0]);
 	});
 
 	it('says where its practices came from only when they are not from the tag', () => {
-		expect(plainText(pageAt(production, STILL_LOW))).not.toContain(LOW_ENERGY_OUTSIDE_LEAD[0]);
+		expect(plainText(pageAt(beta, STILL_LOW))).not.toContain(LOW_ENERGY_OUTSIDE_LEAD[0]);
 	});
 
 	it('makes the same promise on both, and offers the way back to the set', () => {
 		for (const route of [STILL_LOW, MAKING_LOW]) {
-			const page = plainText(pageAt(production, route));
+			const page = plainText(pageAt(beta, route));
 			for (const line of LOW_ENERGY_LEAD) expect(page, route).toContain(line);
-			expect(pageAt(production, route), route).toContain(`href="${route.replace(/low\/$/, '')}"`);
+			expect(pageAt(beta, route), route).toContain(`href="${route.replace(/low\/$/, '')}"`);
 		}
 	});
 
 	it('is not the set screen wearing the same name in a tab or a bookmark', () => {
-		const titleOf = (route: string) => pageAt(production, route).match(/<title>([^<]*)<\/title>/)?.[1];
+		const titleOf = (route: string) => pageAt(beta, route).match(/<title>([^<]*)<\/title>/)?.[1];
 		expect(titleOf(STILL_LOW)).toBe(LOW_ENERGY_TAB('I want to be still'));
 		expect(titleOf(STILL_LOW)).not.toBe(titleOf(STILL));
 	});
@@ -329,13 +346,13 @@ describe('the low-energy variant', () => {
 		// publishing no low-energy practice at all, which the written records
 		// cannot produce.
 		for (const route of [STILL_LOW, MAKING_LOW]) {
-			expect(plainText(pageAt(production, route)), route).not.toContain(LOW_ENERGY_EMPTY);
+			expect(plainText(pageAt(beta, route)), route).not.toContain(LOW_ENERGY_EMPTY);
 		}
 	});
 
 	it('is a path of its own, not a toggle or a query string', () => {
 		for (const route of [STILL, '/me/for/make-or-do-something/']) {
-			const screen = pageAt(production, route);
+			const screen = pageAt(beta, route);
 			expect(screen, route).not.toContain('?low');
 			expect(screen, route).not.toContain('<input');
 			expect(screen, route).not.toContain('<button');
@@ -347,13 +364,13 @@ describe('the low-energy variant', () => {
 		// put practices that need getting up on the one page saying nothing
 		// does. Nor does the page link to itself.
 		for (const route of [STILL_LOW, MAKING_LOW]) {
-			expect(pageAt(production, route), route).not.toContain(TAIL_MARKUP);
-			expect(pageAt(production, route), route).not.toContain(`href="${route}"`);
+			expect(pageAt(beta, route), route).not.toContain(TAIL_MARKUP);
+			expect(pageAt(beta, route), route).not.toContain(`href="${route}"`);
 		}
 	});
 
 	it('carries neither the limits line nor the crisis pointer', () => {
-		const page = plainText(pageAt(production, STILL_LOW));
+		const page = plainText(pageAt(beta, STILL_LOW));
 		expect(page).not.toContain(LIMITS_LINE);
 		expect(page).not.toContain(CRISIS_LEAD);
 	});
@@ -362,6 +379,9 @@ describe('the low-energy variant', () => {
 describe('/me/not-sure/', () => {
 	it('serves its fixed set, in the fixed editorial order', () => {
 		expect(practicesOn(split(pageAt(production, NOT_SURE)).set)).toEqual([
+			'noticing-whats-around-you',
+		]);
+		expect(practicesOn(split(pageAt(beta, NOT_SURE)).set)).toEqual([
 			'noticing-whats-around-you',
 			'rest-without-a-task',
 		]);
