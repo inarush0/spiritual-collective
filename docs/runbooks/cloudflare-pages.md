@@ -9,6 +9,16 @@ behavioral difference is `SITE_BUILD=beta` on the beta project. Readers use
 permanently to `www`. The generated `pages.dev` hostnames are deployment
 plumbing, not the published addresses.
 
+For the one-time setup, run the interactive companion from the repository root:
+
+```sh
+scripts/setup-cloudflare-pages.sh
+```
+
+It opens each dashboard, pauses at every manual action, records only non-secret
+project hostnames in `/tmp`, and runs the checks in this runbook. This document
+remains the source of truth when dashboard wording changes.
+
 ## Keep DNS at Squarespace
 
 The domain is registered and its DNS is currently hosted at Squarespace. The
