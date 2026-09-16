@@ -28,8 +28,9 @@ runtime. Production and beta use the same posture.
   default; verify rather than assume it.
 - Preview branch deployments are disabled, so only the production and beta
   `main` deployments create stable release surfaces.
-- Beta has no Access policy or password. Its discovery controls are the
-  site-wide `noindex` response header and full crawler disallow.
+- Beta at `beta.spiritual-collective.com` has no Access policy or password. It
+  is not publicly linked; its discovery controls are the site-wide `noindex`
+  response header and full crawler disallow.
 
 Cloudflare necessarily processes edge request metadata to serve the files.
 This project does not describe that processing as “nothing stored”; it enables
@@ -50,6 +51,6 @@ no optional collection and selects the shortest retention the account exposes.
 | --- | --- | --- | --- | --- | --- |
 | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
 
-Record role, not identity. The unguessable beta URL belongs in the private
-release artifact rather than this public repository; record only the project
-name here if that does not reveal it.
+Record role, not identity. The public hostnames are
+`spiritual-collective.com` and `beta.spiritual-collective.com`; the generated
+Pages project names may be recorded here as deployment evidence.
