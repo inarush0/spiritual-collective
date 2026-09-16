@@ -6,9 +6,8 @@ const complete = () => ({
 	name: 'Rest, without a task',
 	invitation: "You don't have to do anything with this time.",
 	what_this_involves: [
-		'Put the phone down somewhere you can still reach it.',
-		'Let your eyes close, or let them rest on one thing.',
-		'Stay there. Nothing has to happen.',
+		'Let your eyes rest on one thing.',
+		'If you want to close them, put the phone down first. Nothing has to happen. Stop whenever you want.',
 	],
 	ways_to_change_it: 'Eyes open is fine. Lying down is fine.',
 	stop_guidance: "Stop whenever you want. You don't need a reason.",

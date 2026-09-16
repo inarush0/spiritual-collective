@@ -52,6 +52,7 @@ A **conditions walkthrough** of the beta, with the chaplain owning the condition
 - [ ] Slow or absent wifi after first load
 - [ ] The phone handed between two people mid-practice
 - [ ] **Interrupted mid-practice and returning** — the site is stateless, so returning means re-navigating from the door; whether that is acceptable or a finding is the walkthrough's to decide
+- [ ] A low-energy practice followed while lying down with eyes closed, including leaving the screen and optionally returning. Any reliance on instructions that can no longer be read is a finding.
 - [ ] Artifact: walkthrough notes
 
 Held separate from the handoff rehearsal: that one asks *would you hand this over*, this asks *does it survive the room*. Collapsing them means the second gets skipped.

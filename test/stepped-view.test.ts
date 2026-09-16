@@ -65,8 +65,9 @@ describe('one step per page', () => {
 	});
 
 	it('builds the stepped view for every practice the release publishes', () => {
-		expect(hasPageAt(production, '/me/practice/rest-without-a-task/1/')).toBe(true);
 		// Pending records are on beta only, steps included.
+		expect(hasPageAt(beta, '/me/practice/rest-without-a-task/1/')).toBe(true);
+		expect(hasPageAt(production, '/me/practice/rest-without-a-task/1/')).toBe(false);
 		expect(hasPageAt(beta, '/me/practice/saying-the-hard-thing/1/')).toBe(true);
 		expect(hasPageAt(production, '/me/practice/saying-the-hard-thing/1/')).toBe(false);
 	});
@@ -84,6 +85,20 @@ describe('one step per page', () => {
 		for (const other of [STEPS[0], STEPS[2], STEPS[3]]) {
 			expect(second, `step 2 also shows: ${other}`).not.toContain(other);
 		}
+	});
+
+	it('keeps a screen-interrupting step self-contained for a direct user', () => {
+		const rest = '/me/practice/rest-without-a-task/';
+		const first = plainText(pageAt(beta, `${rest}1/`));
+		const second = plainText(pageAt(beta, `${rest}2/`));
+
+		expect(first).toContain('Let your eyes rest on one thing.');
+		expect(first).not.toContain('put the phone down');
+		expect(second).toContain(
+			'If you want to close them, put the phone down first. Nothing has to happen. Stop whenever you want.',
+		);
+		expect(second).not.toContain('Let your eyes rest on one thing.');
+		expect(hasPageAt(beta, `${rest}3/`)).toBe(false);
 	});
 
 	it('says where the reader is without claiming progress', () => {

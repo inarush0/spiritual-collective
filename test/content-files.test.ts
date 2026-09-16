@@ -55,6 +55,23 @@ describe('the practice records on disk', () => {
 		expect(states).toContain('approved');
 		expect(states.some((state) => state !== 'approved')).toBe(true);
 	});
+
+	it('returns the substantively changed rest practice to review', () => {
+		const parsed = practiceRecordSchema.parse(frontmatter('rest-without-a-task.md'));
+
+		expect(parsed.what_this_involves).toEqual([
+			'Let your eyes rest on one thing.',
+			'If you want to close them, put the phone down first. Nothing has to happen. Stop whenever you want.',
+		]);
+		expect(parsed.publication).toBe('in-review');
+		expect(parsed.review_record).toEqual({
+			approved_version: null,
+			chaplain_attested: null,
+			chaplain_attested_date: null,
+			clinician_attested: 'not-required',
+			reply_kept: null,
+		});
+	});
 });
 
 describe('the guide record on disk', () => {

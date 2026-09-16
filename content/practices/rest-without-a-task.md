@@ -2,9 +2,8 @@
 name: Rest, without a task
 invitation: You don't have to do anything with this time.
 what_this_involves:
-  - Put the phone down somewhere you can still reach it.
-  - Let your eyes close, or let them rest on one thing.
-  - Stay there. Nothing has to happen.
+  - Let your eyes rest on one thing.
+  - If you want to close them, put the phone down first. Nothing has to happen. Stop whenever you want.
 ways_to_change_it: >
   Eyes open is fine. Lying down is fine. If someone is in the room, you do not
   have to explain what you are doing.
@@ -29,16 +28,16 @@ companion_cautions: >
   Do not fill the silence. Do not ask afterwards whether it helped.
 child_keep: Being near someone who isn't asking them for anything.
 child_change: Make it much smaller, and let them keep moving if they want.
-publication: approved
+publication: in-review
 review_record:
-  approved_version: '0000000000000000000000000000000000000000'
-  chaplain_attested: yes
-  chaplain_attested_date: '2026-01-01'
+  approved_version: null
+  chaplain_attested: null
+  chaplain_attested_date: null
   clinician_attested: not-required
-  reply_kept: none — placeholder record, no reply exists
+  reply_kept: null
 ---
 
 **Example, not for publication.** These words are placeholder drafting for the
-build. No chaplain, tradition, or clinical review stands behind them. The
-review record above is a field shape, not an approval: its `approved_version`
-is a zero SHA and no reply is held anywhere.
+build. No chaplain, tradition, or clinical review stands behind them. This
+substantively changed record is `in-review`, with its former review attestation
+cleared.

@@ -54,8 +54,9 @@ A checklist, not a principle — vague standards cannot fail a review ([#7](http
 - Sentence caps: 2 each for `companion note` and `companion cautions`, 1 each for `child keep` and `child change`
 - The banned-phrasing list (§3)
 - **The subtract-only rule** — the one line that is not about language
+- **Screen-interrupting steps** — read every practice as a direct user alone. Each screen-interrupting step includes everything needed to do it or stop without returning to the device. If instructions follow, the step says plainly that returning is optional.
 
-Everything above except the subtract-only rule is machine-checked (§7).
+The subtract-only rule and the screen-interrupting-step rule are human-judged. Everything else above is machine-checked (§7).
 
 ## The catalog
 
@@ -143,9 +144,8 @@ Field shapes only. **Example, not for publication** — no chaplain, tradition, 
 name: Rest, without a task
 invitation: You don't have to do anything with this time.
 what_this_involves:
-  - Put the phone down somewhere you can still reach it.
-  - Let your eyes close, or let them rest on one thing.
-  - Stay there. Nothing has to happen.
+  - Let your eyes rest on one thing.
+  - If you want to close them, put the phone down first. Nothing has to happen. Stop whenever you want.
 ways_to_change_it: >
   Eyes open is fine. Lying down is fine. If someone is in the room,
   you don't have to explain what you're doing.

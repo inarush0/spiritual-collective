@@ -33,6 +33,7 @@ The seven gates split by who can decide them ([#9](https://github.com/inarush0/s
 1. spiritual-care fit and non-proselytizing language
 2. genuine opt-out, stop instruction, and nonreligious alternative
 3. no cure, symptom-relief, divine-favour, or outcome claims
+4. every screen-interrupting step works for a direct user alone, includes what they need to act or stop without returning to the device, and says plainly that later instructions are optional
 
 The chaplain's attestation also carries the **subtract-only rule** on adaptation fields (§2) inside what it means.
 
