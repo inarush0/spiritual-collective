@@ -23,25 +23,25 @@ export function readRecordFiles(dir: string, root: string, kind: RecordKind): Re
 }
 
 /**
- * One record file by name, or nothing if it is not there.
+ * One required record file by name.
  *
- * The **guide record** is a single file rather than a directory, and a
- * repository without one is a real state: the gate has nothing to say about a
- * record that has not been written, and the build is what warns that the
- * younger-child path is not being offered (`src/guide/index.ts`). A missing
- * file failing here would make "write the guide" a prerequisite for merging
- * anything at all.
- *
- * It returns a list rather than `RecordFile | null` because that is how every
- * caller uses it: the records are checked as one list, and a `null` in it
- * would be filtered out at each call site instead of here.
+ * The **guide record** is a single governed record rather than a directory.
+ * Its absence is represented as an unparseable record so the same schema gate
+ * reports the missing fields and names the path. Deleting the file is not a
+ * publication state: promotion and withdrawal both remain one-field edits.
  */
-export function readRecordFileIfWritten(
+export function readRequiredRecordFile(
 	file: string,
 	root: string,
 	kind: RecordKind,
-): RecordFile[] {
-	return existsSync(file) ? [read(file, root, kind)] : [];
+): RecordFile {
+	return existsSync(file)
+		? read(file, root, kind)
+		: {
+				path: relative(root, file).split(sep).join(posix.sep),
+				kind,
+				frontmatter: undefined,
+			};
 }
 
 function read(file: string, root: string, kind: RecordKind): RecordFile {
