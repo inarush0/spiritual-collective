@@ -38,7 +38,7 @@ export function readRequiredRecordFile(
 	return existsSync(file)
 		? read(file, root, kind)
 		: {
-				path: relative(root, file).split(sep).join(posix.sep),
+				path: recordPath(file, root),
 				kind,
 				frontmatter: undefined,
 			};
@@ -46,10 +46,14 @@ export function readRequiredRecordFile(
 
 function read(file: string, root: string, kind: RecordKind): RecordFile {
 	return {
-		path: relative(root, file).split(sep).join(posix.sep),
+		path: recordPath(file, root),
 		kind,
 		frontmatter: parseFrontmatter(readFileSync(file, 'utf8'), file),
 	};
+}
+
+function recordPath(file: string, root: string): string {
+	return relative(root, file).split(sep).join(posix.sep);
 }
 
 /**
