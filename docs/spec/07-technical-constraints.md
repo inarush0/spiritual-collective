@@ -5,7 +5,7 @@ The shape and its reasoning are [ADR 0001](../adr/0001-static-zero-js-no-third-p
 ## Stack
 
 - **Astro**, at the repo root alongside the existing `docs/` and `CONTEXT.md`. Chosen because content collections validate frontmatter against a Zod schema at build time — the mechanical gates become build failures rather than checklist items — and because zero-JS is its default rather than something maintained against the grain.
-- **Cloudflare Pages**, two projects from the same repo and the same branch, differing by one environment variable, auto-deploying on push to `main`. Safe because the gate is the record's `publication` field, not the deploy. The host's one-click rollback is the whole-site revert instrument; per-record withdrawal remains primary.
+- **Cloudflare Pages**, two projects from the same repo and the same branch, differing by one environment variable, auto-deploying on push to `main`. Production is served at `www.spiritual-collective.com`, with `spiritual-collective.com` permanently redirecting to it; beta is served at `beta.spiritual-collective.com`. Safe because the gate is the record's `publication` field, not the deploy. The host's one-click rollback is the whole-site revert instrument; per-record withdrawal remains primary.
 - **No CMS.** Twelve records do not justify one, and it would add a vendor to the data-flow audit for an editing UI a two-person process does not need.
 
 ## Content in git
@@ -35,12 +35,12 @@ The beta must run the *real* site with pending content included, because half th
 
 ### Beta is unlisted, not private
 
-- Unguessable URL
+- No public link to `beta.spiritual-collective.com`
 - **`noindex` HTTP header** — not merely a meta tag
 - `robots.txt` disallow
 - Both verified automatically
 
-**No password.** The content is unapproved rather than confidential; the risk is a distressed user finding unreviewed spiritual-care content via search, which `noindex` addresses; and a login is a real barrier to a chaplain reviewing on a phone between shifts.
+The hostname is deliberately ordinary rather than treated as a secret. An obscure URL is not access control, and the content is unapproved rather than confidential. The risk is a distressed user finding unreviewed spiritual-care content through a public link or search, which the absence of links plus `noindex` and `robots.txt` address. **No password:** a login is a real barrier to a chaplain reviewing on a phone between shifts.
 
 Beta carries production's data posture. **Beta is not where analytics get switched on.**
 

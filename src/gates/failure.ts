@@ -13,7 +13,11 @@
  * value, so a typo would quietly invent a heading and split one check's
  * failures across two.
  */
-export type Gate = 'frontmatter schema' | 'third-party requests' | 'weight budget';
+export type Gate =
+	| 'frontmatter schema'
+	| 'third-party requests'
+	| 'weight budget'
+	| 'beta crawl controls';
 
 export interface GateFailure {
 	gate: Gate;

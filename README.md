@@ -19,6 +19,10 @@ npm run gates    # the gates; run this before you push
 npm test         # unit tests, the records on disk, and both builds
 ```
 
+The one-time host setup and live assertion are in the
+[Cloudflare Pages runbook](./docs/runbooks/cloudflare-pages.md). Its interactive
+companion is `scripts/setup-cloudflare-pages.sh`.
+
 ## `npm run gates`
 
 One command, run identically locally and in CI, blocking on `main`. It exits
@@ -29,6 +33,7 @@ non-zero on any failure and prints every problem it found, not just the first.
 | Frontmatter schema | an incomplete record, an unpopulated `provenance` or `risk_class`, a sixth step, or any field the content standard does not name — a `duration` among them |
 | Network assertion | any absolute URL in the built output: a CDN, an embed, a web font, analytics of any kind |
 | Weight budget | a web font, a raster image, over 100 KB transferred by one page, or any client JavaScript |
+| Beta crawl controls | a beta build without a site-wide `X-Robots-Tag: noindex` rule or full `robots.txt` disallow, or production inheriting either control |
 
 Both releases are gated, not just production: beta carries production's data
 posture. The prose checks, the drift check, and axe are still to come; see

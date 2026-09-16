@@ -4,13 +4,15 @@
 `main`. Nothing merges past a failure
 ([`docs/spec/07-technical-constraints.md`](../../docs/spec/07-technical-constraints.md)).
 
-Three of the six checks the spec lists are here:
+Three of the six content-and-page checks the spec lists are here, along with
+the deployment assertion required for the beta release:
 
 | # | Check | Module |
 | --- | --- | --- |
 | 1 | Frontmatter schema | `frontmatter-gate.ts` — both record kinds |
 | 5 | Network assertion | `network-gate.ts` |
 | 6 | Weight budget | `weight-gate.ts` |
+| deployment | Beta noindex header and crawler disallow | `cloudflare-pages-gate.ts` |
 
 Prose checks, the drift check, and axe are a later ticket. They slot in beside
 these: a check is a function from something already read — the records, or the

@@ -1,9 +1,10 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { Release } from '../records/release.ts';
 import { readBuiltOutput } from './built-output.ts';
+import { checkCloudflarePages } from './cloudflare-pages-gate.ts';
 import type { GateFailure } from './failure.ts';
 import { checkFrontmatter } from './frontmatter-gate.ts';
 import { checkNetwork } from './network-gate.ts';
@@ -57,7 +58,15 @@ export function runGates(root: string, log: Log = () => {}): GateFailure[] {
 			build(root, release, dir);
 			const output = readBuiltOutput(dir);
 			log(`  ${count(output.pages.length, 'page')}`);
-			return [...checkNetwork(output), ...checkWeight(output)].map((failure) => ({
+			const deploymentFiles = {
+				headers: readOptional(dir, '_headers'),
+				robots: readOptional(dir, 'robots.txt'),
+			};
+			return [
+				...checkNetwork(output),
+				...checkWeight(output),
+				...checkCloudflarePages(release, deploymentFiles),
+			].map((failure) => ({
 				...failure,
 				where: `${release} ${failure.where}`,
 			}));
@@ -65,6 +74,12 @@ export function runGates(root: string, log: Log = () => {}): GateFailure[] {
 			rmSync(dir, { recursive: true, force: true });
 		}
 	});
+}
+
+/** Read an optional host control file from the completed build. */
+function readOptional(dir: string, file: string): string | undefined {
+	const path = join(dir, file);
+	return existsSync(path) ? readFileSync(path, 'utf8') : undefined;
 }
 
 function count(n: number, thing: string): string {
