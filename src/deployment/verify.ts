@@ -1,6 +1,8 @@
-import { responseDisablesIndexing, robotsDisallowAll } from './cloudflare-policy.js';
-import { elementsIn, isAbsolute, referencesIn } from '../gates/built-output.js';
-import { PENDING_MARKER } from '../framing/practice-view.js';
+import type { BuiltOutput } from '../gates/built-output.ts';
+import { checkNetwork } from '../gates/network-gate.ts';
+import { checkWeight } from '../gates/weight-gate.ts';
+import { PENDING_MARKER } from '../framing/practice-view.ts';
+import { responseDisablesIndexing, robotsDisallowAll } from './cloudflare-policy.ts';
 
 const REVIEW_BAR = 'beta — for review';
 
@@ -61,7 +63,7 @@ export async function verifyDeployments(
 	if (productionCatalogHtml.includes(PENDING_MARKER)) {
 		failures.push('production must not serve pending records');
 	}
-	if (violatesDataPosture([productionHtml, productionCatalogHtml])) {
+	if (violatesStaticPosture([productionHtml, productionCatalogHtml])) {
 		failures.push('production must not serve client scripts or third-party references');
 	}
 	if (!betaHtml.includes(REVIEW_BAR)) failures.push('beta must show the review bar');
@@ -75,7 +77,7 @@ export async function verifyDeployments(
 	if (!betaCatalogHtml.includes(PENDING_MARKER)) {
 		failures.push('beta must serve and mark pending records');
 	}
-	if (violatesDataPosture([betaHtml, betaCatalogHtml])) {
+	if (violatesStaticPosture([betaHtml, betaCatalogHtml])) {
 		failures.push('beta must not serve client scripts or third-party references');
 	}
 	if (!robotsDisallowAll(robots)) {
@@ -85,10 +87,20 @@ export async function verifyDeployments(
 	return failures;
 }
 
-function violatesDataPosture(pages: string[]): boolean {
-	return pages.some(
-		(html) =>
-			[...elementsIn(html)].some(({ tag }) => tag === 'script') ||
-			referencesIn(html).some(({ url }) => isAbsolute(url)),
-	);
+/** Run the same zero-JS, zero-third-party policy over the live HTML as the build gate. */
+function violatesStaticPosture(pages: string[]): boolean {
+	const output: BuiltOutput = {
+		dir: '',
+		pages: pages.map((html, index) => ({
+			route: `/live/${index}`,
+			file: `live/${index}.html`,
+			html,
+		})),
+		stylesheets: [],
+		files: pages.map((html, index) => ({
+			path: `live/${index}.html`,
+			bytes: Buffer.byteLength(html),
+		})),
+	};
+	return checkNetwork(output).length > 0 || checkWeight(output).length > 0;
 }
