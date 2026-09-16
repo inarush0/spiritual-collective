@@ -254,7 +254,7 @@ describe('the adjustments', () => {
 });
 
 describe('a companion practice view', () => {
-	const PRACTICE = 'rest-without-a-task';
+	const PRACTICE = 'noticing-whats-around-you';
 
 	it('reads "Offer this", and never the direct user\'s action', () => {
 		for (const path of COMPANIONS) {
@@ -314,7 +314,7 @@ describe('the doorway to the standing guide', () => {
 				routes.nothing,
 				routes.forTag('I want to be still'),
 				routes.lowEnergy('I want to be still'),
-				routes.practice('rest-without-a-task'),
+				routes.practice('noticing-whats-around-you'),
 			];
 			for (const route of screens) {
 				expect(plainText(pageAt(production, route)), route).toContain(GUIDE_DOORWAY);

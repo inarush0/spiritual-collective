@@ -16,6 +16,8 @@ import { buildBothReleases, hasPageAt, pageAt, plainText } from './support/build
 const NOTICING = '/me/practice/noticing-whats-around-you/';
 /** A pending record: on beta only. */
 const HARD_THING = '/me/practice/saying-the-hard-thing/';
+/** A substantively changed record returned to review: on beta only. */
+const REST = '/me/practice/rest-without-a-task/';
 
 let production: string;
 let beta: string;
@@ -42,26 +44,26 @@ function at(haystack: string, needle: string): number {
 
 describe('every practice in the catalog has a working page', () => {
 	it('builds one per practice this release publishes', () => {
-		for (const route of [
-			NOTICING,
-			'/me/practice/rest-without-a-task/',
-			'/me/practice/a-small-kindness/',
-		]) {
+		for (const route of [NOTICING, '/me/practice/a-small-kindness/']) {
 			expect(hasPageAt(production, route), route).toBe(true);
 			expect(hasPageAt(beta, route), route).toBe(true);
 		}
 	});
 
 	it('builds the pending record on beta only', () => {
-		expect(hasPageAt(beta, HARD_THING)).toBe(true);
-		expect(hasPageAt(production, HARD_THING)).toBe(false);
+		for (const route of [REST, HARD_THING]) {
+			expect(hasPageAt(beta, route), route).toBe(true);
+			expect(hasPageAt(production, route), route).toBe(false);
+		}
 	});
 
 	it('is linked from /me/everything/', () => {
-		const everything = pageAt(production, '/me/everything/');
-		for (const slug of ['noticing-whats-around-you', 'rest-without-a-task', 'a-small-kindness']) {
-			expect(everything).toContain(`href="/me/practice/${slug}/"`);
+		for (const slug of ['noticing-whats-around-you', 'a-small-kindness']) {
+			expect(pageAt(production, '/me/everything/')).toContain(`href="/me/practice/${slug}/"`);
 		}
+		expect(pageAt(beta, '/me/everything/')).toContain(
+			'href="/me/practice/rest-without-a-task/"',
+		);
 	});
 });
 
