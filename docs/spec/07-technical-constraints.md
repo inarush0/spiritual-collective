@@ -5,7 +5,7 @@ The shape and its reasoning are [ADR 0001](../adr/0001-static-zero-js-no-third-p
 ## Stack
 
 - **Astro**, at the repo root alongside the existing `docs/` and `CONTEXT.md`. Chosen because content collections validate frontmatter against a Zod schema at build time — the mechanical gates become build failures rather than checklist items — and because zero-JS is its default rather than something maintained against the grain.
-- **Cloudflare Pages**, two projects from the same repo and the same branch, differing by one environment variable, auto-deploying on push to `main`. Production is served at `spiritual-collective.com`; beta is served at `beta.spiritual-collective.com`. Safe because the gate is the record's `publication` field, not the deploy. The host's one-click rollback is the whole-site revert instrument; per-record withdrawal remains primary.
+- **Cloudflare Pages**, two projects from the same repo and the same branch, differing by one environment variable, auto-deploying on push to `main`. Production is served at `www.spiritual-collective.com`, with `spiritual-collective.com` permanently redirecting to it; beta is served at `beta.spiritual-collective.com`. Safe because the gate is the record's `publication` field, not the deploy. The host's one-click rollback is the whole-site revert instrument; per-record withdrawal remains primary.
 - **No CMS.** Twelve records do not justify one, and it would add a vendor to the data-flow audit for an editing UI a two-person process does not need.
 
 ## Content in git

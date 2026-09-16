@@ -4,36 +4,27 @@ This is the one-time setup for the two Git-connected Pages projects required by
 [`docs/spec/07-technical-constraints.md`](../spec/07-technical-constraints.md).
 Both projects build `main` from `inarush0/spiritual-collective`. Their only
 behavioral difference is `SITE_BUILD=beta` on the beta project. Readers use
-`spiritual-collective.com` for production and `beta.spiritual-collective.com`
-for beta; the generated `pages.dev` hostnames are deployment plumbing, not the
-published addresses.
+`www.spiritual-collective.com` for production and
+`beta.spiritual-collective.com` for beta; `spiritual-collective.com` redirects
+permanently to `www`. The generated `pages.dev` hostnames are deployment
+plumbing, not the published addresses.
 
-## Preserve the accountability mailbox first
+## Keep DNS at Squarespace
 
 The domain is registered and its DNS is currently hosted at Squarespace. The
 working Fastmail mailbox depends on the MX, SPF, DKIM, and DMARC records listed
 in the [accountability-mailbox runbook](./accountability-mailbox.md#as-provisioned).
 
-Cloudflare requires an apex Pages domain to be a zone on the same Cloudflare
-account, with the domain's nameservers pointed to Cloudflare. Treat this as a
-DNS migration:
+Both Pages sites use subdomains, so Cloudflare does not need to become the
+authoritative DNS provider. Keep the Squarespace nameservers and every Fastmail
+record unchanged. Before and after adding the web records, compare the mail
+records against the provisioned table and send and receive a real mailbox test.
 
-1. Add `spiritual-collective.com` as a Cloudflare zone, but do not change the
-   registrar's nameservers yet.
-2. Recreate every existing Squarespace DNS record in Cloudflare, including all
-   five Fastmail record groups exactly as provisioned. Preserve any unrelated
-   records too.
-3. Compare the complete old and new record sets. A missing mail record blocks
-   the cutover.
-4. Change the authoritative nameservers at Squarespace to the pair Cloudflare
-   assigns.
-5. After propagation, verify the Fastmail MX, SPF, all three DKIM CNAMEs, and
-   DMARC records publicly, then send and receive a real mailbox test.
-6. Update the accountability-mailbox runbook's “As provisioned” paragraph from
-   Squarespace DNS to Cloudflare DNS only after those checks pass.
-
-Do not remove the Squarespace zone records during propagation. Squarespace
-remains the registrar; only authoritative DNS moves.
+The apex is not attached directly to Pages. Squarespace permanently forwards
+`spiritual-collective.com` to `www.spiritual-collective.com`, with SSL enabled
+and path forwarding set to **Maintain paths**. Squarespace does not allow DNS
+editing while domain forwarding is active; a future DNS change therefore
+requires temporarily removing and then restoring the forwarding rule.
 
 ## Shared project settings
 
@@ -68,18 +59,26 @@ live verification row is pending.
 Do not define `SITE_BUILD`. Unset is deliberately the production-safe default:
 only approved records are offered, with no review bar or pending marker.
 
-After its first successful deployment, open **Custom domains → Set up a
-domain**, attach `spiritual-collective.com`, and wait for the hostname and TLS
-certificate to become active. Because the apex is now a Cloudflare zone, Pages
-creates the required flattened CNAME record.
+After its first successful deployment:
+
+1. In Pages, open **Custom domains → Set up a domain**, associate
+   `www.spiritual-collective.com`, and wait for Cloudflare to provide the CNAME
+   target.
+2. In Squarespace DNS, create `www` as a CNAME to that generated
+   `<production-project>.pages.dev` hostname.
+3. Wait for Pages to show the custom hostname and TLS certificate as active.
+4. In Squarespace domain forwarding, permanently redirect `@` to
+   `www.spiritual-collective.com`, keep SSL on, and select **Maintain paths**.
 
 ## Beta project
 
 In its production environment variables, set `SITE_BUILD` to `beta`. Attach
-`beta.spiritual-collective.com` under **Custom domains** and wait for the
-hostname and TLS certificate to become active. Do not enable a password or
-Access policy: the beta is unlisted and uncrawlable, not private. Its ordinary
-`beta` label is intentional; obscurity is not one of its safeguards.
+`beta.spiritual-collective.com` under **Custom domains**, then create a
+Squarespace CNAME named `beta` pointing to the generated
+`<beta-project>.pages.dev` hostname. Wait for the hostname and TLS certificate
+to become active. Do not enable a password or Access policy: the beta is
+unlisted and uncrawlable, not private. Its ordinary `beta` label is intentional;
+obscurity is not one of its safeguards.
 
 The beta build writes two Cloudflare control files into `dist/`:
 
@@ -90,7 +89,7 @@ The beta build writes two Cloudflare control files into `dist/`:
 finish deploying, verify what Cloudflare actually serves:
 
 ```sh
-npm run verify:deployment -- https://spiritual-collective.com https://beta.spiritual-collective.com
+npm run verify:deployment -- https://www.spiritual-collective.com https://beta.spiritual-collective.com
 ```
 
 The command fails unless the origins are distinct HTTPS sites, only beta shows
@@ -108,7 +107,7 @@ suffix**, and **Include subdomains** enabled:
 
 | Source | Destination |
 | --- | --- |
-| `https://<production-project>.pages.dev` | `https://spiritual-collective.com` |
+| `https://<production-project>.pages.dev` | `https://www.spiritual-collective.com` |
 | `https://<beta-project>.pages.dev` | `https://beta.spiritual-collective.com` |
 
 The custom domains are the stable addresses used by the live verifier and all

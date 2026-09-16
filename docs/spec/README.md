@@ -27,7 +27,7 @@ It says **what to build**. It does not restate the reasoning that produced it; e
 
 - **The content itself.** The twelve **practice records** and the **guide record** are specified as slots, fields, and rules; the words are written by the **editor** and approved by the **chaplain reviewer** on a track that runs alongside implementation. §2 carries one worked example marked _example, not for publication_.
 - **Copy below the record shape.** Route structure, page contents by role, and content rules are fixed here. Actual user-facing wording is a **framing surface** under chaplain veto (§5) and is drafted, not specified.
-- **Branding.** Out of scope for this release; the resource's name is decided and is not a placeholder. The public hostnames are fixed in §7: `spiritual-collective.com` for production and `beta.spiritual-collective.com` for the beta release.
+- **Branding.** Out of scope for this release; the resource's name is decided and is not a placeholder. The public hostnames are fixed in §7: `www.spiritual-collective.com` for production and `beta.spiritual-collective.com` for the beta release; the apex redirects to `www`.
 - **Anything for the handoff moment** — printed cards, one-pagers, QR pages. Ruled out of scope; a sayable name and a matching URL are the mitigation.
 
 ## Reference material off `main`

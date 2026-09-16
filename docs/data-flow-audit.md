@@ -52,5 +52,6 @@ no optional collection and selects the shortest retention the account exposes.
 | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
 
 Record role, not identity. The public hostnames are
-`spiritual-collective.com` and `beta.spiritual-collective.com`; the generated
-Pages project names may be recorded here as deployment evidence.
+`www.spiritual-collective.com` and `beta.spiritual-collective.com`; the apex
+redirects to `www`. The generated Pages project names may be recorded here as
+deployment evidence.
