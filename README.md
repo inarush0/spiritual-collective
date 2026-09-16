@@ -19,6 +19,9 @@ npm run gates    # the gates; run this before you push
 npm test         # unit tests, the records on disk, and both builds
 ```
 
+The one-time host setup and live assertion are in the
+[Cloudflare Pages runbook](./docs/runbooks/cloudflare-pages.md).
+
 ## `npm run gates`
 
 One command, run identically locally and in CI, blocking on `main`. It exits
