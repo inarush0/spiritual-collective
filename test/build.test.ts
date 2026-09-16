@@ -1,4 +1,4 @@
-import { existsSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { PENDING_MARKER } from '../src/framing/practice-view.js';
@@ -10,11 +10,14 @@ function names(html: string): string[] {
 }
 
 let cleanUp: () => void;
+let builds: ReturnType<typeof buildBothReleases>['builds'];
 let productionHtml: string;
 let betaHtml: string;
 
 beforeAll(() => {
-	const { builds, cleanUp: teardown } = buildBothReleases();
+	const result = buildBothReleases();
+	builds = result.builds;
+	const { cleanUp: teardown } = result;
 	cleanUp = teardown;
 	productionHtml = pageAt(builds.production, '/me/everything/');
 	betaHtml = pageAt(builds.beta, '/me/everything/');
@@ -56,6 +59,20 @@ describe('one environment variable selects the build', () => {
 
 	it('refuses to build against a release it does not recognise', () => {
 		expect(() => build('staging')).toThrow();
+	});
+});
+
+describe('the beta build is unlisted and uncrawlable', () => {
+	it('emits a Cloudflare noindex header for every response', () => {
+		const headers = readFileSync(join(builds.beta, '_headers'), 'utf8');
+		expect(headers).toBe('/*\n  X-Robots-Tag: noindex\n');
+		expect(existsSync(join(builds.production, '_headers'))).toBe(false);
+	});
+
+	it('disallows every crawler in robots.txt', () => {
+		const robots = readFileSync(join(builds.beta, 'robots.txt'), 'utf8');
+		expect(robots).toBe('User-agent: *\nDisallow: /\n');
+		expect(existsSync(join(builds.production, 'robots.txt'))).toBe(false);
 	});
 });
 
